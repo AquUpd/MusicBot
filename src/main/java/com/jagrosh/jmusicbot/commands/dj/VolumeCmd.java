@@ -33,7 +33,7 @@ public class VolumeCmd extends DJCommand
         super(bot);
         this.name = "volume";
         this.aliases = bot.getConfig().getAliases(this.name);
-        this.help = "sets or shows volume";
+        this.help = "Устанавливает громкость пластинок";
         this.arguments = "[0-150]";
     }
 
@@ -45,7 +45,7 @@ public class VolumeCmd extends DJCommand
         int volume = handler.getPlayer().getVolume();
         if(event.getArgs().isEmpty())
         {
-            event.reply(FormatUtil.volumeIcon(volume)+" Current volume is `"+volume+"`");
+            event.reply(FormatUtil.volumeIcon(volume)+" В данный момент громкость равна `"+volume+"`");
         }
         else
         {
@@ -56,12 +56,12 @@ public class VolumeCmd extends DJCommand
                 nvolume = -1;
             }
             if(nvolume<0 || nvolume>150)
-                event.reply(event.getClient().getError()+" Volume must be a valid integer between 0 and 150!");
+                event.reply(event.getClient().getError()+" Громкость должна быть целым числом между 0 и 150!");
             else
             {
                 handler.getPlayer().setVolume(nvolume);
                 settings.setVolume(nvolume);
-                event.reply(FormatUtil.volumeIcon(nvolume)+" Volume changed from `"+volume+"` to `"+nvolume+"`");
+                event.reply(FormatUtil.volumeIcon(nvolume)+" Громкость изменена из `"+volume+"` до `"+nvolume+"`");
             }
         }
     }

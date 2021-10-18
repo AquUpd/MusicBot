@@ -18,28 +18,29 @@ package com.jagrosh.jmusicbot.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
+import com.jagrosh.jmusicbot.settings.Settings;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
+import java.io.IOException;
+
 /**
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public abstract class MusicCommand extends Command 
+public abstract class ApplicationCommand extends Command
 {
     protected final Bot bot;
-    protected boolean bePlaying;
-    protected boolean beListening;
-    
-    public MusicCommand(Bot bot)
+    protected boolean beInChannel;
+
+    public ApplicationCommand(Bot bot)
     {
         this.bot = bot;
         this.guildOnly = true;
-        this.category = new Category("Music");
+        this.category = new Category("Applications");
     }
     
     @Override
@@ -53,31 +54,26 @@ public abstract class MusicCommand extends Command
             {
                 event.getMessage().delete().queue();
             } catch(PermissionException ignore){}
-            event.replyInDm(event.getClient().getError()+" Вы можете использовать эту команду только в "+tchannel.getAsMention()+"!");
+            event.replyInDm(event.getClient().getError()+" Вы можете использовать данную команду только в "+tchannel.getAsMention()+"!");
             return;
         }
         bot.getPlayerManager().setUpHandler(event.getGuild()); // no point constantly checking for this later
-        if(bePlaying && !((AudioHandler)event.getGuild().getAudioManager().getSendingHandler()).isMusicPlaying(event.getJDA()))
-        {
-            event.reply(event.getClient().getError()+" Для использования этой команды нужна музыка!");
-            return;
-        }
-        if(beListening)
+        if(beInChannel)
         {
             VoiceChannel current = event.getGuild().getSelfMember().getVoiceState().getChannel();
             if(current==null)
                 current = settings.getVoiceChannel(event.getGuild());
             GuildVoiceState userState = event.getMember().getVoiceState();
-            if(!userState.inVoiceChannel() || userState.isDeafened() || (current!=null && !userState.getChannel().equals(current)))
+            if(!userState.inVoiceChannel() || (current!=null && !userState.getChannel().equals(current)))
             {
-                event.replyError("Вы должны "+(current==null ? "слушать музыку" : current.getAsMention())+" чтобы использовать это!");
+                event.replyError("Вы должны находится в канале!");
                 return;
             }
 
             VoiceChannel afkChannel = userState.getGuild().getAfkChannel();
             if(afkChannel != null && afkChannel.equals(userState.getChannel()))
             {
-                event.replyError("Вы не можете использовать эту команду в АФК канале!");
+                event.replyError("Вы не можете использовать это в AFK канале!");
                 return;
             }
 
@@ -89,14 +85,17 @@ public abstract class MusicCommand extends Command
                 }
                 catch(PermissionException ex) 
                 {
-                    event.reply(event.getClient().getError()+" Я не могу подключиться к "+userState.getChannel().getAsMention()+"!");
+                    event.reply(event.getClient().getError()+" Я не могу подключится к **"+userState.getChannel().getName()+"**!");
                     return;
                 }
             }
         }
-        
-        doCommand(event);
+        try {
+            doCommand(event);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
-    public abstract void doCommand(CommandEvent event);
+    public abstract void doCommand(CommandEvent event) throws IOException;
 }

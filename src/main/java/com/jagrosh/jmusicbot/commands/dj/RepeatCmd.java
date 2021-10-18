@@ -31,7 +31,7 @@ public class RepeatCmd extends DJCommand
     {
         super(bot);
         this.name = "repeat";
-        this.help = "re-adds music to the queue when finished";
+        this.help = "добавляет пластинку каждый раз когда она заканичвается";
         this.arguments = "[off|all|single]";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = true;
@@ -65,11 +65,11 @@ public class RepeatCmd extends DJCommand
         }
         else
         {
-            event.replyError("Valid options are `off`, `all` or `single` (or leave empty to toggle between `off` and `all`)");
+            event.replyError("Разрешенные параметры: `off`, `all` или `single`");
             return;
         }
         settings.setRepeatMode(value);
-        event.replySuccess("Repeat mode is now `"+value.getUserFriendlyName()+"`");
+        event.replySuccess("Режим повтора пластинок: `"+value.getUserFriendlyName()+"`");
     }
 
     @Override

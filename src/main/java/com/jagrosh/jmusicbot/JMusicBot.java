@@ -19,6 +19,7 @@ import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.*;
 import com.jagrosh.jmusicbot.commands.admin.*;
+import com.jagrosh.jmusicbot.commands.application.*;
 import com.jagrosh.jmusicbot.commands.dj.*;
 import com.jagrosh.jmusicbot.commands.general.*;
 import com.jagrosh.jmusicbot.commands.music.*;
@@ -62,7 +63,7 @@ public class JMusicBot
         Prompt prompt = new Prompt("JMusicBot", "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag.");
         
         // get and check latest version
-        String version = OtherUtil.checkVersion(prompt);
+        //String version = OtherUtil.checkVersion(prompt);
         
         // check for valid java version
         if(!System.getProperty("java.vm.name").contains("64"))
@@ -80,7 +81,7 @@ public class JMusicBot
         Bot bot = new Bot(waiter, config, settings);
         
         AboutCommand aboutCommand = new AboutCommand(Color.BLUE.brighter(),
-                                "a music bot that is [easy to host yourself!](https://github.com/jagrosh/MusicBot) (v"+version+")",
+                                "Музыкальный бот которого [легко хостить!](https://github.com/jagrosh/MusicBot)",
                                 new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
                                 RECOMMENDED_PERMS);
         aboutCommand.setIsAuthor(false);
@@ -98,7 +99,11 @@ public class JMusicBot
                 .addCommands(aboutCommand,
                         new PingCommand(),
                         new SettingsCmd(bot),
-                        
+
+                        new ChessCmd(bot),
+                        new PokerCmd(bot),
+                        new YoutubeCmd(bot),
+
                         new LyricsCmd(bot),
                         new NowplayingCmd(bot),
                         new PlayCmd(bot),

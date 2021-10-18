@@ -29,7 +29,7 @@ public class SetgameCmd extends OwnerCommand
     public SetgameCmd(Bot bot)
     {
         this.name = "setgame";
-        this.help = "sets the game the bot is playing";
+        this.help = "устанавливает игру в которую играет бот";
         this.arguments = "[action] [game]";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = false;
@@ -48,11 +48,11 @@ public class SetgameCmd extends OwnerCommand
         {
             event.getJDA().getPresence().setActivity(title.isEmpty() ? null : Activity.playing(title));
             event.reply(event.getClient().getSuccess()+" **"+event.getSelfUser().getName()
-                    +"** is "+(title.isEmpty() ? "no longer playing anything." : "now playing `"+title+"`"));
+                    +"** теперь "+(title.isEmpty() ? "ничего не играет." : "играет в `"+title+"`"));
         }
         catch(Exception e)
         {
-            event.reply(event.getClient().getError()+" The game could not be set!");
+            event.reply(event.getClient().getError()+" Не удалось установить игру!");
         }
     }
     
@@ -62,7 +62,7 @@ public class SetgameCmd extends OwnerCommand
         {
             this.name = "stream";
             this.aliases = new String[]{"twitch","streaming"};
-            this.help = "sets the game the bot is playing to a stream";
+            this.help = "отображает стрим другого человека";
             this.arguments = "<username> <game>";
             this.guildOnly = false;
         }
@@ -73,18 +73,18 @@ public class SetgameCmd extends OwnerCommand
             String[] parts = event.getArgs().split("\\s+", 2);
             if(parts.length<2)
             {
-                event.replyError("Please include a twitch username and the name of the game to 'stream'");
+                event.replyError("Напишите название канала и название стрима");
                 return;
             }
             try
             {
                 event.getJDA().getPresence().setActivity(Activity.streaming(parts[1], "https://twitch.tv/"+parts[0]));
                 event.replySuccess("**"+event.getSelfUser().getName()
-                        +"** is now streaming `"+parts[1]+"`");
+                        +"** теперь стримит `"+parts[1]+"`");
             }
             catch(Exception e)
             {
-                event.reply(event.getClient().getError()+" The game could not be set!");
+                event.reply(event.getClient().getError()+" Не удалось установить стрим!");
             }
         }
     }
@@ -95,7 +95,7 @@ public class SetgameCmd extends OwnerCommand
         {
             this.name = "listen";
             this.aliases = new String[]{"listening"};
-            this.help = "sets the game the bot is listening to";
+            this.help = "устанавливает что слушает бот";
             this.arguments = "<title>";
             this.guildOnly = false;
         }
@@ -105,16 +105,16 @@ public class SetgameCmd extends OwnerCommand
         {
             if(event.getArgs().isEmpty())
             {
-                event.replyError("Please include a title to listen to!");
+                event.replyError("Напишите название того, что слушает бот!");
                 return;
             }
             String title = event.getArgs().toLowerCase().startsWith("to") ? event.getArgs().substring(2).trim() : event.getArgs();
             try
             {
                 event.getJDA().getPresence().setActivity(Activity.listening(title));
-                event.replySuccess("**"+event.getSelfUser().getName()+"** is now listening to `"+title+"`");
+                event.replySuccess("**"+event.getSelfUser().getName()+"** теперь слушает `"+title+"`");
             } catch(Exception e) {
-                event.reply(event.getClient().getError()+" The game could not be set!");
+                event.reply(event.getClient().getError()+" Не удалось установить пластинку!");
             }
         }
     }
@@ -125,7 +125,7 @@ public class SetgameCmd extends OwnerCommand
         {
             this.name = "watch";
             this.aliases = new String[]{"watching"};
-            this.help = "sets the game the bot is watching";
+            this.help = "показывает что смотрит бот";
             this.arguments = "<title>";
             this.guildOnly = false;
         }
@@ -135,16 +135,16 @@ public class SetgameCmd extends OwnerCommand
         {
             if(event.getArgs().isEmpty())
             {
-                event.replyError("Please include a title to watch!");
+                event.replyError("Напишите название того, что смотрит бот!");
                 return;
             }
             String title = event.getArgs();
             try
             {
                 event.getJDA().getPresence().setActivity(Activity.watching(title));
-                event.replySuccess("**"+event.getSelfUser().getName()+"** is now watching `"+title+"`");
+                event.replySuccess("**"+event.getSelfUser().getName()+"** теперь смотрит `"+title+"`");
             } catch(Exception e) {
-                event.reply(event.getClient().getError()+" The game could not be set!");
+                event.reply(event.getClient().getError()+" не удалось показать, что смотрит бот!");
             }
         }
     }

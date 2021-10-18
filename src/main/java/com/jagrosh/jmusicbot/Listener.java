@@ -67,8 +67,7 @@ public class Listener extends ListenerAdapter
             }
             catch(Exception ignore) {}
         });
-        if(bot.getConfig().useUpdateAlerts())
-        {
+        /*if(bot.getConfig().useUpdateAlerts()){
             bot.getThreadpool().scheduleWithFixedDelay(() -> 
             {
                 try
@@ -84,7 +83,7 @@ public class Listener extends ListenerAdapter
                 }
                 catch(Exception ex) {} // ignored
             }, 0, 24, TimeUnit.HOURS);
-        }
+        }*/
     }
     
     @Override

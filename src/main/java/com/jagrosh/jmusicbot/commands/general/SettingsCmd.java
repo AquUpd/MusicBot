@@ -38,7 +38,7 @@ public class SettingsCmd extends Command
     public SettingsCmd(Bot bot)
     {
         this.name = "settings";
-        this.help = "shows the bots settings";
+        this.help = "показывает настройки бота";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.guildOnly = true;
     }
@@ -50,24 +50,24 @@ public class SettingsCmd extends Command
         MessageBuilder builder = new MessageBuilder()
                 .append(EMOJI + " **")
                 .append(FormatUtil.filter(event.getSelfUser().getName()))
-                .append("** settings:");
+                .append("** настройки:");
         TextChannel tchan = s.getTextChannel(event.getGuild());
         VoiceChannel vchan = s.getVoiceChannel(event.getGuild());
         Role role = s.getRole(event.getGuild());
         EmbedBuilder ebuilder = new EmbedBuilder()
                 .setColor(event.getSelfMember().getColor())
-                .setDescription("Text Channel: " + (tchan == null ? "Any" : "**#" + tchan.getName() + "**")
-                        + "\nVoice Channel: " + (vchan == null ? "Any" : vchan.getAsMention())
-                        + "\nDJ Role: " + (role == null ? "None" : "**" + role.getName() + "**")
-                        + "\nCustom Prefix: " + (s.getPrefix() == null ? "None" : "`" + s.getPrefix() + "`")
-                        + "\nRepeat Mode: " + (s.getRepeatMode() == RepeatMode.OFF
+                .setDescription("Текстовый канал: " + (tchan == null ? "Any" : "**#" + tchan.getName() + "**")
+                        + "\nГолосовой канал: " + (vchan == null ? "Any" : vchan.getAsMention())
+                        + "\nDJ Роль: " + (role == null ? "None" : "**" + role.getName() + "**")
+                        + "\nКастомный префикс: " + (s.getPrefix() == null ? "None" : "`" + s.getPrefix() + "`")
+                        + "\nПовторение: " + (s.getRepeatMode() == RepeatMode.OFF
                                                 ? s.getRepeatMode().getUserFriendlyName()
                                                 : "**"+s.getRepeatMode().getUserFriendlyName()+"**")
-                        + "\nDefault Playlist: " + (s.getDefaultPlaylist() == null ? "None" : "**" + s.getDefaultPlaylist() + "**")
+                        + "\nАвтоплейлист: " + (s.getDefaultPlaylist() == null ? "None" : "**" + s.getDefaultPlaylist() + "**")
                         )
                 .setFooter(event.getJDA().getGuilds().size() + " servers | "
                         + event.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel()).count()
-                        + " audio connections", null);
+                        + " голосовых подключений", null);
         event.getChannel().sendMessage(builder.setEmbed(ebuilder.build()).build()).queue();
     }
     
