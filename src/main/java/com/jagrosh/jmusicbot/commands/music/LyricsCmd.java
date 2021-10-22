@@ -48,16 +48,11 @@ public class LyricsCmd extends MusicCommand
         if(event.getArgs().isEmpty())
         {
             AudioHandler sendingHandler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
-            if (sendingHandler.isMusicPlaying(event.getJDA()))
-                title = sendingHandler.getPlayer().getPlayingTrack().getInfo().title;
-            else
-            {
-                event.replyError("Вы должны указать название пластинки!");
-                return;
-            }
+            event.replyError("Вы должны указать название пластинки!");
+            return;
         }
-        else
-            title = event.getArgs();
+        else title = event.getArgs();
+
         event.getChannel().sendTyping().queue();
         client.getLyrics(title).thenAccept(lyrics -> 
         {

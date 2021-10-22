@@ -60,15 +60,27 @@ public class JMusicBot
         Logger log = LoggerFactory.getLogger("Startup");
         
         // create prompt to handle startup
-        Prompt prompt = new Prompt("JMusicBot", "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag.");
+        Prompt prompt = new Prompt("JMusicBot", "переключаемся в nogui режим. Вы можете сами его включать, сделав -Dnogui=true флаг.");
         
         // get and check latest version
         //String version = OtherUtil.checkVersion(prompt);
         
+
         // check for valid java version
-        if(!System.getProperty("java.vm.name").contains("64"))
-            prompt.alert(Prompt.Level.WARNING, "Java Version", "It appears that you may not be using a supported Java version. Please use 64-bit java.");
-        
+        String version = System.getProperty("java.version");
+        if(version.startsWith("1.")) {
+            version = version.substring(2, 3);
+        } else {
+            int dot = version.indexOf(".");
+            if(dot != -1) { version = version.substring(0, dot); }
+        }
+        int v_num = Integer.parseInt(version);
+
+        if(!System.getProperty("java.vm.name").contains("64") || !(v_num >= 8 && v_num <= 16)) {
+            prompt.alert(Prompt.Level.WARNING, "Java Version", "Вы используете неподдерживаемую версию JAVA. Пожалуйста используйте JAVA 8-16 64-bit.");
+            System.exit(1);
+        }
+
         // load config
         BotConfig config = new BotConfig(prompt);
         config.load();
@@ -165,21 +177,23 @@ public class JMusicBot
             } 
             catch(Exception e) 
             {
-                log.error("Could not start GUI. If you are "
-                        + "running on a server or in a location where you cannot display a "
-                        + "window, please run in nogui mode using the -Dnogui=true flag.");
+                log.error("Не удалось запустить GUI. Если вы запускаете "
+                        + "этого бота на VDS/VPS то запускайте бота через "
+                        + "-Dnogui=true флаг.");
             }
         }
         
-        log.info("Loaded config from " + config.getConfigLocation());
-        
+        log.info("Конфиг загружен из " + config.getConfigLocation());
+
+
+
         // attempt to log in and start
         try
         {
             JDA jda = JDABuilder.create(config.getToken(), Arrays.asList(INTENTS))
                     .enableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE)
                     .disableCache(CacheFlag.ACTIVITY, CacheFlag.CLIENT_STATUS, CacheFlag.EMOTE, CacheFlag.ONLINE_STATUS)
-                    .setActivity(nogame ? null : Activity.playing("loading..."))
+                    .setActivity(nogame ? null : Activity.playing("загрузка..."))
                     .setStatus(config.getStatus()==OnlineStatus.INVISIBLE || config.getStatus()==OnlineStatus.OFFLINE 
                             ? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB)
                     .addEventListeners(cb.build(), waiter, new Listener(bot))
@@ -189,15 +203,15 @@ public class JMusicBot
         }
         catch (LoginException ex)
         {
-            prompt.alert(Prompt.Level.ERROR, "JMusicBot", ex + "\nPlease make sure you are "
-                    + "editing the correct config.txt file, and that you have used the "
-                    + "correct token (not the 'secret'!)\nConfig Location: " + config.getConfigLocation());
+            prompt.alert(Prompt.Level.ERROR, "JMusicBot", ex + "\nУбедитесь что вы "
+                    + "изменяете правильный config.txt файл и применяете "
+                    + "правильный токен бота (не 'secret'!)\nРасположение config.txt: " + config.getConfigLocation());
             System.exit(1);
         }
         catch(IllegalArgumentException ex)
         {
-            prompt.alert(Prompt.Level.ERROR, "JMusicBot", "Some aspect of the configuration is "
-                    + "invalid: " + ex + "\nConfig Location: " + config.getConfigLocation());
+            prompt.alert(Prompt.Level.ERROR, "JMusicBot", "Некоторые строчки конфигурационного файла "
+                    + "не правильные: " + ex + "\nРасположение config.txt: " + config.getConfigLocation());
             System.exit(1);
         }
     }

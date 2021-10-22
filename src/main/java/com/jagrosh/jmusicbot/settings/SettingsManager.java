@@ -58,7 +58,7 @@ public class SettingsManager implements GuildSettingsManager
                         o.has("skip_ratio")      ? o.getDouble("skip_ratio")                 : SKIP_RATIO));
             });
         } catch(IOException | JSONException e) {
-            LoggerFactory.getLogger("Settings").warn("Failed to load server settings (this is normal if no settings have been set yet): "+e);
+            LoggerFactory.getLogger("Settings").warn("Не удалось загрузить настройки серверов (Это окей, если вы еще не настраивали бота на серверах): " +e);
         }
     }
     

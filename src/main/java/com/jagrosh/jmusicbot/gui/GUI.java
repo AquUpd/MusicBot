@@ -17,9 +17,8 @@ package com.jagrosh.jmusicbot.gui;
 
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
-import javax.swing.WindowConstants;
+import javax.swing.*;
+
 import com.jagrosh.jmusicbot.Bot;
 
 
@@ -44,11 +43,12 @@ public class GUI extends JFrame
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("JMusicBot");
         JTabbedPane tabs = new JTabbedPane();
-        tabs.add("Console", console);
+        tabs.add("Консоль", console);
         getContentPane().add(tabs);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+
         addWindowListener(new WindowListener() 
         {
             @Override public void windowOpened(WindowEvent e) { /* unused */ }

@@ -22,6 +22,7 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.typesafe.config.Config;
 import net.dv8tion.jda.api.entities.Guild;
+import org.apache.http.client.config.RequestConfig;
 
 /**
  *
@@ -42,6 +43,12 @@ public class PlayerManager extends DefaultAudioPlayerManager
         AudioSourceManagers.registerRemoteSources(this);
         AudioSourceManagers.registerLocalSource(this);
         source(YoutubeAudioSourceManager.class).setPlaylistPageCount(10);
+        setHttpRequestConfigurator(config ->
+                RequestConfig.copy(config)
+                        .setSocketTimeout(20000)
+                        .setConnectTimeout(20000)
+                        .build()
+        );
     }
     
     public Bot getBot()
