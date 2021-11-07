@@ -58,9 +58,9 @@
         </dependency>
         <!-- jitpack for now, we need to version this correctly later -->
 	<dependency>
-        <groupId>com.github.jagrosh</groupId>
-        <artifactId>JLyrics</artifactId>
-        <version>0f9ac5df83</version>
+            <groupId>com.github.jagrosh</groupId>
+            <artifactId>JLyrics</artifactId>
+	    <version>0f9ac5df83</version>
 	</dependency>
         <!--dependency>
             <groupId>com.jagrosh</groupId>
