@@ -43,7 +43,7 @@
             <groupId>com.github.jagrosh</groupId>
             <artifactId>lavaplayer</artifactId>
             <version>b0b7a051ee</version>
-	    </dependency>
+	</dependency>
         <!-- this is needed, but isn't actually hosted anywhere anymore... uh -->
         <!--dependency>
             <groupId>com.sedmelluq</groupId>
