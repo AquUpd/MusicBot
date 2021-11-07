@@ -21,7 +21,7 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-		<repository>
+	<repository>
             <id>icu4j</id>
             <url>https://mvnrepository.com/artifact/com.ibm.icu/icu4j</url>
         </repository>
