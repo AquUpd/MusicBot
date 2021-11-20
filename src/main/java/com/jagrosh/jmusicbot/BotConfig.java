@@ -63,7 +63,7 @@ public class BotConfig
         try 
         {
             // get the path to the config, default config.txt
-            path = OtherUtil.getPath(System.getProperty("config.file", System.getProperty("config", "config.txt")));
+            path = OtherUtil.getPath(System.getProperty("config.file", System.getProperty("config", "config.go")));
             if(path.toFile().exists())
             {
                 if(System.getProperty("config.file") == null)
@@ -112,7 +112,7 @@ public class BotConfig
                         + "\nТокен бота: ");
                 if(token==null)
                 {
-                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "Токен отсутствует! Выходим.\n\nРасположение config.txt: " + path.toAbsolutePath().toString());
+                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "Токен отсутствует! Выходим.\n\nРасположение config.go: " + path.toAbsolutePath().toString());
                     return;
                 }
                 else
@@ -138,7 +138,7 @@ public class BotConfig
                 }
                 if(owner<=0)
                 {
-                    prompt.alert(Prompt.Level.ERROR, CONTEXT, "Не правильный User ID! Выходим.\n\nРасположение config.txt: " + path.toAbsolutePath().toString());
+                    prompt.alert(Prompt.Level.ERROR, CONTEXT, "Не правильный User ID! Выходим.\n\nРасположение config.go: " + path.toAbsolutePath().toString());
                     return;
                 }
                 else
@@ -155,7 +155,7 @@ public class BotConfig
         }
         catch (ConfigException ex)
         {
-            prompt.alert(Prompt.Level.ERROR, CONTEXT, ex + ": " + ex.getMessage() + "\n\nРасположение config.txt: " + path.toAbsolutePath().toString());
+            prompt.alert(Prompt.Level.ERROR, CONTEXT, ex + ": " + ex.getMessage() + "\n\nРасположение config.go: " + path.toAbsolutePath().toString());
         }
     }
     
@@ -180,7 +180,7 @@ public class BotConfig
         }
         catch(IOException ex) 
         {
-            prompt.alert(Prompt.Level.WARNING, CONTEXT, "не удалось записать некоторые настройки в config.txt: "+ex
+            prompt.alert(Prompt.Level.WARNING, CONTEXT, "не удалось записать некоторые настройки в config.go: "+ex
                 + "\nУбедитесь что файлы бота не находятся в ограниченном доступе.\n\nРасположение config.txt: "
                 + path.toAbsolutePath().toString());
         }

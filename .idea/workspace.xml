@@ -5,16 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="260cf643-4a37-453c-b8f1-e254e2303513" name="Changes" comment="More time for Timed Out">
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/BotConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/BotConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/JMusicBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/JMusicBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/audio/PlayerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/audio/PlayerManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/music/LyricsCmd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/music/LyricsCmd.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/gui/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/gui/GUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/settings/SettingsManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/settings/SettingsManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/logback.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/logback.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
