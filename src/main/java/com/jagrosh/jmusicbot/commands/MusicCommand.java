@@ -70,7 +70,7 @@ public abstract class MusicCommand extends Command
             GuildVoiceState userState = event.getMember().getVoiceState();
             if(!userState.inVoiceChannel() || userState.isDeafened() || (current!=null && !userState.getChannel().equals(current)))
             {
-                event.replyError("Вы должны "+(current==null ? "слушать музыку" : current.getAsMention())+" чтобы использовать это!");
+                event.replyError((current==null ? "Вы должны слушать музыку" : "Вы должны быть в "+current.getAsMention())+" чтобы использовать это!");
                 return;
             }
 
