@@ -62,7 +62,7 @@ public class SetdjCmd extends AdminCommand
             else
             {
                 s.setDJRole(list.get(0));
-                event.reply(event.getClient().getSuccess()+" DJ команды теперь могжет использовать **"+list.get(0).getName()+"** роль.");
+                event.reply(event.getClient().getSuccess()+" DJ команды теперь может использовать роль **"+list.get(0).getName()+"**.   ");
             }
         }
     }
