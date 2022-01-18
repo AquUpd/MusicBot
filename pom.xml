@@ -33,6 +33,11 @@
             <artifactId>JDA</artifactId> 
             <version>4.3.0_324</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.natanbc</groupId>
+            <artifactId>lavadsp</artifactId>
+            <version>0.7.7</version>
+        </dependency>
         <!-- using a fork of this to fix some issues faster -->
         <!-- dependency>
             <groupId>com.sedmelluq</groupId>

@@ -27,9 +27,11 @@ import com.jagrosh.jmusicbot.commands.owner.*;
 import com.jagrosh.jmusicbot.entities.Prompt;
 import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
-import com.jagrosh.jmusicbot.utils.OtherUtil;
 import java.awt.Color;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.TimeZone;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
@@ -56,6 +58,7 @@ public class JMusicBot
      */
     public static void main(String[] args)
     {
+        long timer = System.currentTimeMillis();
         // startup log
         Logger log = LoggerFactory.getLogger("Startup");
         
@@ -113,6 +116,7 @@ public class JMusicBot
                         new SettingsCmd(bot),
 
                         new ChessCmd(bot),
+                        new DoodleCmd(bot),
                         new PokerCmd(bot),
                         new YoutubeCmd(bot),
 
@@ -126,6 +130,8 @@ public class JMusicBot
                         new SCSearchCmd(bot),
                         new ShuffleCmd(bot),
                         new SkipCmd(bot),
+                        new SeekCmd(bot),
+                        new SpeedCmd(bot),
 
                         new ForceRemoveCmd(bot),
                         new ForceskipCmd(bot),
@@ -214,5 +220,9 @@ public class JMusicBot
                     + "не правильные: " + ex + "\nРасположение config.txt: " + config.getConfigLocation());
             System.exit(1);
         }
+        DateFormat formatter;
+        formatter = new SimpleDateFormat("s.SSS");
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC+3"));
+        log.info("Done (" + formatter.format(System.currentTimeMillis() - timer) + "s)!");
     }
 }

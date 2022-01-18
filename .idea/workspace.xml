@@ -5,9 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="260cf643-4a37-453c-b8f1-e254e2303513" name="Changes" comment="More time for Timed Out">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/application/DoodleCmd.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/dj/SeekCmd.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/dj/SpeedCmd.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/admin/SetdjCmd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/admin/SetdjCmd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/JMusicBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/JMusicBot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/Listener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/Listener.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/dj/VolumeCmd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/dj/VolumeCmd.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,6 +55,10 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Documents\GitHub\MusicBot\src\main\java\com\jagrosh\jmusicbot\commands" />
       <recent name="D:\Documents\GitHub\MusicBot\src\main\java\com\jagrosh\jmusicbot\utils" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.jagrosh.jmusicbot.commands.application" />
+      <recent name="com.jagrosh.jmusicbot.commands.dj" />
     </key>
   </component>
   <component name="RunManager">

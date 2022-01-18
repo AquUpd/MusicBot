@@ -34,7 +34,7 @@ public class VolumeCmd extends DJCommand
         this.name = "volume";
         this.aliases = bot.getConfig().getAliases(this.name);
         this.help = "Устанавливает громкость пластинок";
-        this.arguments = "[0-1000]";
+        this.arguments = "[0-500]";
     }
 
     @Override
@@ -55,8 +55,8 @@ public class VolumeCmd extends DJCommand
             }catch(NumberFormatException e){
                 nvolume = -1;
             }
-            if(nvolume<0 || nvolume>1000)
-                event.reply(event.getClient().getError()+" Громкость должна быть целым числом между 0 и 1000!");
+            if(nvolume<0 || nvolume>500)
+                event.reply(event.getClient().getError()+" Громкость должна быть целым числом между 0 и 500!");
             else
             {
                 handler.getPlayer().setVolume(nvolume);
