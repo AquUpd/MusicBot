@@ -30,19 +30,15 @@ public class RockPaperScissorsCmd extends FunCommand {
         String argument = String.valueOf(event.getArgs());
         if(argument.length() != 0) {
             Random random = new Random(System.currentTimeMillis());
-            int rpsbot = random.nextInt(3); // 0-Камень 1-Ножницы 2-Бумага
-            int rpsplayer;
-            String rpsbotname;
-            String rpsplayername;
-            String result;
-            String emoji;
+            int rpsbot = random.nextInt(3); int rpsplayer; String rpsbotname; String rpsplayername; String result; String emoji;
+
             switch (rpsbot) {
                 case 0: rpsbotname = "камень"; break;
                 case 1: rpsbotname = "ножницы"; break;
                 case 2: rpsbotname = "бумага"; break;
                 default: rpsbotname = "ничего"; break;
             }
-            //0 -> 1, 1 -> 2, 2 -> 0
+
             switch (argument.toLowerCase(Locale.ENGLISH)) {
                 case "камень": rpsplayer = 0; rpsplayername = "камень"; break;
                 case "ножницы": rpsplayer = 1; rpsplayername = "ножницы"; break;
