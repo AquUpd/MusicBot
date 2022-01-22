@@ -42,35 +42,9 @@ public class SkipCmd extends MusicCommand
     public void doCommand(CommandEvent event) 
     {
         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        RequestMetadata rm = handler.getRequestMetadata();
-        if(event.getAuthor().getIdLong() == rm.getOwner())
         {
             event.reply(event.getClient().getSuccess()+" Пропущена пластинка **"+handler.getPlayer().getPlayingTrack().getInfo().title+"**");
             handler.getPlayer().stopTrack();
-        }
-        else
-        {
-            int listeners = (int)event.getSelfMember().getVoiceState().getChannel().getMembers().stream()
-                    .filter(m -> !m.getUser().isBot() && !m.getVoiceState().isDeafened()).count();
-            String msg;
-            if(handler.getVotes().contains(event.getAuthor().getId()))
-                msg = event.getClient().getWarning()+" Вы уже проголосовали за пропуск этой пластинки `[";
-            else
-            {
-                msg = event.getClient().getSuccess()+" Вы проголосовали за пропуск пластинки `[";
-                handler.getVotes().add(event.getAuthor().getId());
-            }
-            int skippers = (int)event.getSelfMember().getVoiceState().getChannel().getMembers().stream()
-                    .filter(m -> handler.getVotes().contains(m.getUser().getId())).count();
-            int required = (int)Math.ceil(listeners * bot.getSettingsManager().getSettings(event.getGuild()).getSkipRatio());
-            msg += skippers + " голосов, " + required + "/" + listeners + " нужно]`";
-            if(skippers>=required)
-            {
-                msg += "\n" + event.getClient().getSuccess() + " Пропущена пластинка **" + handler.getPlayer().getPlayingTrack().getInfo().title
-                    + "** " + (rm.getOwner() == 0L ? "(запустилась сама)" : "(запрошена **" + rm.user.username + "**)");
-                handler.getPlayer().stopTrack();
-            }
-            event.reply(msg);
         }
     }
     

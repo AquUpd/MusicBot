@@ -1,23 +1,23 @@
-package com.jagrosh.jmusicbot.commands.application;
+package com.jagrosh.jmusicbot.commands.fun;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.commands.ApplicationCommand;
+import com.jagrosh.jmusicbot.commands.FunCommand;
 import com.jagrosh.jmusicbot.utils.DefaultContentTypeInterceptor;
 import net.dv8tion.jda.api.Permission;
 import okhttp3.*;
-import org.json.*;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
 
 
-public class YoutubeCmd extends ApplicationCommand {
-    public YoutubeCmd(Bot bot)
+public class DoodleCmd extends FunCommand {
+    public DoodleCmd(Bot bot)
     {
         super(bot);
-        this.name = "youtube";
-        this.help = "запускает Youtube Together";
+        this.name = "doodle";
+        this.help = "запускает игру \"Doodle Crew\"";
         this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
         this.beInChannel = true;
     }
@@ -26,7 +26,7 @@ public class YoutubeCmd extends ApplicationCommand {
     public void doCommand(CommandEvent event) throws IOException {
         String current = event.getMember().getVoiceState().getChannel().getId();
         URL url = new URL ("https://discord.com/api/v8/channels/" + current + "/invites");
-        String postBody = "{\"max_age\": \"86400\", \"max_uses\": 0, \"target_application_id\":\"880218394199220334\", \"target_type\":2, \"temporary\": false, \"validate\": null}";
+        String postBody = "{\"max_age\": \"86400\", \"max_uses\": 0, \"target_application_id\":\"878067389634314250\", \"target_type\":2, \"temporary\": false, \"validate\": null}";
 
         RequestBody body = RequestBody.create(
                 MediaType.parse("application/json"), postBody);

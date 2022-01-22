@@ -19,7 +19,7 @@ import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.jagrosh.jdautilities.examples.command.*;
 import com.jagrosh.jmusicbot.commands.admin.*;
-import com.jagrosh.jmusicbot.commands.application.*;
+import com.jagrosh.jmusicbot.commands.fun.*;
 import com.jagrosh.jmusicbot.commands.dj.*;
 import com.jagrosh.jmusicbot.commands.general.*;
 import com.jagrosh.jmusicbot.commands.music.*;
@@ -118,6 +118,7 @@ public class JMusicBot
                         new ChessCmd(bot),
                         new DoodleCmd(bot),
                         new PokerCmd(bot),
+                        new RockPaperScissorsCmd(bot),
                         new YoutubeCmd(bot),
 
                         new LyricsCmd(bot),

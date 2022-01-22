@@ -5,5 +5,4 @@
 *.json
 *.txt
 nb*.xml
-.idea/workspace.xml
-.idea/workspace.xml
+/.idea/

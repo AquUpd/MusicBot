@@ -31,12 +31,12 @@ import java.io.IOException;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public abstract class ApplicationCommand extends Command
+public abstract class FunCommand extends Command
 {
     protected final Bot bot;
     protected boolean beInChannel;
 
-    public ApplicationCommand(Bot bot)
+    public FunCommand(Bot bot)
     {
         this.bot = bot;
         this.guildOnly = true;

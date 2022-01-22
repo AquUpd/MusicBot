@@ -4,15 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="260cf643-4a37-453c-b8f1-e254e2303513" name="Changes" comment="More time for Timed Out">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/application/DoodleCmd.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/dj/SeekCmd.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/dj/SpeedCmd.java" afterDir="false" />
+    <list default="true" id="260cf643-4a37-453c-b8f1-e254e2303513" name="Changes" comment="some new things">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/fun/RockPaperScissorsCmd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/JMusicBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/JMusicBot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/Listener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/Listener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/dj/VolumeCmd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/dj/VolumeCmd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/ApplicationCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/FunCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/application/ChessCmd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/fun/ChessCmd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/application/DoodleCmd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/fun/DoodleCmd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/application/PokerCmd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/fun/PokerCmd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/application/YoutubeCmd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/fun/YoutubeCmd.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/music/SkipCmd.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/jagrosh/jmusicbot/commands/music/SkipCmd.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +61,7 @@
       <recent name="D:\Documents\GitHub\MusicBot\src\main\java\com\jagrosh\jmusicbot\utils" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.jagrosh.jmusicbot.commands.fun" />
       <recent name="com.jagrosh.jmusicbot.commands.application" />
       <recent name="com.jagrosh.jmusicbot.commands.dj" />
     </key>
@@ -115,7 +120,14 @@
       <option name="project" value="LOCAL" />
       <updated>1634546862528</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="some new things">
+      <created>1642504209223</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1642504209223</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -133,6 +145,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Rus and removed Update checker" />
     <MESSAGE value="More time for Timed Out" />
-    <option name="LAST_COMMIT_MESSAGE" value="More time for Timed Out" />
+    <MESSAGE value="some new things" />
+    <option name="LAST_COMMIT_MESSAGE" value="some new things" />
   </component>
 </project>
