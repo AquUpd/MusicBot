@@ -132,7 +132,7 @@ public class JMusicBot
                         new ShuffleCmd(bot),
                         new SkipCmd(bot),
                         new SeekCmd(bot),
-                        new SpeedCmd(bot),
+                        new SpeedCmd(bot), //убрал потому что она не до конца сделана
 
                         new ForceRemoveCmd(bot),
                         new ForceskipCmd(bot),

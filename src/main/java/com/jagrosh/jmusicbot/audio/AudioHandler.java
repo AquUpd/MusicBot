@@ -15,6 +15,7 @@
  */
 package com.jagrosh.jmusicbot.audio;
 
+import com.github.natanbc.lavadsp.timescale.TimescalePcmAudioFilter;
 import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
 import com.jagrosh.jmusicbot.settings.RepeatMode;
@@ -23,10 +24,9 @@ import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
+
 import com.jagrosh.jmusicbot.queue.FairQueue;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
@@ -177,6 +177,9 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
                 // unpause, in the case when the player was paused and the track has been skipped.
                 // this is to prevent the player being paused next time it's being used.
                 player.setPaused(false);
+                player.setFilterFactory((tracks, format, output) -> Collections.singletonList(new TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate)
+                        .setRate(1.0F)));
+                player.setVolume(100);
             }
         }
         else

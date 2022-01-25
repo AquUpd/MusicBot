@@ -8,10 +8,8 @@ import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.TimeZone;
+
 
 /**
  * Command that provides users the ability to move a track in the playlist.
@@ -36,7 +34,6 @@ public class SpeedCmd extends DJCommand
         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
         AudioPlayer player = handler.getPlayer();
 
-
         String parts = event.getArgs();
 
         float speed = 0;
@@ -46,17 +43,14 @@ public class SpeedCmd extends DJCommand
         }
         catch (NumberFormatException e)
         {
-            player.setFilterFactory((track, format, output)->{
-                TimescalePcmAudioFilter audioFilter = new TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate);
-                audioFilter.setSpeed(1.0);
-                return Collections.singletonList(audioFilter);
-            });
+            player.setFilterFactory((track, format, output) -> Collections.singletonList(new TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate)
+                    .setRate(1.0F)));
             String reply = "Скорость пластинки: **1.0x**";
             event.replySuccess(reply);
             return;
         }
-        if((speed < 0.25) || (speed > 4.0)) {
-            event.reply(event.getClient().getError()+" Скорость должна быть между 0.25 и 4.0!!");
+        if((speed < 0.5) || (speed > 2.0)) {
+            event.reply(event.getClient().getError()+" Скорость должна быть между 0.5 и 2.0!!");
             return;
         }
 
@@ -64,11 +58,8 @@ public class SpeedCmd extends DJCommand
             event.replyError("Эту пластинку нельзя ускорить.");
         } else {
             float finalSpeed = speed;
-            player.setFilterFactory((track, format, output)->{
-                TimescalePcmAudioFilter audioFilter = new TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate);
-                audioFilter.setSpeed(finalSpeed);
-                return Collections.singletonList(audioFilter);
-            });
+            player.setFilterFactory((track, format, output) -> Collections.singletonList(new TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate)
+                    .setRate(finalSpeed)));
             String reply = "Скорость пластинки: **" + speed + "**x";
             event.replySuccess(reply);
         }

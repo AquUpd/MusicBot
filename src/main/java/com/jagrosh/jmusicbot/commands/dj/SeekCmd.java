@@ -1,15 +1,11 @@
 package com.jagrosh.jmusicbot.commands.dj;
 
-
-import com.github.natanbc.lavadsp.timescale.TimescalePcmAudioFilter;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.DJCommand;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 
 import java.text.*;
-import java.util.Collections;
 import java.util.TimeZone;
 
 /**
