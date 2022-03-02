@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.TimeZone;
 import javax.security.auth.login.LoginException;
+
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -221,9 +222,10 @@ public class JMusicBot
                     + "не правильные: " + ex + "\nРасположение config.txt: " + config.getConfigLocation());
             System.exit(1);
         }
+
         DateFormat formatter;
         formatter = new SimpleDateFormat("s.SSS");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC+3"));
-        log.info("Done (" + formatter.format(System.currentTimeMillis() - timer) + "s)!");
+        log.info("Done (" + formatter.format(System.currentTimeMillis() - timer) + "s)! For help, type " + config.getPrefix() + "help in chat");
     }
 }

@@ -26,6 +26,9 @@ import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
 import java.util.Objects;
+
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAccessTokenTracker;
+import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrameProvider;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
@@ -63,7 +66,7 @@ public class Bot
         this.aloneInVoiceHandler = new AloneInVoiceHandler(this);
         this.aloneInVoiceHandler.init();
     }
-    
+
     public BotConfig getConfig()
     {
         return config;
