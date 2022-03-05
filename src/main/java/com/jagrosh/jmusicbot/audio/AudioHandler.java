@@ -15,7 +15,6 @@
  */
 package com.jagrosh.jmusicbot.audio;
 
-import com.github.natanbc.lavadsp.timescale.TimescalePcmAudioFilter;
 import com.jagrosh.jmusicbot.JMusicBot;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
 import com.jagrosh.jmusicbot.settings.RepeatMode;
@@ -103,7 +102,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
     
     public boolean isMusicPlaying(JDA jda)
     {
-        return guild(jda).getSelfMember().getVoiceState().inVoiceChannel() && audioPlayer.getPlayingTrack()!=null;
+        return guild(jda).getSelfMember().getVoiceState().inAudioChannel() && audioPlayer.getPlayingTrack()!=null;
     }
     
     public Set<String> getVotes()
@@ -177,8 +176,6 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
                 // unpause, in the case when the player was paused and the track has been skipped.
                 // this is to prevent the player being paused next time it's being used.
                 player.setPaused(false);
-                player.setFilterFactory((tracks, format, output) -> Collections.singletonList(new TimescalePcmAudioFilter(output, format.channelCount, format.sampleRate)
-                        .setRate(1.0F)));
                 player.setVolume(100);
             }
         }
@@ -241,7 +238,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
                     + " `[" + FormatUtil.formatTime(track.getPosition()) + "/" + FormatUtil.formatTime(track.getDuration()) + "]` "
                     + FormatUtil.volumeIcon(audioPlayer.getVolume()));
             
-            return mb.setEmbed(eb.build()).build();
+            return mb.setEmbeds(eb.build()).build();
         }
         else return null;
     }
@@ -251,7 +248,7 @@ public class AudioHandler extends AudioEventAdapter implements AudioSendHandler
         Guild guild = guild(jda);
         return new MessageBuilder()
                 .setContent(FormatUtil.filter(manager.getBot().getConfig().getSuccess()+" **Now Playing...**"))
-                .setEmbed(new EmbedBuilder()
+                .setEmbeds(new EmbedBuilder()
                 .setTitle("No music playing")
                 .setDescription(JMusicBot.STOP_EMOJI+" "+FormatUtil.progressBar(-1)+" "+FormatUtil.volumeIcon(audioPlayer.getVolume()))
                 .setColor(guild.getSelfMember().getColor())

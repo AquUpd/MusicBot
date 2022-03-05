@@ -13,7 +13,7 @@ import java.net.URL;
 
 
 public class PokerCmd extends FunCommand {
-    public PokerCmd(Bot bot)
+    public  PokerCmd(Bot bot)
     {
         super(bot);
         this.name = "poker";
@@ -37,6 +37,10 @@ public class PokerCmd extends FunCommand {
 
         Call call = client.newCall(request);
         Response response = call.execute();
+        if(response.body() == null) {
+            response.close();
+            event.replyError("response body is null");
+        }
         JSONObject obj = new JSONObject(response.body().string());
         String code = obj.getString("code");
         event.reply("https://discord.com/invite/" + code);

@@ -2,15 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.jagrosh</groupId>
-    <artifactId>JMusicBot</artifactId>
-    <version>0.3.12-RUS</version>
+    <artifactId>JMusicBotRus</artifactId>
+    <version>debug</version>
     <packaging>jar</packaging>
     
     <repositories>
         <repository>
-            <id>dv8tion</id>
-            <name>m2-dv8tion</name>
-            <url>https://m2.dv8tion.net/releases</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
         <repository>
             <id>central</id>
@@ -18,60 +17,32 @@
             <url>https://jcenter.bintray.com</url>
         </repository>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
             <id>icu4j</id>
             <url>https://mvnrepository.com/artifact/com.ibm.icu/icu4j</url>
-            </repository>
-        </repositories>
-    
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
-            <groupId>net.dv8tion</groupId> 
-            <artifactId>JDA</artifactId> 
-            <version>4.3.0_324</version>
+            <groupId>com.github.DV8FromTheWorld</groupId>
+            <artifactId>JDA</artifactId>
+            <version>v5.0.0-alpha.9</version>
         </dependency>
         <dependency>
-            <groupId>com.github.natanbc</groupId>
-            <artifactId>lavadsp</artifactId>
-            <version>0.7.7</version>
+            <groupId>com.github.JDA-Applications</groupId>
+            <artifactId>jda-utilities</artifactId>
+            <version>dfd5c6f599</version>
         </dependency>
-        <!-- using  a fork of this to fix some issues faster -->
-        <!-- dependency>
-            <groupId>com.sedmelluq</groupId>
-            <artifactId>lavaplayer</artifactId>
-            <version>1.3.78</version>
-        </dependency -->
         <dependency>
             <groupId>com.github.Walkyst</groupId>
             <artifactId>lavaplayer-fork</artifactId>
             <version>fdd1b3a261</version>
 		</dependency>
-        <!-- this is needed, but isn't actually hosted anywhere anymore... uh -->
-        <!--dependency>
-            <groupId>com.sedmelluq</groupId>
-            <artifactId>lavaplayer-natives-extra</artifactId>
-            <version>1.3.13</version>
-        </dependency-->
-        <dependency>
-            <groupId>com.jagrosh</groupId>
-            <artifactId>jda-utilities</artifactId>
-            <version>3.0.5</version>
-            <type>pom</type>
-        </dependency>
-        <!-- jitpack for now, we need to version this correctly later -->
         <dependency>
             <groupId>com.github.jagrosh</groupId>
             <artifactId>JLyrics</artifactId>
             <version>0f9ac5df83</version>
         </dependency>
-        <!--dependency>
-            <groupId>com.jagrosh</groupId>
-            <artifactId>JLyrics</artifactId>
-            <version>0.6</version>
-        </dependency-->
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
@@ -86,18 +57,6 @@
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>1.14.2</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-core</artifactId>
-            <version>1.3</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     
