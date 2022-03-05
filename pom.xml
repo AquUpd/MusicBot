@@ -28,9 +28,9 @@
             <version>v5.0.0-alpha.9</version>
         </dependency>
         <dependency>
-            <groupId>com.github.JDA-Applications</groupId>
-            <artifactId>jda-utilities</artifactId>
-            <version>dfd5c6f599</version>
+            <groupId>com.github.AquUpd</groupId>
+			<artifactId>JDA-Utilities-rus</artifactId>
+            <version>c0bc45740c</version>
         </dependency>
         <dependency>
             <groupId>com.github.Walkyst</groupId>
