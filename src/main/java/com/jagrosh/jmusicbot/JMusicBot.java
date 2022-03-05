@@ -98,7 +98,7 @@ public class JMusicBot
         
         AboutCommand aboutCommand = new AboutCommand(Color.BLUE.brighter(),
                                 "Музыкальный бот которого [легко хостить!](https://github.com/jagrosh/MusicBot)",
-                                new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
+                                new String[]{""},
                                 RECOMMENDED_PERMS);
         aboutCommand.setIsAuthor(false);
         aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
@@ -114,6 +114,9 @@ public class JMusicBot
                 .setGuildSettingsManager(settings)
                 .addCommands(aboutCommand,
                         new PingCommand(),
+                        new GuildlistCommand(bot.getWaiter()),
+                        new RoleinfoCommand(),
+                        new ServerinfoCommand(),
                         new SettingsCmd(bot),
 
                         new ChessCmd(bot),
