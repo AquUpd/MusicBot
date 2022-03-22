@@ -36,8 +36,8 @@
         <dependency>
             <groupId>com.github.Walkyst</groupId>
             <artifactId>lavaplayer-fork</artifactId>
-            <version>fdd1b3a261</version>
-		</dependency>
+            <version>custom-SNAPSHOT</version>
+	</dependency>
         <dependency>
             <groupId>com.github.AquUpd</groupId>
             <artifactId>JDA-Utilities-rus</artifactId>
