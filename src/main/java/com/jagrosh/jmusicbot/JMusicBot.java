@@ -53,7 +53,7 @@ public class JMusicBot
     public final static Permission[] RECOMMENDED_PERMS = {Permission.MESSAGE_READ, Permission.MESSAGE_WRITE, Permission.MESSAGE_HISTORY, Permission.MESSAGE_ADD_REACTION,
                                 Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
                                 Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
-    public final static GatewayIntent[] INTENTS = {GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_VOICE_STATES};
+    public final static GatewayIntent[] INTENTS = {GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS};
     /**
      * @param args the command line arguments
      */
@@ -97,8 +97,8 @@ public class JMusicBot
         Bot bot = new Bot(waiter, config, settings);
         
         AboutCommand aboutCommand = new AboutCommand(Color.BLUE.brighter(),
-                                "Музыкальный бот которого [легко хостить!](https://github.com/jagrosh/MusicBot)",
-                                new String[]{"High-quality music playback", "FairQueue™ Technology", "Easy to host yourself"},
+                                "Музыкальный бот. [Вот соурс код!](https://github.com/AquUpd/MusicBot)",
+                                new String[]{"Воспроизведение данных типов файлов: MP3, MP4, FLAC, WAV, WEBM, OGG, AAC, M3U", "Воспроизведение из Youtube, SoundCloud, Vimeo, Twitch", "Переведенный на русский язык!"},
                                 RECOMMENDED_PERMS);
         aboutCommand.setIsAuthor(false);
         aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
@@ -121,6 +121,7 @@ public class JMusicBot
                         new PokerCmd(bot),
                         new RockPaperScissorsCmd(bot),
                         new YoutubeCmd(bot),
+                        new ProfilePictureCmd(bot),
 
                         new LyricsCmd(bot),
                         new NowplayingCmd(bot),
@@ -133,7 +134,6 @@ public class JMusicBot
                         new ShuffleCmd(bot),
                         new SkipCmd(bot),
                         new SeekCmd(bot),
-                        new SpeedCmd(bot), //убрал потому что она не до конца сделана
 
                         new ForceRemoveCmd(bot),
                         new ForceskipCmd(bot),
