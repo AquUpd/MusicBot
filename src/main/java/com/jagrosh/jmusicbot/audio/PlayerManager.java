@@ -16,18 +16,24 @@
 package com.jagrosh.jmusicbot.audio;
 
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.JMusicBot;
+import com.sedmelluq.discord.lavaplayer.container.MediaContainerRegistry;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.bandcamp.BandcampAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.getyarn.GetyarnAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.yamusic.YandexMusicAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeHttpContextFilter;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.impl.client.HttpClientBuilder;
 
 /**
  *
@@ -44,13 +50,14 @@ public class PlayerManager extends DefaultAudioPlayerManager
     
     public void init()
     {
-        TransformativeAudioSourceManager.createTransforms(bot.getConfig().getTransforms()).forEach(this::registerSourceManager);
-        AudioSourceManagers.registerRemoteSources(this);
-        AudioSourceManagers.registerLocalSource(this);
-
         Config conf = ConfigFactory.load();
         String email = conf.getString("ytemail");
         String password = conf.getString("ytpassword");
+
+        TransformativeAudioSourceManager.createTransforms(bot.getConfig().getTransforms()).forEach(this::registerSourceManager);
+
+        this.registerRemoteSources(email, password);
+        AudioSourceManagers.registerLocalSource(this);
 
         source(YoutubeAudioSourceManager.class).setPlaylistPageCount(10);
         setHttpRequestConfigurator(config ->
@@ -59,7 +66,18 @@ public class PlayerManager extends DefaultAudioPlayerManager
                         .setConnectTimeout(20000)
                         .build());
     }
-    
+
+    public void registerRemoteSources(String email, String password){
+        this.registerSourceManager(new YoutubeAudioSourceManager(true, email, password));
+        this.registerSourceManager(new YandexMusicAudioSourceManager(true));
+        this.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
+        this.registerSourceManager(new BandcampAudioSourceManager());
+        this.registerSourceManager(new VimeoAudioSourceManager());
+        this.registerSourceManager(new TwitchStreamAudioSourceManager());
+        this.registerSourceManager(new BeamAudioSourceManager());
+        this.registerSourceManager(new GetyarnAudioSourceManager());
+        this.registerSourceManager(new HttpAudioSourceManager(MediaContainerRegistry.DEFAULT_REGISTRY));
+    }
     public Bot getBot()
     {
         return bot;
