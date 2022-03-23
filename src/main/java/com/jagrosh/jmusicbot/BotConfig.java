@@ -41,7 +41,7 @@ public class BotConfig
     private final static String END_TOKEN = "/// END OF JMUSICBOT CONFIG ///";
     
     private Path path = null;
-    private String token, prefix, altprefix, helpWord, playlistsFolder,
+    private String token, ytemail, ytpassword, prefix, altprefix, helpWord, playlistsFolder,
             successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji;
     private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
     private long owner, maxSeconds, aloneTimeUntilStop;
@@ -61,12 +61,10 @@ public class BotConfig
         valid = false;
         
         // read config from file
-        try 
-        {
+        try {
             // get the path to the config, default config.txt
             path = OtherUtil.getPath(System.getProperty("config.file", System.getProperty("config", "config.go")));
-            if(path.toFile().exists())
-            {
+            if(path.toFile().exists()) {
                 if(System.getProperty("config.file") == null)
                     System.setProperty("config.file", System.getProperty("config", path.toAbsolutePath().toString()));
                 ConfigFactory.invalidateCaches();
@@ -77,6 +75,8 @@ public class BotConfig
             Config config = ConfigFactory.load();
             
             // set values
+            ytemail = config.getString("ytemail");
+            ytpassword = config.getString("ytpassword");
             token = config.getString("token");
             prefix = config.getString("prefix");
             altprefix = config.getString("altprefix");
@@ -110,39 +110,29 @@ public class BotConfig
                         + "\nИнструкции для этого вы можете найти здесь:"
                         + "\nhttps://github.com/jagrosh/MusicBot/wiki/Getting-a-Bot-Token."
                         + "\nТокен бота: ");
-                if(token==null)
-                {
-                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "Токен отсутствует! Выходим.\n\nРасположение config.go: " + path.toAbsolutePath().toString());
+                if(token==null) {
+                    prompt.alert(Prompt.Level.WARNING, CONTEXT, "Токен отсутствует! Выходим.\n\nРасположение config.go: "
+                            + path.toAbsolutePath().toString());
                     return;
-                }
-                else
-                {
+                } else {
                     write = true;
                 }
             }
-            
             // validate bot owner
             if(owner<=0)
             {
-                try
-                {
+                try {
                     owner = Long.parseLong(prompt.prompt("Owner ID отсутствует или он не правильный."
                         + "\nВведите правильный User ID администратора бота."
                         + "\nИнструкции по получению ID можно найти здесь:"
                         + "\nhttps://github.com/jagrosh/MusicBot/wiki/Finding-Your-User-ID"
                         + "\nUser ID администратора: "));
-                }
-                catch(NumberFormatException | NullPointerException ex)
-                {
+                } catch(NumberFormatException | NullPointerException ex) {
                     owner = 0;
-                }
-                if(owner<=0)
-                {
+                }if(owner<=0) {
                     prompt.alert(Prompt.Level.ERROR, CONTEXT, "Не правильный User ID! Выходим.\n\nРасположение config.go: " + path.toAbsolutePath().toString());
                     return;
-                }
-                else
-                {
+                } else {
                     write = true;
                 }
             }
@@ -152,9 +142,7 @@ public class BotConfig
             
             // if we get through the whole config, it's good to go
             valid = true;
-        }
-        catch (ConfigException ex)
-        {
+        } catch (ConfigException ex) {
             prompt.alert(Prompt.Level.ERROR, CONTEXT, ex + ": " + ex.getMessage() + "\n\nРасположение config.go: " + path.toAbsolutePath().toString());
         }
     }
@@ -163,23 +151,16 @@ public class BotConfig
     {
         String original = OtherUtil.loadResource(this, "/reference.conf");
         byte[] bytes;
-        if(original==null)
-        {
+        if(original==null) {
             bytes = ("token = "+token+"\r\nowner = "+owner).getBytes();
-        }
-        else
-        {
+        } else {
             bytes = original.substring(original.indexOf(START_TOKEN)+START_TOKEN.length(), original.indexOf(END_TOKEN))
                 .replace("BOT_TOKEN_HERE", token)
                 .replace("0 // OWNER ID", Long.toString(owner))
                 .trim().getBytes();
-        }
-        try 
-        {
+        } try {
             Files.write(path, bytes);
-        }
-        catch(IOException ex) 
-        {
+        } catch(IOException ex) {
             prompt.alert(Prompt.Level.WARNING, CONTEXT, "не удалось записать некоторые настройки в config.go: "+ex
                 + "\nУбедитесь что файлы бота не находятся в ограниченном доступе.\n\nРасположение config.txt: "
                 + path.toAbsolutePath().toString());

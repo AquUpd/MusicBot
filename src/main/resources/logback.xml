@@ -6,7 +6,7 @@
             <!-- Pattern -->
             <charset>UTF-8</charset>
             <pattern>
-                %nopex[%d{HH:mm:ss}] [%level] [%logger{0}]: %msg%n%ex
+                %nopex[%d{dd MMM yyyy HH:mm:ss}] [%level] [%logger{0}]: %msg%n%ex
             </pattern>
         </encoder>
     </appender>

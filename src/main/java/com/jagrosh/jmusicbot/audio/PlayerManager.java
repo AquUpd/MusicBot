@@ -16,13 +16,18 @@
 package com.jagrosh.jmusicbot.audio;
 
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.JMusicBot;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeHttpContextFilter;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 /**
  *
@@ -39,16 +44,20 @@ public class PlayerManager extends DefaultAudioPlayerManager
     
     public void init()
     {
-        TransformativeAudioSourceManager.createTransforms(bot.getConfig().getTransforms()).forEach(t -> registerSourceManager(t));
+        TransformativeAudioSourceManager.createTransforms(bot.getConfig().getTransforms()).forEach(this::registerSourceManager);
         AudioSourceManagers.registerRemoteSources(this);
         AudioSourceManagers.registerLocalSource(this);
+
+        Config conf = ConfigFactory.load();
+        String email = conf.getString("ytemail");
+        String password = conf.getString("ytpassword");
+
         source(YoutubeAudioSourceManager.class).setPlaylistPageCount(10);
         setHttpRequestConfigurator(config ->
                 RequestConfig.copy(config)
                         .setSocketTimeout(20000)
                         .setConnectTimeout(20000)
-                        .build()
-        );
+                        .build());
     }
     
     public Bot getBot()

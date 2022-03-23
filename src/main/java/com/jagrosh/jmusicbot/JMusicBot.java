@@ -144,7 +144,8 @@ public class JMusicBot
                         new SkiptoCmd(bot),
                         new StopCmd(bot),
                         new VolumeCmd(bot),
-                        
+
+                        new DeleteCommandsCmd(bot),
                         new PrefixCmd(bot),
                         new SetdjCmd(bot),
                         new SkipratioCmd(bot),
@@ -226,6 +227,7 @@ public class JMusicBot
         DateFormat formatter;
         formatter = new SimpleDateFormat("s.SSS");
         formatter.setTimeZone(TimeZone.getTimeZone("UTC+3"));
+
         log.info("Done (" + formatter.format(System.currentTimeMillis() - timer) + "s)! For help, type " + config.getPrefix() + "help in chat");
     }
 }

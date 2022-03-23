@@ -25,6 +25,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
+
+import com.typesafe.config.ConfigFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
@@ -38,14 +40,17 @@ public class TransformativeAudioSourceManager extends YoutubeAudioSourceManager
 {
     private final static Logger log = LoggerFactory.getLogger(TransformativeAudioSourceManager.class);
     private final String name, regex, replacement, selector, format;
-    
+
     public TransformativeAudioSourceManager(String name, Config object)
     {
-        this(name, object.getString("regex"), object.getString("replacement"), object.getString("selector"), object.getString("format"));
+        this(name, object.getString("regex"), object.getString("replacement"), object.getString("selector"),
+                object.getString("format"));
     }
     
     public TransformativeAudioSourceManager(String name, String regex, String replacement, String selector, String format)
     {
+        Config conf = ConfigFactory.load();
+
         this.name = name;
         this.regex = regex;
         this.replacement = replacement;

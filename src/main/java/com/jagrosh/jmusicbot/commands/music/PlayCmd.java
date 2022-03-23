@@ -222,7 +222,7 @@ public class PlayCmd extends MusicCommand
             if(throwable.severity==Severity.COMMON)
                 m.editMessage(event.getClient().getError()+" Ошибка загрузки: "+throwable.getMessage()).queue();
             else
-                m.editMessage(event.getClient().getError()+" Ощибка загрузки пластинки. ").queue();
+                m.editMessage(event.getClient().getError()+" Ошибка загрузки пластинки. ").queue();
         }
     }
     
@@ -258,7 +258,7 @@ public class PlayCmd extends MusicCommand
                 AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
                 playlist.loadTracks(bot.getPlayerManager(), (at)->handler.addTrack(new QueuedTrack(at, event.getAuthor())), () -> {
                     StringBuilder builder = new StringBuilder(playlist.getTracks().isEmpty() 
-                            ? event.getClient().getWarning()+" Пластинки не были загуржены!"
+                            ? event.getClient().getWarning()+" Пластинки не были загружены!"
                             : event.getClient().getSuccess()+" Пластинки были загружены");
                     if(!playlist.getErrors().isEmpty())
                         builder.append("\nНе удалось загрузить данные пластинки:");

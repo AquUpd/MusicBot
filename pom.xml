@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.jagrosh</groupId>
     <artifactId>JMusicBotRus</artifactId>
-    <version>1.1</version>
+    <version>1.1.3</version>
     <packaging>jar</packaging>
     
     <repositories>
@@ -36,8 +36,8 @@
         <dependency>
             <groupId>com.github.Walkyst</groupId>
             <artifactId>lavaplayer-fork</artifactId>
-            <version>custom-SNAPSHOT</version>
-	</dependency>
+            <version>daa26c85b8</version>
+        </dependency>
         <dependency>
             <groupId>com.github.AquUpd</groupId>
             <artifactId>JDA-Utilities-rus</artifactId>
