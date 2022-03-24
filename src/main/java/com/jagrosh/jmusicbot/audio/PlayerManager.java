@@ -59,7 +59,7 @@ public class PlayerManager extends DefaultAudioPlayerManager
         this.registerRemoteSources(email, password);
         AudioSourceManagers.registerLocalSource(this);
 
-        source(YoutubeAudioSourceManager.class).setPlaylistPageCount(10);
+        source(YoutubeAudioSourceManager.class).setPlaylistPageCount(100);
         setHttpRequestConfigurator(config ->
                 RequestConfig.copy(config)
                         .setSocketTimeout(20000)
