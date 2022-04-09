@@ -193,13 +193,13 @@ public class PlayCmd extends MusicCommand
                     if (playlist.getTracks().size() == 1) {
                         m.editMessage(FormatUtil.filter(event.getClient().getSuccess() + " Найден "
                                 + (playlist.getName() == null ? "неизвестный плейлист" : "плейлист **" + playlist.getName() + "**") + " с `"
-                                + playlist.getTracks().size() + "` пластинкой; Она добавлена в очередь!"
+                                + playlist.getTracks().size() + "` пластинкой; Он добавлена в очередь!"
                                 + (count < playlist.getTracks().size() ? "\n" + event.getClient().getWarning()
                                 + "Некоторые пластинки были убраны" : ""))).queue();
                     } else {
                         m.editMessage(FormatUtil.filter(event.getClient().getSuccess() + " Найден "
                                 + (playlist.getName() == null ? "неизвестный плейлист" : "плейлист **" + playlist.getName() + "**") + " с `"
-                                + playlist.getTracks().size() + "` пластинками; Она добавлена в очередь!"
+                                + playlist.getTracks().size() + "` пластинками; Он добавлена в очередь!"
                                 + (count < playlist.getTracks().size() ? "\n" + event.getClient().getWarning()
                                 + "Некоторые пластинки были убраны" : ""))).queue();
                     }
