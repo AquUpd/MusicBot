@@ -20,6 +20,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
+import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -64,11 +65,11 @@ public abstract class MusicCommand extends Command
         }
         if(beListening)
         {
-            VoiceChannel current = event.getGuild().getSelfMember().getVoiceState().getChannel();
+            AudioChannel current = event.getGuild().getSelfMember().getVoiceState().getChannel();
             if(current==null)
                 current = settings.getVoiceChannel(event.getGuild());
             GuildVoiceState userState = event.getMember().getVoiceState();
-            if(!userState.inVoiceChannel() || (current!=null && !userState.getChannel().equals(current)))
+            if(!userState.inAudioChannel() || (current!=null && !userState.getChannel().equals(current)))
             {
                 event.replyError((current==null ? "Вы должны слушать музыку" : "Вы должны быть в "+current.getAsMention())+" чтобы использовать это!");
                 return;
@@ -81,7 +82,7 @@ public abstract class MusicCommand extends Command
                 return;
             }
 
-            if(!event.getGuild().getSelfMember().getVoiceState().inVoiceChannel())
+            if(!event.getGuild().getSelfMember().getVoiceState().inAudioChannel())
             {
                 try 
                 {
