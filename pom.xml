@@ -25,22 +25,22 @@
         <dependency>
             <groupId>com.github.DV8FromTheWorld</groupId>
             <artifactId>JDA</artifactId>
-            <version>v5.0.0-alpha.9</version>
+            <version>5.0.0-alpha.11</version>
         </dependency>
         <dependency>
             <groupId>com.github.AquUpd</groupId>
 			<artifactId>JDA-Utilities-rus</artifactId>
-            <version>b729e42876</version>
+            <version>master-v5-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.github.Walkyst</groupId>
-            <artifactId>lavaplayer-fork</artifactId>
-            <version>fdd1b3a261</version>
+            <groupId>com.github.AquUpd</groupId>
+            <artifactId>lavaplayer-fork-rus</artifactId>
+			<version>custom-v5-SNAPSHOT	</version>
 		</dependency>
         <dependency>
-            <groupId>com.github.jagrosh</groupId>
-            <artifactId>JLyrics</artifactId>
-            <version>0f9ac5df83</version>
+            <groupId>com.github.AquUpd</groupId>
+            <artifactId>JLyrics-rus</artifactId>
+            <version>-SNAPSHOT</version>
         </dependency>
 
         <dependency>
