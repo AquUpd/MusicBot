@@ -48,7 +48,6 @@
             <artifactId>JLyrics</artifactId>
             <version>0f9ac5df83</version>
         </dependency>
-
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
