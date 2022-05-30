@@ -6,3 +6,5 @@
 *.txt
 nb*.xml
 /.idea/
+*.go
+1.2old/JMusicBotRus-*.jar
