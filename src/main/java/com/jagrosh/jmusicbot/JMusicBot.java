@@ -54,9 +54,13 @@ public class JMusicBot
                                 Permission.MESSAGE_EMBED_LINKS, Permission.MESSAGE_ATTACH_FILES, Permission.MESSAGE_MANAGE, Permission.MESSAGE_EXT_EMOJI,
                                 Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
     public final static GatewayIntent[] INTENTS = {GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS};
+
+    static TextInputObject textInput;
+
     /**
      * @param args the command line arguments
      */
+
     public static void main(String[] args)
     {
         long timer = System.currentTimeMillis();
@@ -84,7 +88,6 @@ public class JMusicBot
             prompt.alert(Prompt.Level.WARNING, "Java Version", "Вы используете неподдерживаемую версию JAVA. Пожалуйста используйте JAVA 8-16 64-bit.");
             System.exit(1);
         }
-
         // load config
         BotConfig config = new BotConfig(prompt);
         config.load();
@@ -223,6 +226,10 @@ public class JMusicBot
                     + "не правильные: " + ex + "\nРасположение config.txt: " + config.getConfigLocation());
             System.exit(1);
         }
+
+        // console listener
+        textInput = new TextInputObject(bot);
+        textInput.start();
 
         DateFormat formatter;
         formatter = new SimpleDateFormat("s.SSS");
