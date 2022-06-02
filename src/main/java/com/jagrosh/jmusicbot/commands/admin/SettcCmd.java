@@ -15,56 +15,66 @@
  */
 package com.jagrosh.jmusicbot.commands.admin;
 
-import java.util.List;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import java.util.List;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 /**
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SettcCmd extends AdminCommand 
-{
-    public SettcCmd(Bot bot)
-    {
-        this.name = "settc";
-        this.help = "устанавливает текстовый канал для команд";
-        this.arguments = "<channel|NONE>";
-        this.aliases = bot.getConfig().getAliases(this.name);
+public class SettcCmd extends AdminCommand {
+
+  public SettcCmd(Bot bot) {
+    this.name = "settc";
+    this.help = "устанавливает текстовый канал для команд";
+    this.arguments = "<channel|NONE>";
+    this.aliases = bot.getConfig().getAliases(this.name);
+  }
+
+  @Override
+  protected void execute(CommandEvent event) {
+    if (event.getArgs().isEmpty()) {
+      event.reply(
+        event.getClient().getError() +
+        " Напшите нужный канал или 'NONE' для очистки"
+      );
+      return;
     }
-    
-    @Override
-    protected void execute(CommandEvent event) 
-    {
-        if(event.getArgs().isEmpty())
-        {
-            event.reply(event.getClient().getError()+" Напшите нужный канал или 'NONE' для очистки");
-            return;
-        }
-        Settings s = event.getClient().getSettingsFor(event.getGuild());
-        if(event.getArgs().equalsIgnoreCase("none"))
-        {
-            s.setTextChannel(null);
-            event.reply(event.getClient().getSuccess()+" Теперь команды можно использовать повсюду");
-        }
-        else
-        {
-            List<TextChannel> list = FinderUtil.findTextChannels(event.getArgs(), event.getGuild());
-            if(list.isEmpty())
-                event.reply(event.getClient().getWarning()+" Нет текстового канала с названием \""+event.getArgs()+"\"");
-            else if (list.size()>1)
-                event.reply(event.getClient().getWarning()+FormatUtil.listOfTChannels(list, event.getArgs()));
-            else
-            {
-                s.setTextChannel(list.get(0));
-                event.reply(event.getClient().getSuccess()+" Музыкальные каналы теперь можно использовать только в <#"+list.get(0).getId()+">");
-            }
-        }
+    Settings s = event.getClient().getSettingsFor(event.getGuild());
+    if (event.getArgs().equalsIgnoreCase("none")) {
+      s.setTextChannel(null);
+      event.reply(
+        event.getClient().getSuccess() +
+        " Теперь команды можно использовать повсюду"
+      );
+    } else {
+      List<TextChannel> list = FinderUtil.findTextChannels(
+        event.getArgs(),
+        event.getGuild()
+      );
+      if (list.isEmpty()) event.reply(
+        event.getClient().getWarning() +
+        " Нет текстового канала с названием \"" +
+        event.getArgs() +
+        "\""
+      ); else if (list.size() > 1) event.reply(
+        event.getClient().getWarning() +
+        FormatUtil.listOfTChannels(list, event.getArgs())
+      ); else {
+        s.setTextChannel(list.get(0));
+        event.reply(
+          event.getClient().getSuccess() +
+          " Музыкальные каналы теперь можно использовать только в <#" +
+          list.get(0).getId() +
+          ">"
+        );
+      }
     }
-    
+  }
 }

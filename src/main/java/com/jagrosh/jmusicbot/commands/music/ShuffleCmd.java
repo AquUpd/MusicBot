@@ -24,35 +24,34 @@ import com.jagrosh.jmusicbot.commands.MusicCommand;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class ShuffleCmd extends MusicCommand 
-{
-    public ShuffleCmd(Bot bot)
-    {
-        super(bot);
-        this.name = "shuffle";
-        this.help = "перемешивает пластинки";
-        this.aliases = bot.getConfig().getAliases(this.name);
-        this.beListening = true;
-        this.bePlaying = true;
-    }
+public class ShuffleCmd extends MusicCommand {
 
-    @Override
-    public void doCommand(CommandEvent event) 
-    {
-        AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        int s = handler.getQueue().shuffle(event.getAuthor().getIdLong());
-        switch (s) 
-        {
-            case 0:
-                event.replyError("У вас нет пластинок в очереди!");
-                break;
-            case 1:
-                event.replyWarning("У вас только `1` пластинка в очереди!");
-                break;
-            default:
-                event.replySuccess("Успешно перемешано `"+s+"` пластинок.");
-                break;
-        }
+  public ShuffleCmd(Bot bot) {
+    super(bot);
+    this.name = "shuffle";
+    this.help = "перемешивает пластинки";
+    this.aliases = bot.getConfig().getAliases(this.name);
+    this.beListening = true;
+    this.bePlaying = true;
+  }
+
+  @Override
+  public void doCommand(CommandEvent event) {
+    AudioHandler handler = (AudioHandler) event
+      .getGuild()
+      .getAudioManager()
+      .getSendingHandler();
+    int s = handler.getQueue().shuffle(event.getAuthor().getIdLong());
+    switch (s) {
+      case 0:
+        event.replyError("У вас нет пластинок в очереди!");
+        break;
+      case 1:
+        event.replyWarning("У вас только `1` пластинка в очереди!");
+        break;
+      default:
+        event.replySuccess("Успешно перемешано `" + s + "` пластинок.");
+        break;
     }
-    
+  }
 }

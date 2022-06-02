@@ -27,69 +27,66 @@ import net.dv8tion.jda.api.Permission;
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public class LyricsCmd extends MusicCommand
-{
-    private final LyricsClient client = new LyricsClient();
-    
-    public LyricsCmd(Bot bot)
-    {
-        super(bot);
-        this.name = "lyrics";
-        this.arguments = "[название пластинки]";
-        this.help = "показывает текст пластинки";
-        this.aliases = bot.getConfig().getAliases(this.name);
-        this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
-    }
+public class LyricsCmd extends MusicCommand {
 
-    @Override
-    public void doCommand(CommandEvent event)
-    {
-        String title;
-        if(event.getArgs().isEmpty())
-        {
-            AudioHandler sendingHandler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
-            event.replyError("Вы должны указать название пластинки!");
-            return;
+  private final LyricsClient client = new LyricsClient();
+
+  public LyricsCmd(Bot bot) {
+    super(bot);
+    this.name = "lyrics";
+    this.arguments = "[название пластинки]";
+    this.help = "показывает текст пластинки";
+    this.aliases = bot.getConfig().getAliases(this.name);
+    this.botPermissions = new Permission[] { Permission.MESSAGE_EMBED_LINKS };
+  }
+
+  @Override
+  public void doCommand(CommandEvent event) {
+    String title;
+    if (event.getArgs().isEmpty()) {
+      AudioHandler sendingHandler = (AudioHandler) event
+        .getGuild()
+        .getAudioManager()
+        .getSendingHandler();
+      event.replyError("Вы должны указать название пластинки!");
+      return;
+    } else title = event.getArgs();
+
+    event.getChannel().sendTyping().queue();
+    client
+      .getLyrics(title)
+      .thenAccept(lyrics -> {
+        if (lyrics == null) {
+          event.replyError("Текст для `" + title + "` не найден!");
+          return;
         }
-        else title = event.getArgs();
 
-        event.getChannel().sendTyping().queue();
-        client.getLyrics(title).thenAccept(lyrics -> 
-        {
-            if(lyrics == null)
-            {
-                event.replyError("Текст для `" + title + "` не найден!");
-                return;
-            }
-
-            EmbedBuilder eb = new EmbedBuilder()
-                    .setAuthor(lyrics.getAuthor())
-                    .setColor(event.getSelfMember().getColor())
-                    .setTitle(lyrics.getTitle(), lyrics.getURL());
-            if(lyrics.getContent().length()>15000)
-            {
-                event.replyWarning("Текст для `" + title + "` найден, но он, возможно, не правильный: " + lyrics.getURL());
-            }
-            else if(lyrics.getContent().length()>2000)
-            {
-                String content = lyrics.getContent().trim();
-                while(content.length() > 2000)
-                {
-                    int index = content.lastIndexOf("\n\n", 2000);
-                    if(index == -1)
-                        index = content.lastIndexOf("\n", 2000);
-                    if(index == -1)
-                        index = content.lastIndexOf(" ", 2000);
-                    if(index == -1)
-                        index = 2000;
-                    event.reply(eb.setDescription(content.substring(0, index).trim()).build());
-                    content = content.substring(index).trim();
-                    eb.setAuthor(null).setTitle(null, null);
-                }
-                event.reply(eb.setDescription(content).build());
-            }
-            else
-                event.reply(eb.setDescription(lyrics.getContent()).build());
-        });
-    }
+        EmbedBuilder eb = new EmbedBuilder()
+          .setAuthor(lyrics.getAuthor())
+          .setColor(event.getSelfMember().getColor())
+          .setTitle(lyrics.getTitle(), lyrics.getURL());
+        if (lyrics.getContent().length() > 15000) {
+          event.replyWarning(
+            "Текст для `" +
+            title +
+            "` найден, но он, возможно, не правильный: " +
+            lyrics.getURL()
+          );
+        } else if (lyrics.getContent().length() > 2000) {
+          String content = lyrics.getContent().trim();
+          while (content.length() > 2000) {
+            int index = content.lastIndexOf("\n\n", 2000);
+            if (index == -1) index = content.lastIndexOf("\n", 2000);
+            if (index == -1) index = content.lastIndexOf(" ", 2000);
+            if (index == -1) index = 2000;
+            event.reply(
+              eb.setDescription(content.substring(0, index).trim()).build()
+            );
+            content = content.substring(index).trim();
+            eb.setAuthor(null).setTitle(null, null);
+          }
+          event.reply(eb.setDescription(content).build());
+        } else event.reply(eb.setDescription(lyrics.getContent()).build());
+      });
+  }
 }

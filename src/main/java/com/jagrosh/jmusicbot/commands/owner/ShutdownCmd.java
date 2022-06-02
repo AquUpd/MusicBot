@@ -23,23 +23,21 @@ import com.jagrosh.jmusicbot.commands.OwnerCommand;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class ShutdownCmd extends OwnerCommand
-{
-    private final Bot bot;
-    
-    public ShutdownCmd(Bot bot)
-    {
-        this.bot = bot;
-        this.name = "shutdown";
-        this.help = "безопасно выключает бота";
-        this.aliases = bot.getConfig().getAliases(this.name);
-        this.guildOnly = false;
-    }
-    
-    @Override
-    protected void execute(CommandEvent event)
-    {
-        event.replyWarning("Прощайте...");
-        bot.shutdown();
-    }
+public class ShutdownCmd extends OwnerCommand {
+
+  private final Bot bot;
+
+  public ShutdownCmd(Bot bot) {
+    this.bot = bot;
+    this.name = "shutdown";
+    this.help = "безопасно выключает бота";
+    this.aliases = bot.getConfig().getAliases(this.name);
+    this.guildOnly = false;
+  }
+
+  @Override
+  protected void execute(CommandEvent event) {
+    event.replyWarning("Прощайте...");
+    bot.shutdown();
+  }
 }

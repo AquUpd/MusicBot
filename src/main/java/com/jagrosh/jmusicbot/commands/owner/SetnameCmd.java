@@ -24,33 +24,38 @@ import net.dv8tion.jda.api.exceptions.RateLimitedException;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SetnameCmd extends OwnerCommand
-{
-    public SetnameCmd(Bot bot)
-    {
-        this.name = "setname";
-        this.help = "устанавливает новое название бота";
-        this.arguments = "<name>";
-        this.aliases = bot.getConfig().getAliases(this.name);
-        this.guildOnly = false;
+public class SetnameCmd extends OwnerCommand {
+
+  public SetnameCmd(Bot bot) {
+    this.name = "setname";
+    this.help = "устанавливает новое название бота";
+    this.arguments = "<name>";
+    this.aliases = bot.getConfig().getAliases(this.name);
+    this.guildOnly = false;
+  }
+
+  @Override
+  protected void execute(CommandEvent event) {
+    try {
+      String oldname = event.getSelfUser().getName();
+      event.getSelfUser().getManager().setName(event.getArgs()).complete(false);
+      event.reply(
+        event.getClient().getSuccess() +
+        " Изменено название бота с `" +
+        oldname +
+        "` на `" +
+        event.getArgs() +
+        "`"
+      );
+    } catch (RateLimitedException e) {
+      event.reply(
+        event.getClient().getError() +
+        " Название бота можно менять 1 раз в час!"
+      );
+    } catch (Exception e) {
+      event.reply(
+        event.getClient().getError() + " Это название не правильное!"
+      );
     }
-    
-    @Override
-    protected void execute(CommandEvent event) 
-    {
-        try 
-        {
-            String oldname = event.getSelfUser().getName();
-            event.getSelfUser().getManager().setName(event.getArgs()).complete(false);
-            event.reply(event.getClient().getSuccess()+" Изменено название бота с `"+oldname+"` на `"+event.getArgs()+"`");
-        } 
-        catch(RateLimitedException e) 
-        {
-            event.reply(event.getClient().getError()+" Название бота можно менять 1 раз в час!");
-        }
-        catch(Exception e) 
-        {
-            event.reply(event.getClient().getError()+" Это название не правильное!");
-        }
-    }
+  }
 }

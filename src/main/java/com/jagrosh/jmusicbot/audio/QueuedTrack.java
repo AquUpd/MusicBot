@@ -15,44 +15,49 @@
  */
 package com.jagrosh.jmusicbot.audio;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import com.jagrosh.jmusicbot.queue.Queueable;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.User;
 
 /**
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class QueuedTrack implements Queueable
-{
-    private final AudioTrack track;
-    
-    public QueuedTrack(AudioTrack track, User owner)
-    {
-        this(track, new RequestMetadata(owner));
-    }
-    
-    public QueuedTrack(AudioTrack track, RequestMetadata rm)
-    {
-        this.track = track;
-        this.track.setUserData(rm);
-    }
-    
-    @Override
-    public long getIdentifier() 
-    {
-        return track.getUserData(RequestMetadata.class).getOwner();
-    }
-    
-    public AudioTrack getTrack()
-    {
-        return track;
-    }
+public class QueuedTrack implements Queueable {
 
-    @Override
-    public String toString() 
-    {
-        return "`[" + FormatUtil.formatTime(track.getDuration()) + "]` [**" + track.getInfo().title + "**]("+track.getInfo().uri+") - <@" + track.getUserData(RequestMetadata.class).getOwner() + ">";
-    }
+  private final AudioTrack track;
+
+  public QueuedTrack(AudioTrack track, User owner) {
+    this(track, new RequestMetadata(owner));
+  }
+
+  public QueuedTrack(AudioTrack track, RequestMetadata rm) {
+    this.track = track;
+    this.track.setUserData(rm);
+  }
+
+  @Override
+  public long getIdentifier() {
+    return track.getUserData(RequestMetadata.class).getOwner();
+  }
+
+  public AudioTrack getTrack() {
+    return track;
+  }
+
+  @Override
+  public String toString() {
+    return (
+      "`[" +
+      FormatUtil.formatTime(track.getDuration()) +
+      "]` [**" +
+      track.getInfo().title +
+      "**](" +
+      track.getInfo().uri +
+      ") - <@" +
+      track.getUserData(RequestMetadata.class).getOwner() +
+      ">"
+    );
+  }
 }

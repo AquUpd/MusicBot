@@ -24,23 +24,24 @@ import com.jagrosh.jmusicbot.commands.DJCommand;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class StopCmd extends DJCommand 
-{
-    public StopCmd(Bot bot)
-    {
-        super(bot);
-        this.name = "stop";
-        this.help = "останавливает проигрывание пластинок и очищает их";
-        this.aliases = bot.getConfig().getAliases(this.name);
-        this.bePlaying = false;
-    }
+public class StopCmd extends DJCommand {
 
-    @Override
-    public void doCommand(CommandEvent event) 
-    {
-        AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        handler.stopAndClear();
-        event.getGuild().getAudioManager().closeAudioConnection();
-        event.reply(event.getClient().getSuccess()+" Все было очищено.");
-    }
+  public StopCmd(Bot bot) {
+    super(bot);
+    this.name = "stop";
+    this.help = "останавливает проигрывание пластинок и очищает их";
+    this.aliases = bot.getConfig().getAliases(this.name);
+    this.bePlaying = false;
+  }
+
+  @Override
+  public void doCommand(CommandEvent event) {
+    AudioHandler handler = (AudioHandler) event
+      .getGuild()
+      .getAudioManager()
+      .getSendingHandler();
+    handler.stopAndClear();
+    event.getGuild().getAudioManager().closeAudioConnection();
+    event.reply(event.getClient().getSuccess() + " Все было очищено.");
+  }
 }

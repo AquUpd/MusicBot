@@ -15,12 +15,6 @@
  */
 package com.jagrosh.jmusicbot.commands.music;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import java.util.concurrent.TimeUnit;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.menu.OrderedMenu;
 import com.jagrosh.jmusicbot.Bot;
@@ -28,6 +22,12 @@ import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 
@@ -35,114 +35,185 @@ import net.dv8tion.jda.api.entities.Message;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SearchCmd extends MusicCommand 
-{
-    protected String searchPrefix = "ytsearch:";
-    private final OrderedMenu.Builder builder;
-    private final String searchingEmoji;
-    
-    public SearchCmd(Bot bot)
-    {
-        super(bot);
-        this.searchingEmoji = bot.getConfig().getSearching();
-        this.name = "search";
-        this.aliases = bot.getConfig().getAliases(this.name);
-        this.arguments = "<аргументы>";
-        this.help = "поиск пластинок в YouTube";
-        this.beListening = true;
-        this.bePlaying = false;
-        this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
-        builder = new OrderedMenu.Builder()
-                .allowTextInput(true)
-                .useNumbers()
-                .useCancelButton(true)
-                .setEventWaiter(bot.getWaiter())
-                .setTimeout(1, TimeUnit.MINUTES);
+public class SearchCmd extends MusicCommand {
+
+  protected String searchPrefix = "ytsearch:";
+  private final OrderedMenu.Builder builder;
+  private final String searchingEmoji;
+
+  public SearchCmd(Bot bot) {
+    super(bot);
+    this.searchingEmoji = bot.getConfig().getSearching();
+    this.name = "search";
+    this.aliases = bot.getConfig().getAliases(this.name);
+    this.arguments = "<аргументы>";
+    this.help = "поиск пластинок в YouTube";
+    this.beListening = true;
+    this.bePlaying = false;
+    this.botPermissions = new Permission[] { Permission.MESSAGE_EMBED_LINKS };
+    builder =
+      new OrderedMenu.Builder()
+        .allowTextInput(true)
+        .useNumbers()
+        .useCancelButton(true)
+        .setEventWaiter(bot.getWaiter())
+        .setTimeout(1, TimeUnit.MINUTES);
+  }
+
+  @Override
+  public void doCommand(CommandEvent event) {
+    if (event.getArgs().isEmpty()) {
+      event.replyError("Напишите аргументы поиска.");
+      return;
     }
+    event.reply(
+      searchingEmoji + " Поиск... `[" + event.getArgs() + "]`",
+      m ->
+        bot
+          .getPlayerManager()
+          .loadItemOrdered(
+            event.getGuild(),
+            searchPrefix + event.getArgs(),
+            new ResultHandler(m, event)
+          )
+    );
+  }
+
+  private class ResultHandler implements AudioLoadResultHandler {
+
+    private final Message m;
+    private final CommandEvent event;
+
+    private ResultHandler(Message m, CommandEvent event) {
+      this.m = m;
+      this.event = event;
+    }
+
     @Override
-    public void doCommand(CommandEvent event) 
-    {
-        if(event.getArgs().isEmpty())
-        {
-            event.replyError("Напишите аргументы поиска.");
+    public void trackLoaded(AudioTrack track) {
+      if (bot.getConfig().isTooLong(track)) {
+        m
+          .editMessage(
+            FormatUtil.filter(
+              event.getClient().getWarning() +
+              " This track (**" +
+              track.getInfo().title +
+              "**) is longer than the allowed maximum: `" +
+              FormatUtil.formatTime(track.getDuration()) +
+              "` > `" +
+              bot.getConfig().getMaxTime() +
+              "`"
+            )
+          )
+          .queue();
+        return;
+      }
+      AudioHandler handler = (AudioHandler) event
+        .getGuild()
+        .getAudioManager()
+        .getSendingHandler();
+      int pos = handler.addTrack(new QueuedTrack(track, event.getAuthor())) + 1;
+      m
+        .editMessage(
+          FormatUtil.filter(
+            event.getClient().getSuccess() +
+            " Добавлен **" +
+            track.getInfo().title +
+            "** (`" +
+            FormatUtil.formatTime(track.getDuration()) +
+            "`) " +
+            (pos == 0 ? "" : " в очередь " + pos)
+          )
+        )
+        .queue();
+    }
+
+    @Override
+    public void playlistLoaded(AudioPlaylist playlist) {
+      builder
+        .setColor(event.getSelfMember().getColor())
+        .setText(
+          FormatUtil.filter(
+            event.getClient().getSuccess() +
+            " Результаты поиска: `" +
+            event.getArgs() +
+            "`:"
+          )
+        )
+        .setChoices(new String[0])
+        .setSelection((msg, i) -> {
+          AudioTrack track = playlist.getTracks().get(i - 1);
+          if (bot.getConfig().isTooLong(track)) {
+            event.replyWarning(
+              "Эта пластинка (**" +
+              track.getInfo().title +
+              "**) длиннее чем разрешенный лимит : `" +
+              FormatUtil.formatTime(track.getDuration()) +
+              "` > `" +
+              bot.getConfig().getMaxTime() +
+              "`"
+            );
             return;
-        }
-        event.reply(searchingEmoji+" Поиск... `["+event.getArgs()+"]`",
-                m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), searchPrefix + event.getArgs(), new ResultHandler(m,event)));
+          }
+          AudioHandler handler = (AudioHandler) event
+            .getGuild()
+            .getAudioManager()
+            .getSendingHandler();
+          int pos =
+            handler.addTrack(new QueuedTrack(track, event.getAuthor())) + 1;
+          event.replySuccess(
+            "Добавлена пластинка **" +
+            FormatUtil.filter(track.getInfo().title) +
+            "** (`" +
+            FormatUtil.formatTime(track.getDuration()) +
+            "`) " +
+            (pos == 0 ? "" : " в очередь " + pos)
+          );
+        })
+        .setCancel(msg -> {})
+        .setUsers(event.getAuthor());
+      for (int i = 0; i < 4 && i < playlist.getTracks().size(); i++) {
+        AudioTrack track = playlist.getTracks().get(i);
+        builder.addChoices(
+          "`[" +
+          FormatUtil.formatTime(track.getDuration()) +
+          "]` [**" +
+          track.getInfo().title +
+          "**](" +
+          track.getInfo().uri +
+          ")"
+        );
+      }
+      builder.build().display(m);
     }
-    
-    private class ResultHandler implements AudioLoadResultHandler 
-    {
-        private final Message m;
-        private final CommandEvent event;
-        
-        private ResultHandler(Message m, CommandEvent event)
-        {
-            this.m = m;
-            this.event = event;
-        }
-        
-        @Override
-        public void trackLoaded(AudioTrack track)
-        {
-            if(bot.getConfig().isTooLong(track))
-            {
-                m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" This track (**"+track.getInfo().title+"**) is longer than the allowed maximum: `"
-                        +FormatUtil.formatTime(track.getDuration())+"` > `"+bot.getConfig().getMaxTime()+"`")).queue();
-                return;
-            }
-            AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-            int pos = handler.addTrack(new QueuedTrack(track, event.getAuthor()))+1;
-            m.editMessage(FormatUtil.filter(event.getClient().getSuccess()+" Добавлен **"+track.getInfo().title
-                    +"** (`"+FormatUtil.formatTime(track.getDuration())+"`) "+(pos==0 ? ""
-                        : " в очередь "+pos))).queue();
-        }
 
-        @Override
-        public void playlistLoaded(AudioPlaylist playlist)
-        {
-            builder.setColor(event.getSelfMember().getColor())
-                    .setText(FormatUtil.filter(event.getClient().getSuccess()+" Результаты поиска: `"+event.getArgs()+"`:"))
-                    .setChoices(new String[0])
-                    .setSelection((msg,i) -> 
-                    {
-                        AudioTrack track = playlist.getTracks().get(i-1);
-                        if(bot.getConfig().isTooLong(track))
-                        {
-                            event.replyWarning("Эта пластинка (**"+track.getInfo().title+"**) длиннее чем разрешенный лимит : `"
-                                    +FormatUtil.formatTime(track.getDuration())+"` > `"+bot.getConfig().getMaxTime()+"`");
-                            return;
-                        }
-                        AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-                        int pos = handler.addTrack(new QueuedTrack(track, event.getAuthor()))+1;
-                        event.replySuccess("Добавлена пластинка **" + FormatUtil.filter(track.getInfo().title)
-                                + "** (`" + FormatUtil.formatTime(track.getDuration()) + "`) " + (pos==0 ? ""
-                                    : " в очередь "+pos));
-                    })
-                    .setCancel((msg) -> {})
-                    .setUsers(event.getAuthor())
-                    ;
-            for(int i=0; i<4 && i<playlist.getTracks().size(); i++)
-            {
-                AudioTrack track = playlist.getTracks().get(i);
-                builder.addChoices("`["+FormatUtil.formatTime(track.getDuration())+"]` [**"+track.getInfo().title+"**]("+track.getInfo().uri+")");
-            }
-            builder.build().display(m);
-        }
-
-        @Override
-        public void noMatches() 
-        {
-            m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" Результаты не найдены для `"+event.getArgs()+"`.")).queue();
-        }
-
-        @Override
-        public void loadFailed(FriendlyException throwable) 
-        {
-            if(throwable.severity==Severity.COMMON)
-                m.editMessage(event.getClient().getError()+" Ошибка загрузки: "+throwable.getMessage()).queue();
-            else
-                m.editMessage(event.getClient().getError()+" Ошибка загрузки пластинки.").queue();
-        }
+    @Override
+    public void noMatches() {
+      m
+        .editMessage(
+          FormatUtil.filter(
+            event.getClient().getWarning() +
+            " Результаты не найдены для `" +
+            event.getArgs() +
+            "`."
+          )
+        )
+        .queue();
     }
+
+    @Override
+    public void loadFailed(FriendlyException throwable) {
+      if (throwable.severity == Severity.COMMON) m
+        .editMessage(
+          event.getClient().getError() +
+          " Ошибка загрузки: " +
+          throwable.getMessage()
+        )
+        .queue(); else m
+        .editMessage(
+          event.getClient().getError() + " Ошибка загрузки пластинки."
+        )
+        .queue();
+    }
+  }
 }

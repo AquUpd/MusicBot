@@ -24,33 +24,34 @@ import net.dv8tion.jda.api.OnlineStatus;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SetstatusCmd extends OwnerCommand
-{
-    public SetstatusCmd(Bot bot)
-    {
-        this.name = "setstatus";
-        this.help = "устанавливает статус что делает бот";
-        this.arguments = "<status>";
-        this.aliases = bot.getConfig().getAliases(this.name);
-        this.guildOnly = false;
+public class SetstatusCmd extends OwnerCommand {
+
+  public SetstatusCmd(Bot bot) {
+    this.name = "setstatus";
+    this.help = "устанавливает статус что делает бот";
+    this.arguments = "<status>";
+    this.aliases = bot.getConfig().getAliases(this.name);
+    this.guildOnly = false;
+  }
+
+  @Override
+  protected void execute(CommandEvent event) {
+    try {
+      OnlineStatus status = OnlineStatus.fromKey(event.getArgs());
+      if (status == OnlineStatus.UNKNOWN) {
+        event.replyError(
+          "Напишите подходящий статус: `ONLINE`, `IDLE`, `DND`, `INVISIBLE`"
+        );
+      } else {
+        event.getJDA().getPresence().setStatus(status);
+        event.replySuccess(
+          "Установлен `" + status.getKey().toUpperCase() + "` статус"
+        );
+      }
+    } catch (Exception e) {
+      event.reply(
+        event.getClient().getError() + " Статус невозможно установить!"
+      );
     }
-    
-    @Override
-    protected void execute(CommandEvent event) 
-    {
-        try {
-            OnlineStatus status = OnlineStatus.fromKey(event.getArgs());
-            if(status==OnlineStatus.UNKNOWN)
-            {
-                event.replyError("Напишите подходящий статус: `ONLINE`, `IDLE`, `DND`, `INVISIBLE`");
-            }
-            else
-            {
-                event.getJDA().getPresence().setStatus(status);
-                event.replySuccess("Установлен `"+status.getKey().toUpperCase()+"` статус");
-            }
-        } catch(Exception e) {
-            event.reply(event.getClient().getError()+" Статус невозможно установить!");
-        }
-    }
+  }
 }

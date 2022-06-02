@@ -24,35 +24,35 @@ import com.jagrosh.jmusicbot.settings.Settings;
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public class PrefixCmd extends AdminCommand
-{
-    public PrefixCmd(Bot bot)
-    {
-        this.name = "prefix";
-        this.help = "выбирает префикс для определенного сервера";
-        this.arguments = "<prefix|NONE>";
-        this.aliases = bot.getConfig().getAliases(this.name);
+public class PrefixCmd extends AdminCommand {
+
+  public PrefixCmd(Bot bot) {
+    this.name = "prefix";
+    this.help = "выбирает префикс для определенного сервера";
+    this.arguments = "<prefix|NONE>";
+    this.aliases = bot.getConfig().getAliases(this.name);
+  }
+
+  @Override
+  protected void execute(CommandEvent event) {
+    if (event.getArgs().isEmpty()) {
+      event.replyError("Напшите нужный префикс или 'NONE' для очистки");
+      return;
     }
-    
-    @Override
-    protected void execute(CommandEvent event) 
-    {
-        if(event.getArgs().isEmpty())
-        {
-            event.replyError("Напшите нужный префикс или 'NONE' для очистки");
-            return;
-        }
-        
-        Settings s = event.getClient().getSettingsFor(event.getGuild());
-        if(event.getArgs().equalsIgnoreCase("none"))
-        {
-            s.setPrefix(null);
-            event.replySuccess("Префикс очищен.");
-        }
-        else
-        {
-            s.setPrefix(event.getArgs());
-            event.replySuccess("Префикс на сервере *" + event.getGuild().getName() + "* изменен на '" + event.getArgs() + "'");
-        }
+
+    Settings s = event.getClient().getSettingsFor(event.getGuild());
+    if (event.getArgs().equalsIgnoreCase("none")) {
+      s.setPrefix(null);
+      event.replySuccess("Префикс очищен.");
+    } else {
+      s.setPrefix(event.getArgs());
+      event.replySuccess(
+        "Префикс на сервере *" +
+        event.getGuild().getName() +
+        "* изменен на '" +
+        event.getArgs() +
+        "'"
+      );
     }
+  }
 }

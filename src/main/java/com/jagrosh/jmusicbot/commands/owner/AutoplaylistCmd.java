@@ -24,45 +24,56 @@ import com.jagrosh.jmusicbot.settings.Settings;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class AutoplaylistCmd extends OwnerCommand
-{
-    private final Bot bot;
-    
-    public AutoplaylistCmd(Bot bot)
-    {
-        this.bot = bot;
-        this.guildOnly = true;
-        this.name = "autoplaylist";
-        this.arguments = "<name|NONE>";
-        this.help = "делает автоматический плейлист который будет воспроизоводится при входе в канал";
-        this.aliases = bot.getConfig().getAliases(this.name);
-    }
+public class AutoplaylistCmd extends OwnerCommand {
 
-    @Override
-    public void execute(CommandEvent event) 
-    {
-        if(event.getArgs().isEmpty())
-        {
-            event.reply(event.getClient().getError()+" Пожалуйста напишите название плейлиста или NONE");
-            return;
-        }
-        if(event.getArgs().equalsIgnoreCase("none"))
-        {
-            Settings settings = event.getClient().getSettingsFor(event.getGuild());
-            settings.setDefaultPlaylist(null);
-            event.reply(event.getClient().getSuccess()+" Убран автоматический плейлист для **"+event.getGuild().getName()+"**");
-            return;
-        }
-        String pname = event.getArgs().replaceAll("\\s+", "_");
-        if(bot.getPlaylistLoader().getPlaylist(pname)==null)
-        {
-            event.reply(event.getClient().getError()+" Не могу найти `"+pname+".txt`!");
-        }
-        else
-        {
-            Settings settings = event.getClient().getSettingsFor(event.getGuild());
-            settings.setDefaultPlaylist(pname);
-            event.reply(event.getClient().getSuccess()+" Автоматический плейлист для **"+event.getGuild().getName()+"** теперь `"+pname+"`");
-        }
+  private final Bot bot;
+
+  public AutoplaylistCmd(Bot bot) {
+    this.bot = bot;
+    this.guildOnly = true;
+    this.name = "autoplaylist";
+    this.arguments = "<name|NONE>";
+    this.help =
+      "делает автоматический плейлист который будет воспроизоводится при входе в канал";
+    this.aliases = bot.getConfig().getAliases(this.name);
+  }
+
+  @Override
+  public void execute(CommandEvent event) {
+    if (event.getArgs().isEmpty()) {
+      event.reply(
+        event.getClient().getError() +
+        " Пожалуйста напишите название плейлиста или NONE"
+      );
+      return;
     }
+    if (event.getArgs().equalsIgnoreCase("none")) {
+      Settings settings = event.getClient().getSettingsFor(event.getGuild());
+      settings.setDefaultPlaylist(null);
+      event.reply(
+        event.getClient().getSuccess() +
+        " Убран автоматический плейлист для **" +
+        event.getGuild().getName() +
+        "**"
+      );
+      return;
+    }
+    String pname = event.getArgs().replaceAll("\\s+", "_");
+    if (bot.getPlaylistLoader().getPlaylist(pname) == null) {
+      event.reply(
+        event.getClient().getError() + " Не могу найти `" + pname + ".txt`!"
+      );
+    } else {
+      Settings settings = event.getClient().getSettingsFor(event.getGuild());
+      settings.setDefaultPlaylist(pname);
+      event.reply(
+        event.getClient().getSuccess() +
+        " Автоматический плейлист для **" +
+        event.getGuild().getName() +
+        "** теперь `" +
+        pname +
+        "`"
+      );
+    }
+  }
 }

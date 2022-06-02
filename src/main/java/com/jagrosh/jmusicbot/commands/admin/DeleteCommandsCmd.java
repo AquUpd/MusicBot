@@ -19,27 +19,25 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
+import java.util.List;
 import net.dv8tion.jda.api.interactions.commands.Command;
 
-import java.util.List;
+public class DeleteCommandsCmd extends OwnerCommand {
 
-public class DeleteCommandsCmd extends OwnerCommand
-{
-    public DeleteCommandsCmd(Bot bot) {
-        this.name = "deletecommands";
-        this.help = "удаляет все существующие команды";
-        this.aliases = bot.getConfig().getAliases(this.name);
+  public DeleteCommandsCmd(Bot bot) {
+    this.name = "deletecommands";
+    this.help = "удаляет все существующие команды";
+    this.aliases = bot.getConfig().getAliases(this.name);
+  }
+
+  @Override
+  protected void execute(CommandEvent event) {
+    List<Command> commands = event.getGuild().retrieveCommands().complete();
+    if (commands.isEmpty()) event.reply("нет команд"); else {
+      for (Command command : commands) {
+        event.getGuild().deleteCommandById(command.getIdLong()).submit();
+      }
+      event.reply("Done");
     }
-    
-    @Override
-    protected void execute(CommandEvent event) {
-        List<Command> commands = event.getGuild().retrieveCommands().complete();
-        if(commands.isEmpty()) event.reply("нет команд");
-        else {
-            for (Command command : commands) {
-                event.getGuild().deleteCommandById(command.getIdLong()).submit();
-            }
-            event.reply("Done");
-        }
-    }
+  }
 }

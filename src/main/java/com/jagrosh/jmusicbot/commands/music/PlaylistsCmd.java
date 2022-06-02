@@ -15,48 +15,54 @@
  */
 package com.jagrosh.jmusicbot.commands.music;
 
-import java.util.List;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
+import java.util.List;
 
 /**
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class PlaylistsCmd extends MusicCommand 
-{
-    public PlaylistsCmd(Bot bot)
-    {
-        super(bot);
-        this.name = "playlists";
-        this.help = "показывает доступные плейлисты";
-        this.aliases = bot.getConfig().getAliases(this.name);
-        this.guildOnly = true;
-        this.beListening = false;
+public class PlaylistsCmd extends MusicCommand {
+
+  public PlaylistsCmd(Bot bot) {
+    super(bot);
+    this.name = "playlists";
+    this.help = "показывает доступные плейлисты";
+    this.aliases = bot.getConfig().getAliases(this.name);
+    this.guildOnly = true;
+    this.beListening = false;
+  }
+
+  @Override
+  public void doCommand(CommandEvent event) {
+    if (!bot.getPlaylistLoader().folderExists()) bot
+      .getPlaylistLoader()
+      .createFolder();
+    if (!bot.getPlaylistLoader().folderExists()) {
+      event.reply(
+        event.getClient().getWarning() +
+        " Папки с плейлистами не существует и она будет создана!"
+      );
+      return;
     }
-    
-    @Override
-    public void doCommand(CommandEvent event) 
-    {
-        if(!bot.getPlaylistLoader().folderExists())
-            bot.getPlaylistLoader().createFolder();
-        if(!bot.getPlaylistLoader().folderExists())
-        {
-            event.reply(event.getClient().getWarning()+" Папки с плейлистами не существует и она будет создана!");
-            return;
-        }
-        List<String> list = bot.getPlaylistLoader().getPlaylistNames();
-        if(list==null)
-            event.reply(event.getClient().getError()+" Не удалось получить список плейлистов!");
-        else if(list.isEmpty())
-            event.reply(event.getClient().getWarning()+" В папке плейлистов нет плейлистов(грустно)!");
-        else
-        {
-            StringBuilder builder = new StringBuilder(event.getClient().getSuccess()+" Доступные плейлисты:\n");
-            list.forEach(str -> builder.append("`").append(str).append("` "));
-            builder.append("\nнапишите `").append(event.getClient().getTextualPrefix()).append("play playlist <название>` чтобы включить плейлист");
-            event.reply(builder.toString());
-        }
+    List<String> list = bot.getPlaylistLoader().getPlaylistNames();
+    if (list == null) event.reply(
+      event.getClient().getError() + " Не удалось получить список плейлистов!"
+    ); else if (list.isEmpty()) event.reply(
+      event.getClient().getWarning() +
+      " В папке плейлистов нет плейлистов(грустно)!"
+    ); else {
+      StringBuilder builder = new StringBuilder(
+        event.getClient().getSuccess() + " Доступные плейлисты:\n"
+      );
+      list.forEach(str -> builder.append("`").append(str).append("` "));
+      builder
+        .append("\nнапишите `")
+        .append(event.getClient().getTextualPrefix())
+        .append("play playlist <название>` чтобы включить плейлист");
+      event.reply(builder.toString());
     }
+  }
 }

@@ -21,11 +21,10 @@ import com.jagrosh.jdautilities.command.Command;
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public abstract class OwnerCommand extends Command
-{
-    public OwnerCommand()
-    {
-        this.category = new Category("Owner");
-        this.ownerCommand = true;
-    }
+public abstract class OwnerCommand extends Command {
+
+  public OwnerCommand() {
+    this.category = new Category("Owner");
+    this.ownerCommand = true;
+  }
 }

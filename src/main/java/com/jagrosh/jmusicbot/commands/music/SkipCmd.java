@@ -26,26 +26,31 @@ import net.dv8tion.jda.api.entities.User;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SkipCmd extends MusicCommand 
-{
-    public SkipCmd(Bot bot)
-    {
-        super(bot);
-        this.name = "skip";
-        this.help = "голосование за пропуск пластинок";
-        this.aliases = bot.getConfig().getAliases(this.name);
-        this.beListening = true;
-        this.bePlaying = true;
-    }
+public class SkipCmd extends MusicCommand {
 
-    @Override
-    public void doCommand(CommandEvent event) 
+  public SkipCmd(Bot bot) {
+    super(bot);
+    this.name = "skip";
+    this.help = "голосование за пропуск пластинок";
+    this.aliases = bot.getConfig().getAliases(this.name);
+    this.beListening = true;
+    this.bePlaying = true;
+  }
+
+  @Override
+  public void doCommand(CommandEvent event) {
+    AudioHandler handler = (AudioHandler) event
+      .getGuild()
+      .getAudioManager()
+      .getSendingHandler();
     {
-        AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        {
-            event.reply(event.getClient().getSuccess()+" Пропущена пластинка **"+handler.getPlayer().getPlayingTrack().getInfo().title+"**");
-            handler.getPlayer().stopTrack();
-        }
+      event.reply(
+        event.getClient().getSuccess() +
+        " Пропущена пластинка **" +
+        handler.getPlayer().getPlayingTrack().getInfo().title +
+        "**"
+      );
+      handler.getPlayer().stopTrack();
     }
-    
+  }
 }

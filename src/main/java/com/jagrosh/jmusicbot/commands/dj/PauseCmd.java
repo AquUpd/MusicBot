@@ -24,27 +24,37 @@ import com.jagrosh.jmusicbot.commands.DJCommand;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class PauseCmd extends DJCommand 
-{
-    public PauseCmd(Bot bot)
-    {
-        super(bot);
-        this.name = "pause";
-        this.help = "ставит пластинку на паузу";
-        this.aliases = bot.getConfig().getAliases(this.name);
-        this.bePlaying = true;
-    }
+public class PauseCmd extends DJCommand {
 
-    @Override
-    public void doCommand(CommandEvent event) 
-    {
-        AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
-        if(handler.getPlayer().isPaused())
-        {
-            event.replyWarning("Пластинки уже стоят на паузе! Используйте `"+event.getClient().getPrefix()+"play` чтобы возобновить прослушивание!");
-            return;
-        }
-        handler.getPlayer().setPaused(true);
-        event.replySuccess("**"+handler.getPlayer().getPlayingTrack().getInfo().title+"** теперь на паузе. Используйте `"+event.getClient().getPrefix()+"play` чтобы возобновить прослушивание!");
+  public PauseCmd(Bot bot) {
+    super(bot);
+    this.name = "pause";
+    this.help = "ставит пластинку на паузу";
+    this.aliases = bot.getConfig().getAliases(this.name);
+    this.bePlaying = true;
+  }
+
+  @Override
+  public void doCommand(CommandEvent event) {
+    AudioHandler handler = (AudioHandler) event
+      .getGuild()
+      .getAudioManager()
+      .getSendingHandler();
+    if (handler.getPlayer().isPaused()) {
+      event.replyWarning(
+        "Пластинки уже стоят на паузе! Используйте `" +
+        event.getClient().getPrefix() +
+        "play` чтобы возобновить прослушивание!"
+      );
+      return;
     }
+    handler.getPlayer().setPaused(true);
+    event.replySuccess(
+      "**" +
+      handler.getPlayer().getPlayingTrack().getInfo().title +
+      "** теперь на паузе. Используйте `" +
+      event.getClient().getPrefix() +
+      "play` чтобы возобновить прослушивание!"
+    );
+  }
 }
