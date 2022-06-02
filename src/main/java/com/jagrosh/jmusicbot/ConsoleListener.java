@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Scanner;
 
 @SuppressWarnings("InfiniteRecursion")
-public class TextInputObject implements Runnable {
+public class ConsoleListener implements Runnable {
 
-    Logger log = LoggerFactory.getLogger("ConsoleInput");
+    Logger log = LoggerFactory.getLogger("CL");
     private final Bot bot;
     private final JDA jda;
-    public TextInputObject(Bot bot) {
+    public ConsoleListener(Bot bot) {
         this.bot = bot;
         this.jda = bot.getJDA();
     }
@@ -72,12 +72,15 @@ public class TextInputObject implements Runnable {
                     try {
                         jda.getGuildById(gld).getTextChannelById(chnl).sendMessage(mesg).queue();
                         log.info("Отправлено!");
-                    } catch (NullPointerException npe){
-                        log.error("Что-то пошло не так: ");
-                        npe.printStackTrace();
-                    } catch (InsufficientPermissionException ipe){
+                    } catch (InsufficientPermissionException ipe) {
                         log.error("Я не могу отправлять сообщения в этот чат: ");
                         ipe.printStackTrace();
+                    } catch (NumberFormatException nfe) {
+                        log.error("Какой-то из ID введен не правильно: ");
+                        nfe.printStackTrace();
+                    } catch (Exception e) {
+                        log.error("Что-то пошло не так: ");
+                        e.printStackTrace();
                     }
                 }
                 break;
@@ -88,10 +91,14 @@ public class TextInputObject implements Runnable {
                 } else {
                     String gld = input[1];
                     try {
-                        jda.getGuildById(gld).leave().complete();
+                        jda.getGuildById(gld).leave().queue();
                         log.info("Успешно вышел из сервера");
-                    } catch (NullPointerException npe) {
-                        log.error("Вы не состоите в таком сервере");
+                    } catch (NumberFormatException nfe) {
+                        log.error("ID введен не правильно: ");
+                        nfe.printStackTrace();
+                    } catch (Exception e) {
+                        log.error("Что-то пошло не так: ");
+                        e.printStackTrace();
                     }
                 }
                 break;
@@ -118,8 +125,12 @@ public class TextInputObject implements Runnable {
                             if(channel.getType() != ChannelType.CATEGORY) channelslist.append(channel.getId()).append(" ").append(channel.getName()).append(" ").append(channel.getType()).append("\n");
                         }
                         log.info("Список всех каналов в гильдии " + jda.getGuildById(gld).getName() + ": \n" + channelslist);
-                    } catch (NullPointerException npe) {
-                        log.error("Вы не состоите в таком сервере");
+                    } catch (NumberFormatException nfe) {
+                        log.error("ID введен не правильно: ");
+                        nfe.printStackTrace();
+                    } catch (Exception e) {
+                        log.error("Что-то пошло не так: ");
+                        e.printStackTrace();
                     }
                 }
                 break;

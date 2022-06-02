@@ -18,22 +18,21 @@ package com.jagrosh.jmusicbot.commands.admin;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.AdminCommand;
+import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import net.dv8tion.jda.api.interactions.commands.Command;
 
 import java.util.List;
 
-public class DeleteCommandsCmd extends AdminCommand
+public class DeleteCommandsCmd extends OwnerCommand
 {
-    public DeleteCommandsCmd(Bot bot)
-    {
+    public DeleteCommandsCmd(Bot bot) {
         this.name = "deletecommands";
         this.help = "удаляет все существующие команды";
         this.aliases = bot.getConfig().getAliases(this.name);
     }
     
     @Override
-    protected void execute(CommandEvent event) 
-    {
+    protected void execute(CommandEvent event) {
         List<Command> commands = event.getGuild().retrieveCommands().complete();
         if(commands.isEmpty()) event.reply("нет команд");
         else {

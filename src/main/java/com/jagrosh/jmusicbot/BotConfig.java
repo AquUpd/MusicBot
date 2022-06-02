@@ -160,7 +160,7 @@ public class BotConfig
             Files.write(path, bytes);
         } catch(IOException ex) {
             prompt.alert(Prompt.Level.WARNING, CONTEXT, "не удалось записать некоторые настройки в config.go: "+ex
-                + "\nУбедитесь что файлы бота не находятся в ограниченном доступе.\n\nРасположение config.txt: "
+                + "\nУбедитесь что файлы бота не находятся в ограниченном доступе.\n\nРасположение config.go: "
                 + path.toAbsolutePath().toString());
         }
     }

@@ -55,7 +55,7 @@ public class JMusicBot
                                 Permission.MANAGE_CHANNEL, Permission.VOICE_CONNECT, Permission.VOICE_SPEAK, Permission.NICKNAME_CHANGE};
     public final static GatewayIntent[] INTENTS = {GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MEMBERS};
 
-    static TextInputObject textInput;
+    static ConsoleListener textInput;
 
     /**
      * @param args the command line arguments
@@ -216,19 +216,19 @@ public class JMusicBot
         catch (LoginException ex)
         {
             prompt.alert(Prompt.Level.ERROR, "JMusicBot", ex + "\nУбедитесь что вы "
-                    + "изменяете правильный config.txt файл и применяете "
-                    + "правильный токен бота (не 'secret'!)\nРасположение config.txt: " + config.getConfigLocation());
+                    + "изменяете правильный config.go файл и применяете "
+                    + "правильный токен бота (не 'secret'!)\nРасположение config.go: " + config.getConfigLocation());
             System.exit(1);
         }
         catch(IllegalArgumentException ex)
         {
             prompt.alert(Prompt.Level.ERROR, "JMusicBot", "Некоторые строчки конфигурационного файла "
-                    + "не правильные: " + ex + "\nРасположение config.txt: " + config.getConfigLocation());
+                    + "не правильные: " + ex + "\nРасположение config.go: " + config.getConfigLocation());
             System.exit(1);
         }
 
         // console listener
-        textInput = new TextInputObject(bot);
+        textInput = new ConsoleListener(bot);
         textInput.start();
 
         DateFormat formatter;
