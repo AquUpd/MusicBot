@@ -95,7 +95,7 @@ public class AudioHandler
 
   public boolean isMusicPlaying(JDA jda) {
     return (
-      guild(jda).getSelfMember().getVoiceState().inVoiceChannel() &&
+      guild(jda).getSelfMember().getVoiceState().inAudioChannel() &&
       audioPlayer.getPlayingTrack() != null
     );
   }

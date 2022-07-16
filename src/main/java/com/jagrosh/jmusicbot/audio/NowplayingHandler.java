@@ -48,7 +48,7 @@ public class NowplayingHandler {
   public void init() {
     if (!bot.getConfig().useNPImages()) bot
       .getThreadpool()
-      .scheduleWithFixedDelay(() -> updateAll(), 0, 5, TimeUnit.SECONDS);
+      .scheduleWithFixedDelay(this::updateAll, 0, 5, TimeUnit.SECONDS);
   }
 
   public void setLastNPMessage(Message m) {
@@ -92,7 +92,7 @@ public class NowplayingHandler {
         toRemove.add(guildId);
       }
     }
-    toRemove.forEach(id -> lastNP.remove(id));
+    toRemove.forEach(lastNP::remove);
   }
 
   public void updateTopic(long guildId, AudioHandler handler, boolean wait) {
@@ -138,7 +138,7 @@ public class NowplayingHandler {
           .getJDA()
           .getGuilds()
           .stream()
-          .filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel())
+          .filter(g -> g.getSelfMember().getVoiceState().inAudioChannel())
           .count() <=
         1
       ) bot

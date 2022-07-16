@@ -50,8 +50,9 @@ public class JMusicBot {
   public static final String PAUSE_EMOJI = "\u23F8"; // ⏸
   public static final String STOP_EMOJI = "\u23F9"; // ⏹
   public static final Permission[] RECOMMENDED_PERMS = {
-    Permission.MESSAGE_READ,
-    Permission.MESSAGE_WRITE,
+    Permission.MESSAGE_SEND,
+    Permission.MESSAGE_SEND_IN_THREADS,
+    Permission.CREATE_PUBLIC_THREADS,
     Permission.MESSAGE_HISTORY,
     Permission.MESSAGE_ADD_REACTION,
     Permission.MESSAGE_EMBED_LINKS,
@@ -64,6 +65,8 @@ public class JMusicBot {
     Permission.NICKNAME_CHANGE,
   };
   public static final GatewayIntent[] INTENTS = {
+    GatewayIntent.GUILD_PRESENCES,
+    GatewayIntent.GUILD_EMOJIS_AND_STICKERS,
     GatewayIntent.DIRECT_MESSAGES,
     GatewayIntent.GUILD_MESSAGES,
     GatewayIntent.GUILD_MESSAGE_REACTIONS,
@@ -78,6 +81,8 @@ public class JMusicBot {
    */
 
   public static void main(String[] args) {
+    TimeZone.setDefault(TimeZone.getTimeZone("Europe/Moscow"));
+
     long timer = System.currentTimeMillis();
     // startup log
     Logger log = LoggerFactory.getLogger("Startup");
@@ -103,10 +108,7 @@ public class JMusicBot {
     }
     int v_num = Integer.parseInt(version);
 
-    if (
-      !System.getProperty("java.vm.name").contains("64") ||
-      !(v_num >= 8 && v_num <= 16)
-    ) {
+    if (!System.getProperty("java.vm.name").contains("64") || !(v_num >= 8 && v_num <= 16)) {
       prompt.alert(
         Prompt.Level.WARNING,
         "Java Version",
@@ -223,13 +225,8 @@ public class JMusicBot {
     try {
       JDA jda = JDABuilder
         .create(config.getToken(), Arrays.asList(INTENTS))
-        .enableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE)
-        .disableCache(
-          CacheFlag.ACTIVITY,
-          CacheFlag.CLIENT_STATUS,
-          CacheFlag.EMOTE,
-          CacheFlag.ONLINE_STATUS
-        )
+        .enableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE, CacheFlag.ONLINE_STATUS)
+        .disableCache(CacheFlag.ACTIVITY)
         .setActivity(nogame ? null : Activity.playing("загрузка..."))
         .setStatus(
           config.getStatus() == OnlineStatus.INVISIBLE ||

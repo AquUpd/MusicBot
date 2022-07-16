@@ -27,7 +27,6 @@ import com.sedmelluq.discord.lavaplayer.source.http.HttpAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.source.yamusic.YandexMusicAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
@@ -69,19 +68,14 @@ public class PlayerManager extends DefaultAudioPlayerManager {
   }
 
   public void registerRemoteSources(String email, String password) {
-    this.registerSourceManager(
-        new YoutubeAudioSourceManager(true, email, password)
-      );
-    this.registerSourceManager(new YandexMusicAudioSourceManager(true));
+    this.registerSourceManager(new YoutubeAudioSourceManager(true, email, password));
     this.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
     this.registerSourceManager(new BandcampAudioSourceManager());
     this.registerSourceManager(new VimeoAudioSourceManager());
     this.registerSourceManager(new TwitchStreamAudioSourceManager());
     this.registerSourceManager(new BeamAudioSourceManager());
     this.registerSourceManager(new GetyarnAudioSourceManager());
-    this.registerSourceManager(
-        new HttpAudioSourceManager(MediaContainerRegistry.DEFAULT_REGISTRY)
-      );
+    this.registerSourceManager(new HttpAudioSourceManager(MediaContainerRegistry.DEFAULT_REGISTRY));
   }
 
   public Bot getBot() {

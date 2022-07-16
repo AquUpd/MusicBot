@@ -26,8 +26,7 @@ public class ChessCmd extends FunCommand {
     URL url = new URL(
       "https://discord.com/api/v8/channels/" + current + "/invites"
     );
-    String postBody =
-      "{\"max_age\": \"86400\", \"max_uses\": 0, \"target_application_id\":\"832012774040141894\", \"target_type\":2, \"temporary\": false, \"validate\": null}";
+    String postBody = "{\"max_age\": \"86400\", \"max_uses\": 0, \"target_application_id\":\"832012774040141894\", \"target_type\":2, \"temporary\": false, \"validate\": null}";
 
     RequestBody body = RequestBody.create(
       MediaType.parse("application/json"),

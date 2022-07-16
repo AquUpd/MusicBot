@@ -83,7 +83,7 @@ public class SettingsCmd extends Command {
           .getJDA()
           .getGuilds()
           .stream()
-          .filter(g -> g.getSelfMember().getVoiceState().inVoiceChannel())
+          .filter(g -> g.getSelfMember().getVoiceState().inAudioChannel())
           .count() +
         " голосовых подключений",
         null

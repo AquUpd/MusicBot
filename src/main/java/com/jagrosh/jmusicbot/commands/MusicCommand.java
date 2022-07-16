@@ -20,6 +20,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.settings.Settings;
+import net.dv8tion.jda.api.entities.AudioChannel;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -58,20 +59,12 @@ public abstract class MusicCommand extends Command {
       return;
     }
     bot.getPlayerManager().setUpHandler(event.getGuild()); // no point constantly checking for this later
-    if (
-      bePlaying &&
-      !(
-        (AudioHandler) event.getGuild().getAudioManager().getSendingHandler()
-      ).isMusicPlaying(event.getJDA())
-    ) {
-      event.reply(
-        event.getClient().getError() +
-        " Для использования этой команды нужна музыка!"
-      );
+    if (bePlaying && !((AudioHandler) event.getGuild().getAudioManager().getSendingHandler()).isMusicPlaying(event.getJDA())) {
+      event.reply(event.getClient().getError() + " Для использования этой команды нужна музыка!");
       return;
     }
     if (beListening) {
-      VoiceChannel current = event
+      AudioChannel current = event
         .getGuild()
         .getSelfMember()
         .getVoiceState()
@@ -79,7 +72,7 @@ public abstract class MusicCommand extends Command {
       if (current == null) current = settings.getVoiceChannel(event.getGuild());
       GuildVoiceState userState = event.getMember().getVoiceState();
       if (
-        !userState.inVoiceChannel() ||
+        !userState.inAudioChannel() ||
         (current != null && !userState.getChannel().equals(current))
       ) {
         event.replyError(
@@ -99,7 +92,7 @@ public abstract class MusicCommand extends Command {
         return;
       }
 
-      if (!event.getGuild().getSelfMember().getVoiceState().inVoiceChannel()) {
+      if (!event.getGuild().getSelfMember().getVoiceState().inAudioChannel()) {
         try {
           event
             .getGuild()
