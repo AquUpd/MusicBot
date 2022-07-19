@@ -31,17 +31,16 @@ public class PokerCmd extends FunCommand {
 
       RequestBody body = RequestBody.create(MediaType.parse("application/json"), postBody);
 
-      OkHttpClient client = new OkHttpClient.Builder()
-        .addInterceptor(new DefaultContentTypeInterceptor())
-        .build();
+      OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new DefaultContentTypeInterceptor()).build();
 
       Request request = new Request.Builder().url(url).post(body).build();
-        Call call = client.newCall(request);
-        Response response = call.execute();
-        JSONObject obj = new JSONObject(response.body().string());
-        String code = obj.getString("code");
-        event.reply("https://discord.com/invite/" + code);
-        response.close();
+
+      Call call = client.newCall(request);
+      Response response = call.execute();
+      JSONObject obj = new JSONObject(response.body().string());
+      String code = obj.getString("code");
+      event.reply("https://discord.com/invite/" + code);
+      response.close();
     } catch (IOException exception) {
       event.replyError("Я не смог создать ссылку");
     }

@@ -18,73 +18,6 @@ public class ProfilePictureCmd extends FunCommand {
     this.help = "получает изображение профиля";
   }
 
-  @Override
-  public void doCommand(CommandEvent event) {
-    if (event.getGuild().getId().equals("745746205144776774")) {
-      event.replyError("Нельзя использовать данную команду на этом сервере");
-    } else {
-      String argument = String.valueOf(event.getArgs());
-      if (argument.length() == 0) {
-        event.replySuccess(
-          "Ваше изображение профиля: \n" + event.getAuthor().getAvatarUrl()
-        );
-      } else {
-        event.getGuild().loadMembers();
-        if (discordtag(argument)) {
-          Member member = event.getGuild().getMemberByTag(argument);
-          if (member == null) {
-            event.replyError(
-              "Нет пользователя с таким дискорд тегом на данном сервере"
-            );
-          } else {
-            event.reply(
-              "Изображение профиля " +
-              member.getEffectiveName() +
-              " \n" +
-              member.getEffectiveAvatarUrl()
-            );
-          }
-        } else if (discordid(argument)) {
-          Member member = event.getGuild().getMemberById(argument);
-          if (member == null) {
-            event.replyError("Нет пользователя с таким id на данном сервере");
-          } else {
-            event.reply(
-              "Изображение профиля " +
-              member.getEffectiveName() +
-              " \n" +
-              member.getEffectiveAvatarUrl()
-            );
-          }
-        } else {
-          if (
-            event.getGuild().getMembersByName(argument, true).size() == 0
-          ) event.replyError("Нет пользователей с таким ником"); else if (
-            event.getGuild().getMembersByName(argument, true).size() > 1
-          ) event.replyError(
-            "Есть несколько пользователей с таким ником"
-          ); else {
-            Member member = event
-              .getGuild()
-              .getMembersByName(argument, true)
-              .get(0);
-            event.reply(
-              "Изображение профиля " +
-              member.getEffectiveName() +
-              " \n" +
-              member.getEffectiveAvatarUrl()
-            );
-          }
-        }
-      }
-    }
-  }
-
-  @Override
-  public void doSlashCommand(SlashCommandEvent event) {
-
-  }
-
   public static boolean discordtag(String str) {
     String regex = "^.{3,32}#[0-9]{4}$";
 
@@ -127,5 +60,48 @@ public class ProfilePictureCmd extends FunCommand {
     // Return if the string
     // matched the ReGex
     return m.matches();
+  }
+
+  @Override
+  public void doCommand(CommandEvent event) {
+    if (event.getGuild().getId().equals("745746205144776774")) {
+      event.replyError("Нельзя использовать данную команду на этом сервере");
+    } else {
+      String argument = String.valueOf(event.getArgs());
+      if (argument.length() == 0) {
+        event.replySuccess("Ваше изображение профиля: \n" + event.getAuthor().getAvatarUrl());
+      } else {
+        event.getGuild().loadMembers();
+        if (discordtag(argument)) {
+          Member member = event.getGuild().getMemberByTag(argument);
+          if (member == null) {
+            event.replyError("Нет пользователя с таким дискорд тегом на данном сервере");
+          } else {
+            event.reply("Изображение профиля " + member.getEffectiveName() + " \n" + member.getEffectiveAvatarUrl());
+          }
+        } else if (discordid(argument)) {
+          Member member = event.getGuild().getMemberById(argument);
+          if (member == null) {
+            event.replyError("Нет пользователя с таким id на данном сервере");
+          } else {
+            event.reply("Изображение профиля " + member.getEffectiveName() + " \n" + member.getEffectiveAvatarUrl());
+          }
+        } else {
+          if (event.getGuild().getMembersByName(argument, true).size() == 0)
+            event.replyError("Нет пользователей с таким ником");
+          else if (event.getGuild().getMembersByName(argument, true).size() > 1)
+            event.replyError("Есть несколько пользователей с таким ником");
+          else {
+            Member member = event.getGuild().getMembersByName(argument, true).get(0);
+            event.reply("Изображение профиля " + member.getEffectiveName() + " \n" + member.getEffectiveAvatarUrl());
+          }
+        }
+      }
+    }
+  }
+
+  @Override
+  public void doSlashCommand(SlashCommandEvent event) {
+
   }
 }

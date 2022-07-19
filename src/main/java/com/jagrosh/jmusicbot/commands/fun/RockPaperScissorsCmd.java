@@ -74,11 +74,7 @@ public class RockPaperScissorsCmd extends FunCommand {
       if (rpsbot == rpsplayer) {
         result = "Ничья!";
         emoji = ":upside_down: ";
-      } else if (
-        (rpsplayer == 0 && rpsbot == 1) ||
-        (rpsplayer == 1 && rpsbot == 2) ||
-        (rpsplayer == 2 && rpsbot == 0)
-      ) {
+      } else if ((rpsplayer == 0 && rpsbot == 1) || (rpsplayer == 1 && rpsbot == 2) || (rpsplayer == 2 && rpsbot == 0)) {
         result = "Вы победили!";
         emoji = ":sunglasses: ";
       } else {
@@ -86,19 +82,9 @@ public class RockPaperScissorsCmd extends FunCommand {
         emoji = ":sob: ";
       }
 
-      event.reply(
-        emoji +
-        "Бот выбрал: `" +
-        rpsbotname +
-        "`, Игрок выбрал: `" +
-        rpsplayername +
-        "`. " +
-        result
-      );
+      event.reply(emoji + "Бот выбрал: `" + rpsbotname + "`, Игрок выбрал: `" + rpsplayername + "`. " + result);
     } else {
-      event.replyError(
-        "Напишите \"камень\", \"ножницы\" или \"бумага\" после команды."
-      );
+      event.replyError("Напишите \"камень\", \"ножницы\" или \"бумага\" после команды.");
     }
   }
 

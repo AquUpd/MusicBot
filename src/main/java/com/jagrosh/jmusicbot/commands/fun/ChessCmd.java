@@ -22,22 +22,15 @@ public class ChessCmd extends FunCommand {
   }
 
   @Override
-  public void doCommand(CommandEvent event){
+  public void doCommand(CommandEvent event) {
     try {
       String current = event.getMember().getVoiceState().getChannel().getId();
-      URL url = new URL(
-        "https://discord.com/api/v8/channels/" + current + "/invites"
-      );
+      URL url = new URL("https://discord.com/api/v8/channels/" + current + "/invites");
       String postBody = "{\"max_age\": \"86400\", \"max_uses\": 0, \"target_application_id\":\"832012774040141894\", \"target_type\":2, \"temporary\": false, \"validate\": null}";
 
-      RequestBody body = RequestBody.create(
-        MediaType.parse("application/json"),
-        postBody
-      );
+      RequestBody body = RequestBody.create(MediaType.parse("application/json"), postBody);
 
-      OkHttpClient client = new OkHttpClient.Builder()
-        .addInterceptor(new DefaultContentTypeInterceptor())
-        .build();
+      OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new DefaultContentTypeInterceptor()).build();
 
       Request request = new Request.Builder().url(url).post(body).build();
 
