@@ -22,7 +22,6 @@ import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import net.dv8tion.jda.api.OnlineStatus;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class SetstatusCmd extends OwnerCommand {
@@ -45,19 +44,13 @@ public class SetstatusCmd extends OwnerCommand {
     try {
       OnlineStatus status = OnlineStatus.fromKey(event.getArgs());
       if (status == OnlineStatus.UNKNOWN) {
-        event.replyError(
-          "Напишите подходящий статус: `ONLINE`, `IDLE`, `DND`, `INVISIBLE`"
-        );
+        event.replyError("Напишите подходящий статус: `ONLINE`, `IDLE`, `DND`, `INVISIBLE`");
       } else {
         event.getJDA().getPresence().setStatus(status);
-        event.replySuccess(
-          "Установлен `" + status.getKey().toUpperCase() + "` статус"
-        );
+        event.replySuccess("Установлен `" + status.getKey().toUpperCase() + "` статус");
       }
     } catch (Exception e) {
-      event.reply(
-        event.getClient().getError() + " Статус невозможно установить!"
-      );
+      event.reply(event.getClient().getError() + " Статус невозможно установить!");
     }
   }
 }

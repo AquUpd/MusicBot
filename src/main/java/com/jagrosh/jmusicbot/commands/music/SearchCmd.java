@@ -33,14 +33,13 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class SearchCmd extends MusicCommand {
 
-  protected String searchPrefix = "ytsearch:";
   private final OrderedMenu.Builder builder;
   private final String searchingEmoji;
+  protected String searchPrefix = "ytsearch:";
 
   public SearchCmd(Bot bot) {
     super(bot);
@@ -51,14 +50,8 @@ public class SearchCmd extends MusicCommand {
     this.help = "поиск пластинок в YouTube";
     this.beListening = true;
     this.bePlaying = false;
-    this.botPermissions = new Permission[] { Permission.MESSAGE_EMBED_LINKS };
-    builder =
-      new OrderedMenu.Builder()
-        .allowTextInput(true)
-        .useNumbers()
-        .useCancelButton(true)
-        .setEventWaiter(bot.getWaiter())
-        .setTimeout(1, TimeUnit.MINUTES);
+    this.botPermissions = new Permission[]{Permission.MESSAGE_EMBED_LINKS};
+    builder = new OrderedMenu.Builder().allowTextInput(true).useNumbers().useCancelButton(true).setEventWaiter(bot.getWaiter()).setTimeout(1, TimeUnit.MINUTES);
   }
 
   @Override
@@ -67,17 +60,7 @@ public class SearchCmd extends MusicCommand {
       event.replyError("Напишите аргументы поиска.");
       return;
     }
-    event.reply(
-      searchingEmoji + " Поиск... `[" + event.getArgs() + "]`",
-      m ->
-        bot
-          .getPlayerManager()
-          .loadItemOrdered(
-            event.getGuild(),
-            searchPrefix + event.getArgs(),
-            new ResultHandler(m, event)
-          )
-    );
+    event.reply(searchingEmoji + " Поиск... `[" + event.getArgs() + "]`", m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), searchPrefix + event.getArgs(), new ResultHandler(m, event)));
   }
 
   @Override
@@ -98,128 +81,43 @@ public class SearchCmd extends MusicCommand {
     @Override
     public void trackLoaded(AudioTrack track) {
       if (bot.getConfig().isTooLong(track)) {
-        m
-          .editMessage(
-            FormatUtil.filter(
-              event.getClient().getWarning() +
-              " This track (**" +
-              track.getInfo().title +
-              "**) is longer than the allowed maximum: `" +
-              FormatUtil.formatTime(track.getDuration()) +
-              "` > `" +
-              bot.getConfig().getMaxTime() +
-              "`"
-            )
-          )
-          .queue();
+        m.editMessage(FormatUtil.filter(event.getClient().getWarning() + " This track (**" + track.getInfo().title + "**) is longer than the allowed maximum: `" + FormatUtil.formatTime(track.getDuration()) + "` > `" + bot.getConfig().getMaxTime() + "`")).queue();
         return;
       }
-      AudioHandler handler = (AudioHandler) event
-        .getGuild()
-        .getAudioManager()
-        .getSendingHandler();
+      AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
       int pos = handler.addTrack(new QueuedTrack(track, event.getAuthor())) + 1;
-      m
-        .editMessage(
-          FormatUtil.filter(
-            event.getClient().getSuccess() +
-            " Добавлен **" +
-            track.getInfo().title +
-            "** (`" +
-            FormatUtil.formatTime(track.getDuration()) +
-            "`) " +
-            (pos == 0 ? "" : " в очередь " + pos)
-          )
-        )
-        .queue();
+      m.editMessage(FormatUtil.filter(event.getClient().getSuccess() + " Добавлен **" + track.getInfo().title + "** (`" + FormatUtil.formatTime(track.getDuration()) + "`) " + (pos == 0 ? "" : " в очередь " + pos))).queue();
     }
 
     @Override
     public void playlistLoaded(AudioPlaylist playlist) {
-      builder
-        .setColor(event.getSelfMember().getColor())
-        .setText(
-          FormatUtil.filter(
-            event.getClient().getSuccess() +
-            " Результаты поиска: `" +
-            event.getArgs() +
-            "`:"
-          )
-        )
-        .setChoices(new String[0])
-        .setSelection((msg, i) -> {
-          AudioTrack track = playlist.getTracks().get(i - 1);
-          if (bot.getConfig().isTooLong(track)) {
-            event.replyWarning(
-              "Эта пластинка (**" +
-              track.getInfo().title +
-              "**) длиннее чем разрешенный лимит : `" +
-              FormatUtil.formatTime(track.getDuration()) +
-              "` > `" +
-              bot.getConfig().getMaxTime() +
-              "`"
-            );
-            return;
-          }
-          AudioHandler handler = (AudioHandler) event
-            .getGuild()
-            .getAudioManager()
-            .getSendingHandler();
-          int pos =
-            handler.addTrack(new QueuedTrack(track, event.getAuthor())) + 1;
-          event.replySuccess(
-            "Добавлена пластинка **" +
-            FormatUtil.filter(track.getInfo().title) +
-            "** (`" +
-            FormatUtil.formatTime(track.getDuration()) +
-            "`) " +
-            (pos == 0 ? "" : " в очередь " + pos)
-          );
-        })
-        .setCancel(msg -> {})
-        .setUsers(event.getAuthor());
+      builder.setColor(event.getSelfMember().getColor()).setText(FormatUtil.filter(event.getClient().getSuccess() + " Результаты поиска: `" + event.getArgs() + "`:")).setChoices().setSelection((msg, i) -> {
+        AudioTrack track = playlist.getTracks().get(i - 1);
+        if (bot.getConfig().isTooLong(track)) {
+          event.replyWarning("Эта пластинка (**" + track.getInfo().title + "**) длиннее чем разрешенный лимит : `" + FormatUtil.formatTime(track.getDuration()) + "` > `" + bot.getConfig().getMaxTime() + "`");
+          return;
+        }
+        AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+        int pos = handler.addTrack(new QueuedTrack(track, event.getAuthor())) + 1;
+        event.replySuccess("Добавлена пластинка **" + FormatUtil.filter(track.getInfo().title) + "** (`" + FormatUtil.formatTime(track.getDuration()) + "`) " + (pos == 0 ? "" : " в очередь " + pos));
+      }).setCancel(msg -> {}).setUsers(event.getAuthor());
       for (int i = 0; i < 4 && i < playlist.getTracks().size(); i++) {
         AudioTrack track = playlist.getTracks().get(i);
-        builder.addChoices(
-          "`[" +
-          FormatUtil.formatTime(track.getDuration()) +
-          "]` [**" +
-          track.getInfo().title +
-          "**](" +
-          track.getInfo().uri +
-          ")"
-        );
+        builder.addChoices("`[" + FormatUtil.formatTime(track.getDuration()) + "]` [**" + track.getInfo().title + "**](" + track.getInfo().uri + ")");
       }
       builder.build().display(m);
     }
 
     @Override
     public void noMatches() {
-      m
-        .editMessage(
-          FormatUtil.filter(
-            event.getClient().getWarning() +
-            " Результаты не найдены для `" +
-            event.getArgs() +
-            "`."
-          )
-        )
-        .queue();
+      m.editMessage(FormatUtil.filter(event.getClient().getWarning() + " Результаты не найдены для `" + event.getArgs() + "`.")).queue();
     }
 
     @Override
     public void loadFailed(FriendlyException throwable) {
-      if (throwable.severity == Severity.COMMON) m
-        .editMessage(
-          event.getClient().getError() +
-          " Ошибка загрузки: " +
-          throwable.getMessage()
-        )
-        .queue(); else m
-        .editMessage(
-          event.getClient().getError() + " Ошибка загрузки пластинки."
-        )
-        .queue();
+      if (throwable.severity == Severity.COMMON)
+        m.editMessage(event.getClient().getError() + " Ошибка загрузки: " + throwable.getMessage()).queue();
+      else m.editMessage(event.getClient().getError() + " Ошибка загрузки пластинки.").queue();
     }
   }
 }

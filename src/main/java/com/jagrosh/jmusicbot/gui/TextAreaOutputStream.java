@@ -16,13 +16,14 @@
 package com.jagrosh.jmusicbot.gui;
 
 import java.awt.*;
-import java.io.*;
-import java.util.*;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import javax.swing.*;
 
 /**
- *
  * @author Lawrence Dol
  */
 public class TextAreaOutputStream extends OutputStream {
@@ -31,7 +32,7 @@ public class TextAreaOutputStream extends OutputStream {
   // INSTANCE MEMBERS
   // *************************************************************************************************
 
-  private byte[] oneByte; // array for write(int val);
+  private final byte[] oneByte; // array for write(int val);
   private Appender appender; // most recent action
 
   public TextAreaOutputStream(JTextArea txtara) {
@@ -40,17 +41,20 @@ public class TextAreaOutputStream extends OutputStream {
 
   public TextAreaOutputStream(JTextArea txtara, int maxlin) {
     if (maxlin < 1) {
-      throw new IllegalArgumentException(
-        "TextAreaOutputStream maximum lines must be positive (value=" +
-        maxlin +
-        ")"
-      );
+      throw new IllegalArgumentException("TextAreaOutputStream maximum lines must be positive (value=" + maxlin + ")");
     }
     oneByte = new byte[1];
     appender = new Appender(txtara, maxlin);
   }
 
-  /** Clear the current console text area. */
+  //@edu.umd.cs.findbugs.annotations.SuppressWarnings("DM_DEFAULT_ENCODING")
+  private static String bytesToString(byte[] ba, int str, int len) {
+    return new String(ba, str, len, StandardCharsets.UTF_8);
+  }
+
+  /**
+   * Clear the current console text area.
+   */
   public synchronized void clear() {
     if (appender != null) {
       appender.clear();
@@ -85,15 +89,6 @@ public class TextAreaOutputStream extends OutputStream {
     }
   }
 
-  //@edu.umd.cs.findbugs.annotations.SuppressWarnings("DM_DEFAULT_ENCODING")
-  private static String bytesToString(byte[] ba, int str, int len) {
-    try {
-      return new String(ba, str, len, "UTF-8");
-    } catch (UnsupportedEncodingException thr) {
-      return new String(ba, str, len);
-    } // all JVMs are required to support UTF-8
-  }
-
   // *************************************************************************************************
   // STATIC MEMBERS
   // *************************************************************************************************
@@ -101,10 +96,7 @@ public class TextAreaOutputStream extends OutputStream {
   static class Appender implements Runnable {
 
     private static final String EOL1 = "\n";
-    private static final String EOL2 = System.getProperty(
-      "line.separator",
-      EOL1
-    );
+    private static final String EOL2 = System.getProperty("line.separator", EOL1);
 
     private final JTextArea textArea;
     private final int maxLines; // maximum lines allowed in text area
@@ -151,25 +143,21 @@ public class TextAreaOutputStream extends OutputStream {
       if (clear) {
         textArea.setText("");
       }
-      values
-        .stream()
-        .map(val -> {
-          curLength += val.length();
-          return val;
-        })
-        .map(val -> {
-          if (val.endsWith(EOL1) || val.endsWith(EOL2)) {
-            if (lengths.size() >= maxLines) {
-              textArea.replaceRange("", 0, lengths.removeFirst());
-            }
-            lengths.addLast(curLength);
-            curLength = 0;
+      values.stream().map(val -> {
+        curLength += val.length();
+        return val;
+      }).map(val -> {
+        if (val.endsWith(EOL1) || val.endsWith(EOL2)) {
+          if (lengths.size() >= maxLines) {
+            textArea.replaceRange("", 0, lengths.removeFirst());
           }
-          return val;
-        })
-        .forEach(val -> {
-          textArea.append(val);
-        });
+          lengths.addLast(curLength);
+          curLength = 0;
+        }
+        return val;
+      }).forEach(val -> {
+        textArea.append(val);
+      });
       values.clear();
       clear = false;
       queue = true;

@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
 public class Listener extends ListenerAdapter {
@@ -44,39 +43,25 @@ public class Listener extends ListenerAdapter {
   public void onReady(ReadyEvent event) {
     if (event.getJDA().getGuildCache().isEmpty()) {
       Logger log = LoggerFactory.getLogger("MusicBot");
-      log.warn(
-        "Бота нет ни на одном сервере! Используйте ссылку ниже чтобы пригласить бота!"
-      );
+      log.warn("Бота нет ни на одном сервере! Используйте ссылку ниже чтобы пригласить бота!");
       log.warn(event.getJDA().getInviteUrl(JMusicBot.RECOMMENDED_PERMS));
     }
     credit(event.getJDA());
-    event
-      .getJDA()
-      .getGuilds()
-      .forEach(guild -> {
-        try {
-          String defpl = bot
-            .getSettingsManager()
-            .getSettings(guild)
-            .getDefaultPlaylist();
-          VoiceChannel vc = bot
-            .getSettingsManager()
-            .getSettings(guild)
-            .getVoiceChannel(guild);
-          if (
-            defpl != null &&
-            vc != null &&
-            bot.getPlayerManager().setUpHandler(guild).playFromDefault()
-          ) {
-            guild.getAudioManager().openAudioConnection(vc);
-          }
-        } catch (Exception ignore) {}
-      });
+    event.getJDA().getGuilds().forEach(guild -> {
+      try {
+        String defpl = bot.getSettingsManager().getSettings(guild).getDefaultPlaylist();
+        VoiceChannel vc = bot.getSettingsManager().getSettings(guild).getVoiceChannel(guild);
+        if (defpl != null && vc != null && bot.getPlayerManager().setUpHandler(guild).playFromDefault()) {
+          guild.getAudioManager().openAudioConnection(vc);
+        }
+      } catch (Exception ignore) {
+      }
+    });
   }
 
   @Override
   public void onMessageDelete(MessageDeleteEvent event) {
-    if(event.isFromGuild()) bot.getNowplayingHandler().onMessageDelete(event.getGuild(), event.getMessageIdLong());
+    if (event.isFromGuild()) bot.getNowplayingHandler().onMessageDelete(event.getGuild(), event.getMessageIdLong());
   }
 
   @Override
@@ -99,13 +84,7 @@ public class Listener extends ListenerAdapter {
     Guild dbots = jda.getGuildById(110373943822540800L);
     if (dbots == null) return;
     if (bot.getConfig().getDBots()) return;
-    jda.getTextChannelById(119222314964353025L)
-      .sendMessage(
-        "This account is running JMusicBot. Please do not list bot clones on this server, <@" +
-        bot.getConfig().getOwnerId() +
-        ">."
-      )
-      .complete();
+    jda.getTextChannelById(119222314964353025L).sendMessage("This account is running JMusicBot. Please do not list bot clones on this server, <@" + bot.getConfig().getOwnerId() + ">.").complete();
     dbots.leave().queue();
   }
 }

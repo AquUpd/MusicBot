@@ -22,7 +22,6 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
 
 /**
- *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
 public abstract class DJCommand extends MusicCommand {
@@ -33,19 +32,11 @@ public abstract class DJCommand extends MusicCommand {
   }
 
   public static boolean checkDJPermission(CommandEvent event) {
-    if (
-      event.getAuthor().getId().equals(event.getClient().getOwnerId())
-    ) return true;
+    if (event.getAuthor().getId().equals(event.getClient().getOwnerId())) return true;
     if (event.getGuild() == null) return true;
     if (event.getMember().hasPermission(Permission.MANAGE_SERVER)) return true;
     Settings settings = event.getClient().getSettingsFor(event.getGuild());
     Role dj = settings.getRole(event.getGuild());
-    return (
-      dj != null &&
-      (
-        event.getMember().getRoles().contains(dj) ||
-        dj.getIdLong() == event.getGuild().getIdLong()
-      )
-    );
+    return (dj != null && (event.getMember().getRoles().contains(dj) || dj.getIdLong() == event.getGuild().getIdLong()));
   }
 }

@@ -22,7 +22,6 @@ import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import net.dv8tion.jda.api.entities.Activity;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class SetgameCmd extends OwnerCommand {
@@ -33,12 +32,7 @@ public class SetgameCmd extends OwnerCommand {
     this.arguments = "[action] [game]";
     this.aliases = bot.getConfig().getAliases(this.name);
     this.guildOnly = false;
-    this.children =
-      new OwnerCommand[] {
-        new SetlistenCmd(),
-        new SetstreamCmd(),
-        new SetwatchCmd(),
-      };
+    this.children = new OwnerCommand[]{new SetlistenCmd(), new SetstreamCmd(), new SetwatchCmd(),};
   }
 
   @Override
@@ -48,25 +42,12 @@ public class SetgameCmd extends OwnerCommand {
 
   @Override
   protected void execute(CommandEvent event) {
-    String title = event.getArgs().toLowerCase().startsWith("playing")
-      ? event.getArgs().substring(7).trim()
-      : event.getArgs();
+    String title = event.getArgs().toLowerCase().startsWith("playing") ? event.getArgs().substring(7).trim() : event.getArgs();
     try {
-      event
-        .getJDA()
-        .getPresence()
-        .setActivity(title.isEmpty() ? null : Activity.playing(title));
-      event.reply(
-        event.getClient().getSuccess() +
-        " **" +
-        event.getSelfUser().getName() +
-        "** теперь " +
-        (title.isEmpty() ? "ничего не играет." : "играет в `" + title + "`")
-      );
+      event.getJDA().getPresence().setActivity(title.isEmpty() ? null : Activity.playing(title));
+      event.reply(event.getClient().getSuccess() + " **" + event.getSelfUser().getName() + "** теперь " + (title.isEmpty() ? "ничего не играет." : "играет в `" + title + "`"));
     } catch (Exception e) {
-      event.reply(
-        event.getClient().getError() + " Не удалось установить игру!"
-      );
+      event.reply(event.getClient().getError() + " Не удалось установить игру!");
     }
   }
 
@@ -74,7 +55,7 @@ public class SetgameCmd extends OwnerCommand {
 
     private SetstreamCmd() {
       this.name = "stream";
-      this.aliases = new String[] { "twitch", "streaming" };
+      this.aliases = new String[]{"twitch", "streaming"};
       this.help = "отображает стрим другого человека";
       this.arguments = "<username> <game>";
       this.guildOnly = false;
@@ -93,23 +74,10 @@ public class SetgameCmd extends OwnerCommand {
         return;
       }
       try {
-        event
-          .getJDA()
-          .getPresence()
-          .setActivity(
-            Activity.streaming(parts[1], "https://twitch.tv/" + parts[0])
-          );
-        event.replySuccess(
-          "**" +
-          event.getSelfUser().getName() +
-          "** теперь стримит `" +
-          parts[1] +
-          "`"
-        );
+        event.getJDA().getPresence().setActivity(Activity.streaming(parts[1], "https://twitch.tv/" + parts[0]));
+        event.replySuccess("**" + event.getSelfUser().getName() + "** теперь стримит `" + parts[1] + "`");
       } catch (Exception e) {
-        event.reply(
-          event.getClient().getError() + " Не удалось установить стрим!"
-        );
+        event.reply(event.getClient().getError() + " Не удалось установить стрим!");
       }
     }
   }
@@ -118,7 +86,7 @@ public class SetgameCmd extends OwnerCommand {
 
     private SetlistenCmd() {
       this.name = "listen";
-      this.aliases = new String[] { "listening" };
+      this.aliases = new String[]{"listening"};
       this.help = "устанавливает что слушает бот";
       this.arguments = "<title>";
       this.guildOnly = false;
@@ -135,22 +103,12 @@ public class SetgameCmd extends OwnerCommand {
         event.replyError("Напишите название того, что слушает бот!");
         return;
       }
-      String title = event.getArgs().toLowerCase().startsWith("to")
-        ? event.getArgs().substring(2).trim()
-        : event.getArgs();
+      String title = event.getArgs().toLowerCase().startsWith("to") ? event.getArgs().substring(2).trim() : event.getArgs();
       try {
         event.getJDA().getPresence().setActivity(Activity.listening(title));
-        event.replySuccess(
-          "**" +
-          event.getSelfUser().getName() +
-          "** теперь слушает `" +
-          title +
-          "`"
-        );
+        event.replySuccess("**" + event.getSelfUser().getName() + "** теперь слушает `" + title + "`");
       } catch (Exception e) {
-        event.reply(
-          event.getClient().getError() + " Не удалось установить пластинку!"
-        );
+        event.reply(event.getClient().getError() + " Не удалось установить пластинку!");
       }
     }
   }
@@ -159,7 +117,7 @@ public class SetgameCmd extends OwnerCommand {
 
     private SetwatchCmd() {
       this.name = "watch";
-      this.aliases = new String[] { "watching" };
+      this.aliases = new String[]{"watching"};
       this.help = "показывает что смотрит бот";
       this.arguments = "<title>";
       this.guildOnly = false;
@@ -179,18 +137,9 @@ public class SetgameCmd extends OwnerCommand {
       String title = event.getArgs();
       try {
         event.getJDA().getPresence().setActivity(Activity.watching(title));
-        event.replySuccess(
-          "**" +
-          event.getSelfUser().getName() +
-          "** теперь смотрит `" +
-          title +
-          "`"
-        );
+        event.replySuccess("**" + event.getSelfUser().getName() + "** теперь смотрит `" + title + "`");
       } catch (Exception e) {
-        event.reply(
-          event.getClient().getError() +
-          " не удалось показать, что смотрит бот!"
-        );
+        event.reply(event.getClient().getError() + " не удалось показать, что смотрит бот!");
       }
     }
   }

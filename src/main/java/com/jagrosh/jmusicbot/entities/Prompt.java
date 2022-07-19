@@ -16,21 +16,19 @@
 package com.jagrosh.jmusicbot.entities;
 
 import java.util.Scanner;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
 public class Prompt {
 
   private final String title;
   private final String noguiMessage;
-
+  private final boolean noprompt;
   private boolean nogui;
-  private boolean noprompt;
   private Scanner scanner;
 
   public Prompt(String title) {
@@ -38,25 +36,12 @@ public class Prompt {
   }
 
   public Prompt(String title, String noguiMessage) {
-    this(
-      title,
-      noguiMessage,
-      "true".equalsIgnoreCase(System.getProperty("nogui")),
-      "true".equalsIgnoreCase(System.getProperty("noprompt"))
-    );
+    this(title, noguiMessage, "true".equalsIgnoreCase(System.getProperty("nogui")), "true".equalsIgnoreCase(System.getProperty("noprompt")));
   }
 
-  public Prompt(
-    String title,
-    String noguiMessage,
-    boolean nogui,
-    boolean noprompt
-  ) {
+  public Prompt(String title, String noguiMessage, boolean nogui, boolean noprompt) {
     this.title = title;
-    this.noguiMessage =
-      noguiMessage == null
-        ? "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag."
-        : noguiMessage;
+    this.noguiMessage = noguiMessage == null ? "Switching to nogui mode. You can manually start in nogui mode by including the -Dnogui=true flag." : noguiMessage;
     this.nogui = nogui;
     this.noprompt = noprompt;
   }
@@ -99,12 +84,7 @@ public class Prompt {
             option = JOptionPane.PLAIN_MESSAGE;
             break;
         }
-        JOptionPane.showMessageDialog(
-          null,
-          "<html><body><p style='width: 400px;'>" + message,
-          title,
-          option
-        );
+        JOptionPane.showMessageDialog(null, "<html><body><p style='width: 400px;'>" + message, title, option);
       } catch (Exception e) {
         nogui = true;
         alert(Level.WARNING, context, noguiMessage);
@@ -128,12 +108,7 @@ public class Prompt {
       }
     } else {
       try {
-        return JOptionPane.showInputDialog(
-          null,
-          content,
-          title,
-          JOptionPane.QUESTION_MESSAGE
-        );
+        return JOptionPane.showInputDialog(null, content, title, JOptionPane.QUESTION_MESSAGE);
       } catch (Exception e) {
         nogui = true;
         alert(Level.WARNING, title, noguiMessage);
@@ -142,9 +117,7 @@ public class Prompt {
     }
   }
 
-  public static enum Level {
-    INFO,
-    WARNING,
-    ERROR,
+  public enum Level {
+    INFO, WARNING, ERROR,
   }
 }

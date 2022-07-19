@@ -22,7 +22,6 @@ import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class SetnameCmd extends OwnerCommand {
@@ -45,23 +44,11 @@ public class SetnameCmd extends OwnerCommand {
     try {
       String oldname = event.getSelfUser().getName();
       event.getSelfUser().getManager().setName(event.getArgs()).complete(false);
-      event.reply(
-        event.getClient().getSuccess() +
-        " Изменено название бота с `" +
-        oldname +
-        "` на `" +
-        event.getArgs() +
-        "`"
-      );
+      event.reply(event.getClient().getSuccess() + " Изменено название бота с `" + oldname + "` на `" + event.getArgs() + "`");
     } catch (RateLimitedException e) {
-      event.reply(
-        event.getClient().getError() +
-        " Название бота можно менять 1 раз в час!"
-      );
+      event.reply(event.getClient().getError() + " Название бота можно менять 1 раз в час!");
     } catch (Exception e) {
-      event.reply(
-        event.getClient().getError() + " Это название не правильное!"
-      );
+      event.reply(event.getClient().getError() + " Это название не правильное!");
     }
   }
 }

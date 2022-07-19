@@ -23,7 +23,6 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
 /**
- *
  * @author John Grosh (jagrosh)
  */
 public class EvalCmd extends OwnerCommand {
@@ -52,19 +51,9 @@ public class EvalCmd extends OwnerCommand {
     se.put("guild", event.getGuild());
     se.put("channel", event.getChannel());
     try {
-      event.reply(
-        event.getClient().getSuccess() +
-        " Evaluated Successfully:\n```\n" +
-        se.eval(event.getArgs()) +
-        " ```"
-      );
+      event.reply(event.getClient().getSuccess() + " Evaluated Successfully:\n```\n" + se.eval(event.getArgs()) + " ```");
     } catch (Exception e) {
-      event.reply(
-        event.getClient().getError() +
-        " An exception was thrown:\n```\n" +
-        e +
-        " ```"
-      );
+      event.reply(event.getClient().getError() + " An exception was thrown:\n```\n" + e + " ```");
     }
   }
 }

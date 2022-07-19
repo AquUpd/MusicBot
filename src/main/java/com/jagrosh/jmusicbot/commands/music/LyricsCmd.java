@@ -51,12 +51,11 @@ public class LyricsCmd extends MusicCommand {
         .getSendingHandler();
       event.replyError("Вы должны указать название пластинки!");
       return;
-    } else title = event.getArgs();
+    } else
+      title = event.getArgs();
 
     event.getChannel().sendTyping().queue();
-    client
-      .getLyrics(title)
-      .thenAccept(lyrics -> {
+    client.getLyrics(title).thenAccept(lyrics -> {
         if (lyrics == null) {
           event.replyError("Текст для `" + title + "` не найден!");
           return;
@@ -67,12 +66,7 @@ public class LyricsCmd extends MusicCommand {
           .setColor(event.getSelfMember().getColor())
           .setTitle(lyrics.getTitle(), lyrics.getURL());
         if (lyrics.getContent().length() > 15000) {
-          event.replyWarning(
-            "Текст для `" +
-            title +
-            "` найден, но он, возможно, не правильный: " +
-            lyrics.getURL()
-          );
+          event.replyWarning("Текст для `" + title + "` найден, но он, возможно, не правильный: " + lyrics.getURL());
         } else if (lyrics.getContent().length() > 2000) {
           String content = lyrics.getContent().trim();
           while (content.length() > 2000) {
@@ -80,14 +74,13 @@ public class LyricsCmd extends MusicCommand {
             if (index == -1) index = content.lastIndexOf("\n", 2000);
             if (index == -1) index = content.lastIndexOf(" ", 2000);
             if (index == -1) index = 2000;
-            event.reply(
-              eb.setDescription(content.substring(0, index).trim()).build()
-            );
+            event.reply(eb.setDescription(content.substring(0, index).trim()).build());
             content = content.substring(index).trim();
             eb.setAuthor(null).setTitle(null, null);
           }
           event.reply(eb.setDescription(content).build());
-        } else event.reply(eb.setDescription(lyrics.getContent()).build());
+        } else
+          event.reply(eb.setDescription(lyrics.getContent()).build());
       });
   }
 

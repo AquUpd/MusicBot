@@ -19,12 +19,9 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
-import com.jagrosh.jmusicbot.audio.RequestMetadata;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
-import net.dv8tion.jda.api.entities.User;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class SkipCmd extends MusicCommand {
@@ -47,9 +44,9 @@ public class SkipCmd extends MusicCommand {
     {
       event.reply(
         event.getClient().getSuccess() +
-        " Пропущена пластинка **" +
-        handler.getPlayer().getPlayingTrack().getInfo().title +
-        "**"
+          " Пропущена пластинка **" +
+          handler.getPlayer().getPlayingTrack().getInfo().title +
+          "**"
       );
       handler.getPlayer().stopTrack();
     }

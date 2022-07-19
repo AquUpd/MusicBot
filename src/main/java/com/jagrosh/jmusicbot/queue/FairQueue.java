@@ -21,9 +21,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- *
- * @author John Grosh (jagrosh)
  * @param <T>
+ * @author John Grosh (jagrosh)
  */
 public class FairQueue<T extends Queueable> {
 
@@ -32,9 +31,8 @@ public class FairQueue<T extends Queueable> {
 
   public int add(T item) {
     int lastIndex;
-    for (lastIndex = list.size() - 1; lastIndex > -1; lastIndex--) if (
-      list.get(lastIndex).getIdentifier() == item.getIdentifier()
-    ) break;
+    for (lastIndex = list.size() - 1; lastIndex > -1; lastIndex--)
+      if (list.get(lastIndex).getIdentifier() == item.getIdentifier()) break;
     lastIndex++;
     set.clear();
     for (; lastIndex < list.size(); lastIndex++) {
@@ -46,7 +44,8 @@ public class FairQueue<T extends Queueable> {
   }
 
   public void addAt(int index, T item) {
-    if (index >= list.size()) list.add(item); else list.add(index, item);
+    if (index >= list.size()) list.add(item);
+    else list.add(index, item);
   }
 
   public int size() {
@@ -109,8 +108,9 @@ public class FairQueue<T extends Queueable> {
 
   /**
    * Move an item to a different position in the list
+   *
    * @param from The position of the item
-   * @param to The new position of the item
+   * @param to   The new position of the item
    * @return the moved item
    */
   public T moveItem(int from, int to) {

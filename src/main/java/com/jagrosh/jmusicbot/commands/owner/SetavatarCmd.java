@@ -25,7 +25,6 @@ import java.io.InputStream;
 import net.dv8tion.jda.api.entities.Icon;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class SetavatarCmd extends OwnerCommand {
@@ -46,35 +45,19 @@ public class SetavatarCmd extends OwnerCommand {
   @Override
   protected void execute(CommandEvent event) {
     String url;
-    if (event.getArgs().isEmpty()) if (
-      !event.getMessage().getAttachments().isEmpty() &&
-      event.getMessage().getAttachments().get(0).isImage()
-    ) url = event.getMessage().getAttachments().get(0).getUrl(); else url =
-      null; else url = event.getArgs();
+    if (event.getArgs().isEmpty())
+      if (!event.getMessage().getAttachments().isEmpty() && event.getMessage().getAttachments().get(0).isImage())
+        url = event.getMessage().getAttachments().get(0).getUrl();
+      else url = null;
+    else url = event.getArgs();
     InputStream s = OtherUtil.imageFromUrl(url);
     if (s == null) {
       event.reply(event.getClient().getError() + " Неизвестный URL");
     } else {
       try {
-        event
-          .getSelfUser()
-          .getManager()
-          .setAvatar(Icon.from(s))
-          .queue(
-            v ->
-              event.reply(
-                event.getClient().getSuccess() + " Успешно изменен аватар."
-              ),
-            t ->
-              event.reply(
-                event.getClient().getError() + " Не удалось установить аватар."
-              )
-          );
+        event.getSelfUser().getManager().setAvatar(Icon.from(s)).queue(v -> event.reply(event.getClient().getSuccess() + " Успешно изменен аватар."), t -> event.reply(event.getClient().getError() + " Не удалось установить аватар."));
       } catch (IOException e) {
-        event.reply(
-          event.getClient().getError() +
-          " Не получилось загрузить аватар с данного URL."
-        );
+        event.reply(event.getClient().getError() + " Не получилось загрузить аватар с данного URL.");
       }
     }
   }

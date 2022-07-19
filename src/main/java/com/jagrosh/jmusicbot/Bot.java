@@ -31,7 +31,6 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class Bot {
@@ -99,21 +98,18 @@ public class Bot {
     return jda;
   }
 
+  public void setJDA(JDA jda) {
+    this.jda = jda;
+  }
+
   public void closeAudioConnection(long guildId) {
     Guild guild = jda.getGuildById(guildId);
-    if (guild != null) threadpool.submit(() ->
-      guild.getAudioManager().closeAudioConnection()
-    );
+    if (guild != null) threadpool.submit(() -> guild.getAudioManager().closeAudioConnection());
   }
 
   public void resetGame() {
-    Activity game = config.getGame() == null ||
-      config.getGame().getName().equalsIgnoreCase("none")
-      ? null
-      : config.getGame();
-    if (!Objects.equals(jda.getPresence().getActivity(), game)) jda
-      .getPresence()
-      .setActivity(game);
+    Activity game = config.getGame() == null || config.getGame().getName().equalsIgnoreCase("none") ? null : config.getGame();
+    if (!Objects.equals(jda.getPresence().getActivity(), game)) jda.getPresence().setActivity(game);
   }
 
   public void shutdown() {
@@ -121,28 +117,19 @@ public class Bot {
     shuttingDown = true;
     threadpool.shutdownNow();
     if (jda.getStatus() != JDA.Status.SHUTTING_DOWN) {
-      jda
-        .getGuilds()
-        .stream()
-        .forEach(g -> {
-          g.getAudioManager().closeAudioConnection();
-          AudioHandler ah = (AudioHandler) g
-            .getAudioManager()
-            .getSendingHandler();
-          if (ah != null) {
-            ah.stopAndClear();
-            ah.getPlayer().destroy();
-            nowplaying.updateTopic(g.getIdLong(), ah, true);
-          }
-        });
+      jda.getGuilds().stream().forEach(g -> {
+        g.getAudioManager().closeAudioConnection();
+        AudioHandler ah = (AudioHandler) g.getAudioManager().getSendingHandler();
+        if (ah != null) {
+          ah.stopAndClear();
+          ah.getPlayer().destroy();
+          nowplaying.updateTopic(g.getIdLong(), ah, true);
+        }
+      });
       jda.shutdown();
     }
     if (gui != null) gui.dispose();
     System.exit(0);
-  }
-
-  public void setJDA(JDA jda) {
-    this.jda = jda;
   }
 
   public void setGUI(GUI gui) {

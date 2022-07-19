@@ -13,16 +13,16 @@ import org.slf4j.LoggerFactory;
 @SuppressWarnings("InfiniteRecursion")
 public class ConsoleListener implements Runnable {
 
-  Logger log = LoggerFactory.getLogger("CL");
+  static Thread thread;
   private final Bot bot;
   private final JDA jda;
+  Logger log = LoggerFactory.getLogger("CL");
+  Scanner inputReader = new Scanner(System.in);
 
   public ConsoleListener(Bot bot) {
     this.bot = bot;
     this.jda = bot.getJDA();
   }
-
-  static Thread thread;
 
   //This method gets called from the main
   public void start() {
@@ -35,35 +35,22 @@ public class ConsoleListener implements Runnable {
   //this method gets called by the thread.start(); from above
   @Override
   public void run() {
-    log.info(
-      "Консольные команды загружены! Чтобы получить список команд напишите \"help\" в консоль"
-    );
+    log.info("Консольные команды загружены! Чтобы получить список команд напишите \"help\" в консоль");
     readTextFromConsole();
   }
-
-  Scanner inputReader = new Scanner(System.in);
 
   public void readTextFromConsole() {
     String[] input = inputReader.nextLine().split("\\s+");
     switch (input[0]) {
       case "help":
-        log.info(
-          "Список команд: \n" +
-          "getguilds - выводит список всех доступных серверов \n" +
-          "getchannels <guildid> - выводит список всех каналов сервера \n" +
-          "leaveguild <guildid> - выходит из сервера \n" +
-          "sendmessage <guildid> <channelid> <message> - отправляет сообщение в нужный канал сервера \n" +
-          "stop - выключает бота \n"
-        );
+        log.info("Список команд: \n" + "getguilds - выводит список всех доступных серверов \n" + "getchannels <guildid> - выводит список всех каналов сервера \n" + "leaveguild <guildid> - выходит из сервера \n" + "sendmessage <guildid> <channelid> <message> - отправляет сообщение в нужный канал сервера \n" + "stop - выключает бота \n");
         break;
       case "stop":
         bot.shutdown();
         break;
       case "sendmessage":
         if (input.length < 3) {
-          log.info(
-            "Использование команды: sendmessage <guildid> <channelid> <message>"
-          );
+          log.info("Использование команды: sendmessage <guildid> <channelid> <message>");
         } else {
           String gld = input[1];
           String chnl = input[2];
@@ -74,11 +61,7 @@ public class ConsoleListener implements Runnable {
           String mesg = String.valueOf(mesgbuilder);
 
           try {
-            jda
-              .getGuildById(gld)
-              .getTextChannelById(chnl)
-              .sendMessage(mesg)
-              .queue();
+            jda.getGuildById(gld).getTextChannelById(chnl).sendMessage(mesg).queue();
             log.info("Отправлено!");
           } catch (InsufficientPermissionException ipe) {
             log.error("Я не могу отправлять сообщения в этот чат: ");
@@ -113,13 +96,7 @@ public class ConsoleListener implements Runnable {
         StringBuilder guildslist = new StringBuilder();
         List<Guild> allguilds = jda.getGuilds();
         for (Guild guild : allguilds) {
-          guildslist
-            .append(guild.getId())
-            .append(" ")
-            .append(guild.getName())
-            .append(" ")
-            .append(guild.getMemberCount())
-            .append(" участника\n");
+          guildslist.append(guild.getId()).append(" ").append(guild.getName()).append(" ").append(guild.getMemberCount()).append(" участника\n");
         }
         log.info("Список всех гильдий: \n" + guildslist);
         break;
@@ -130,25 +107,13 @@ public class ConsoleListener implements Runnable {
           String gld = input[1];
           try {
             StringBuilder channelslist = new StringBuilder();
-            List<GuildChannel> allchannels = jda
-              .getGuildById(gld)
-              .getChannels();
+            List<GuildChannel> allchannels = jda.getGuildById(gld).getChannels();
 
             for (GuildChannel channel : allchannels) {
-              if (channel.getType() != ChannelType.CATEGORY) channelslist
-                .append(channel.getId())
-                .append(" ")
-                .append(channel.getName())
-                .append(" ")
-                .append(channel.getType())
-                .append("\n");
+              if (channel.getType() != ChannelType.CATEGORY)
+                channelslist.append(channel.getId()).append(" ").append(channel.getName()).append(" ").append(channel.getType()).append("\n");
             }
-            log.info(
-              "Список всех каналов в гильдии " +
-              jda.getGuildById(gld).getName() +
-              ": \n" +
-              channelslist
-            );
+            log.info("Список всех каналов в гильдии " + jda.getGuildById(gld).getName() + ": \n" + channelslist);
           } catch (NumberFormatException nfe) {
             log.error("ID введен не правильно: ");
             nfe.printStackTrace();

@@ -15,24 +15,18 @@
  */
 package com.jagrosh.jmusicbot.commands;
 
-import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.SlashCommand;
 import net.dv8tion.jda.api.Permission;
 
 /**
- *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
 public abstract class AdminCommand extends SlashCommand {
 
   public AdminCommand() {
     this.category =
-      new Category(
-        "Admin",
-        event -> {
-          if (
-            event.getAuthor().getId().equals(event.getClient().getOwnerId())
-          ) return true;
+      new Category("Admin", event -> {
+          if (event.getAuthor().getId().equals(event.getClient().getOwnerId())) return true;
           if (event.getGuild() == null) return true;
           return event.getMember().hasPermission(Permission.MANAGE_SERVER);
         }

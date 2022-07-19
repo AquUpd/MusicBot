@@ -16,10 +16,9 @@
 package com.jagrosh.jmusicbot.entities;
 
 /**
- *
- * @author John Grosh (john.a.grosh@gmail.com)
  * @param <K>
  * @param <V>
+ * @author John Grosh (john.a.grosh@gmail.com)
  */
 public class Pair<K, V> {
 

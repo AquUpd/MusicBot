@@ -24,7 +24,6 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class Settings implements GuildSettingsProvider {
@@ -39,17 +38,7 @@ public class Settings implements GuildSettingsProvider {
   private String prefix;
   private double skipRatio;
 
-  public Settings(
-    SettingsManager manager,
-    String textId,
-    String voiceId,
-    String roleId,
-    int volume,
-    String defaultPlaylist,
-    RepeatMode repeatMode,
-    String prefix,
-    double skipRatio
-  ) {
+  public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio) {
     this.manager = manager;
     try {
       this.textId = Long.parseLong(textId);
@@ -73,17 +62,7 @@ public class Settings implements GuildSettingsProvider {
     this.skipRatio = skipRatio;
   }
 
-  public Settings(
-    SettingsManager manager,
-    long textId,
-    long voiceId,
-    long roleId,
-    int volume,
-    String defaultPlaylist,
-    RepeatMode repeatMode,
-    String prefix,
-    double skipRatio
-  ) {
+  public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio) {
     this.manager = manager;
     this.textId = textId;
     this.voiceId = voiceId;
@@ -112,27 +91,50 @@ public class Settings implements GuildSettingsProvider {
     return volume;
   }
 
+  public void setVolume(int volume) {
+    this.volume = volume;
+    this.manager.writeSettings();
+  }
+
   public String getDefaultPlaylist() {
     return defaultPlaylist;
+  }
+
+  public void setDefaultPlaylist(String defaultPlaylist) {
+    this.defaultPlaylist = defaultPlaylist;
+    this.manager.writeSettings();
   }
 
   public RepeatMode getRepeatMode() {
     return repeatMode;
   }
 
+  public void setRepeatMode(RepeatMode mode) {
+    this.repeatMode = mode;
+    this.manager.writeSettings();
+  }
+
   public String getPrefix() {
     return prefix;
+  }
+
+  public void setPrefix(String prefix) {
+    this.prefix = prefix;
+    this.manager.writeSettings();
   }
 
   public double getSkipRatio() {
     return skipRatio;
   }
 
+  public void setSkipRatio(double skipRatio) {
+    this.skipRatio = skipRatio;
+    this.manager.writeSettings();
+  }
+
   @Override
   public Collection<String> getPrefixes() {
-    return prefix == null
-      ? Collections.EMPTY_SET
-      : Collections.singleton(prefix);
+    return prefix == null ? Collections.EMPTY_SET : Collections.singleton(prefix);
   }
 
   // Setters
@@ -148,31 +150,6 @@ public class Settings implements GuildSettingsProvider {
 
   public void setDJRole(Role role) {
     this.roleId = role == null ? 0 : role.getIdLong();
-    this.manager.writeSettings();
-  }
-
-  public void setVolume(int volume) {
-    this.volume = volume;
-    this.manager.writeSettings();
-  }
-
-  public void setDefaultPlaylist(String defaultPlaylist) {
-    this.defaultPlaylist = defaultPlaylist;
-    this.manager.writeSettings();
-  }
-
-  public void setRepeatMode(RepeatMode mode) {
-    this.repeatMode = mode;
-    this.manager.writeSettings();
-  }
-
-  public void setPrefix(String prefix) {
-    this.prefix = prefix;
-    this.manager.writeSettings();
-  }
-
-  public void setSkipRatio(double skipRatio) {
-    this.skipRatio = skipRatio;
     this.manager.writeSettings();
   }
 }

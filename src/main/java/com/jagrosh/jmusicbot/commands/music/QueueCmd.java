@@ -48,19 +48,10 @@ public class QueueCmd extends MusicCommand {
     this.arguments = "[страница]";
     this.aliases = bot.getConfig().getAliases(this.name);
     this.bePlaying = true;
-    this.botPermissions =
-      new Permission[] {
-        Permission.MESSAGE_ADD_REACTION,
-        Permission.MESSAGE_EMBED_LINKS,
-      };
-    builder =
-      new Paginator.Builder()
+    this.botPermissions = new Permission[] {Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_EMBED_LINKS,};
+    builder = new Paginator.Builder()
         .setColumns(1)
-        .setFinalAction(m -> {
-          try {
-            m.clearReactions().queue();
-          } catch (PermissionException ignore) {}
-        })
+        .setFinalAction(m -> { try {m.clearReactions().queue(); } catch (PermissionException ignore) { } })
         .setItemsPerPage(10)
         .waitOnSinglePage(false)
         .useNumberedItems(true)
@@ -84,18 +75,9 @@ public class QueueCmd extends MusicCommand {
     if (list.isEmpty()) {
       Message nowp = ah.getNowPlaying(event.getJDA());
       Message nonowp = ah.getNoMusicPlaying(event.getJDA());
-      Message built = new MessageBuilder()
-        .setContent(
-          event.getClient().getWarning() + " Нет пластинок в очереди!"
-        )
-        .setEmbeds((nowp == null ? nonowp : nowp).getEmbeds().get(0))
-        .build();
-      event.reply(
-        built,
-        m -> {
-          if (nowp != null) bot.getNowplayingHandler().setLastNPMessage(m);
-        }
-      );
+      Message built = new MessageBuilder().setContent(event.getClient().getWarning() + " Нет пластинок в очереди!")
+        .setEmbeds((nowp == null ? nonowp : nowp).getEmbeds().get(0)).build();
+      event.reply(built, m -> {if (nowp != null) bot.getNowplayingHandler().setLastNPMessage(m);});
       return;
     }
     String[] songs = new String[list.size()];
@@ -106,19 +88,8 @@ public class QueueCmd extends MusicCommand {
     }
     Settings settings = event.getClient().getSettingsFor(event.getGuild());
     long fintotal = total;
-    builder
-      .setText((i1, i2) ->
-        getQueueTitle(
-          ah,
-          event.getClient().getSuccess(),
-          songs.length,
-          fintotal,
-          settings.getRepeatMode()
-        )
-      )
-      .setItems(songs)
-      .setUsers(event.getAuthor())
-      .setColor(event.getSelfMember().getColor());
+    builder.setText((i1, i2) -> getQueueTitle(ah, event.getClient().getSuccess(), songs.length, fintotal, settings.getRepeatMode()))
+      .setItems(songs).setUsers(event.getAuthor()).setColor(event.getSelfMember().getColor());
     builder.build().paginate(event.getChannel(), pagenum);
   }
 
@@ -127,37 +98,15 @@ public class QueueCmd extends MusicCommand {
 
   }
 
-  private String getQueueTitle(
-    AudioHandler ah,
-    String success,
-    int songslength,
-    long total,
-    RepeatMode repeatmode
-  ) {
+  private String getQueueTitle(AudioHandler ah, String success, int songslength, long total, RepeatMode repeatmode) {
     StringBuilder sb = new StringBuilder();
     if (ah.getPlayer().getPlayingTrack() != null) {
-      sb
-        .append(
-          ah.getPlayer().isPaused()
-            ? JMusicBot.PAUSE_EMOJI
-            : JMusicBot.PLAY_EMOJI
-        )
-        .append(" **")
-        .append(ah.getPlayer().getPlayingTrack().getInfo().title)
-        .append("**\n");
+      sb.append(ah.getPlayer().isPaused() ? JMusicBot.PAUSE_EMOJI : JMusicBot.PLAY_EMOJI)
+        .append(" **").append(ah.getPlayer().getPlayingTrack().getInfo().title).append("**\n");
     }
     return FormatUtil.filter(
-      sb
-        .append(success)
-        .append(" Данная очередь состоит из | ")
-        .append(songslength)
-        .append(" пластинок(ки) | `")
-        .append(FormatUtil.formatTime(total))
-        .append("` ")
-        .append(
-          repeatmode.getEmoji() != null ? "| " + repeatmode.getEmoji() : ""
-        )
-        .toString()
-    );
+      sb.append(success).append(" Данная очередь состоит из | ").append(songslength)
+        .append(" пластинок(ки) | `").append(FormatUtil.formatTime(total)).append("` ")
+        .append(repeatmode.getEmoji() != null ? "| " + repeatmode.getEmoji() : "").toString());
   }
 }

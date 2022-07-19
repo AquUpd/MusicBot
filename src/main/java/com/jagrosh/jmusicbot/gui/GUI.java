@@ -21,7 +21,6 @@ import java.awt.event.WindowListener;
 import javax.swing.*;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class GUI extends JFrame {
@@ -45,47 +44,45 @@ public class GUI extends JFrame {
     setLocationRelativeTo(null);
     setVisible(true);
 
-    addWindowListener(
-      new WindowListener() {
-        @Override
-        public void windowOpened(WindowEvent e) {
-          /* unused */
-        }
+    addWindowListener(new WindowListener() {
+      @Override
+      public void windowOpened(WindowEvent e) {
+        /* unused */
+      }
 
-        @Override
-        public void windowClosing(WindowEvent e) {
-          try {
-            bot.shutdown();
-          } catch (Exception ex) {
-            System.exit(0);
-          }
-        }
-
-        @Override
-        public void windowClosed(WindowEvent e) {
-          /* unused */
-        }
-
-        @Override
-        public void windowIconified(WindowEvent e) {
-          /* unused */
-        }
-
-        @Override
-        public void windowDeiconified(WindowEvent e) {
-          /* unused */
-        }
-
-        @Override
-        public void windowActivated(WindowEvent e) {
-          /* unused */
-        }
-
-        @Override
-        public void windowDeactivated(WindowEvent e) {
-          /* unused */
+      @Override
+      public void windowClosing(WindowEvent e) {
+        try {
+          bot.shutdown();
+        } catch (Exception ex) {
+          System.exit(0);
         }
       }
-    );
+
+      @Override
+      public void windowClosed(WindowEvent e) {
+        /* unused */
+      }
+
+      @Override
+      public void windowIconified(WindowEvent e) {
+        /* unused */
+      }
+
+      @Override
+      public void windowDeiconified(WindowEvent e) {
+        /* unused */
+      }
+
+      @Override
+      public void windowActivated(WindowEvent e) {
+        /* unused */
+      }
+
+      @Override
+      public void windowDeactivated(WindowEvent e) {
+        /* unused */
+      }
+    });
   }
 }

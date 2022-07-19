@@ -15,7 +15,6 @@
  */
 package com.jagrosh.jmusicbot.commands;
 
-import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
@@ -29,7 +28,6 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public abstract class MusicCommand extends SlashCommand {
@@ -52,12 +50,7 @@ public abstract class MusicCommand extends SlashCommand {
       try {
         event.getMessage().delete().queue();
       } catch (PermissionException ignore) {}
-      event.replyInDm(
-        event.getClient().getError() +
-        " Вы можете использовать эту команду только в " +
-        tchannel.getAsMention() +
-        "!"
-      );
+      event.replyInDm(event.getClient().getError() + " Вы можете использовать эту команду только в " + tchannel.getAsMention() + "!");
       return;
     }
     bot.getPlayerManager().setUpHandler(event.getGuild()); // no point constantly checking for this later
@@ -66,25 +59,11 @@ public abstract class MusicCommand extends SlashCommand {
       return;
     }
     if (beListening) {
-      AudioChannel current = event
-        .getGuild()
-        .getSelfMember()
-        .getVoiceState()
-        .getChannel();
+      AudioChannel current = event.getGuild().getSelfMember().getVoiceState().getChannel();
       if (current == null) current = settings.getVoiceChannel(event.getGuild());
       GuildVoiceState userState = event.getMember().getVoiceState();
-      if (
-        !userState.inAudioChannel() ||
-        (current != null && !userState.getChannel().equals(current))
-      ) {
-        event.replyError(
-          (
-            current == null
-              ? "Вы должны слушать музыку"
-              : "Вы должны быть в " + current.getAsMention()
-          ) +
-          " чтобы использовать это!"
-        );
+      if (!userState.inAudioChannel() || (current != null && !userState.getChannel().equals(current))) {
+        event.replyError((current == null ? "Вы должны слушать музыку" : "Вы должны быть в " + current.getAsMention()) + " чтобы использовать это!");
         return;
       }
 
@@ -96,17 +75,9 @@ public abstract class MusicCommand extends SlashCommand {
 
       if (!event.getGuild().getSelfMember().getVoiceState().inAudioChannel()) {
         try {
-          event
-            .getGuild()
-            .getAudioManager()
-            .openAudioConnection(userState.getChannel());
+          event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
         } catch (PermissionException ex) {
-          event.reply(
-            event.getClient().getError() +
-            " Я не могу подключиться к " +
-            userState.getChannel().getAsMention() +
-            "!"
-          );
+          event.reply(event.getClient().getError() + " Я не могу подключиться к " + userState.getChannel().getAsMention() + "!");
           return;
         }
       }
@@ -121,5 +92,6 @@ public abstract class MusicCommand extends SlashCommand {
   }
 
   public abstract void doCommand(CommandEvent event);
+
   public abstract void doSlashCommand(SlashCommandEvent event);
 }

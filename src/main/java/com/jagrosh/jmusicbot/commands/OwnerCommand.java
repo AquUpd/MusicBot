@@ -18,7 +18,6 @@ package com.jagrosh.jmusicbot.commands;
 import com.jagrosh.jdautilities.command.SlashCommand;
 
 /**
- *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
 public abstract class OwnerCommand extends SlashCommand {

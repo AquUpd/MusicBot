@@ -62,42 +62,16 @@ public class SettingsCmd extends SlashCommand {
     EmbedBuilder ebuilder = new EmbedBuilder()
       .setColor(event.getSelfMember().getColor())
       .setDescription(
-        "Текстовый канал: " +
-        (tchan == null ? "Any" : "**#" + tchan.getName() + "**") +
-        "\nГолосовой канал: " +
-        (vchan == null ? "Any" : vchan.getAsMention()) +
-        "\nDJ Роль: " +
-        (role == null ? "None" : "**" + role.getName() + "**") +
-        "\nКастомный префикс: " +
-        (s.getPrefix() == null ? "None" : "`" + s.getPrefix() + "`") +
-        "\nПовторение: " +
-        (
-          s.getRepeatMode() == RepeatMode.OFF
-            ? s.getRepeatMode().getUserFriendlyName()
-            : "**" + s.getRepeatMode().getUserFriendlyName() + "**"
-        ) +
-        "\nАвтоплейлист: " +
-        (
-          s.getDefaultPlaylist() == null
-            ? "None"
-            : "**" + s.getDefaultPlaylist() + "**"
-        )
-      )
+        "Текстовый канал: " + (tchan == null ? "Any" : "**#" + tchan.getName() + "**") +
+        "\nГолосовой канал: " + (vchan == null ? "Any" : vchan.getAsMention()) +
+        "\nDJ Роль: " + (role == null ? "None" : "**" + role.getName() + "**") +
+        "\nКастомный префикс: " + (s.getPrefix() == null ? "None" : "`" + s.getPrefix() + "`") +
+        "\nПовторение: " + (s.getRepeatMode() == RepeatMode.OFF ? s.getRepeatMode().getUserFriendlyName() : "**" + s.getRepeatMode().getUserFriendlyName() + "**") +
+        "\nАвтоплейлист: " + (s.getDefaultPlaylist() == null ? "None" : "**" + s.getDefaultPlaylist() + "**"))
       .setFooter(
-        event.getJDA().getGuilds().size() +
-        " servers | " +
-        event
-          .getJDA()
-          .getGuilds()
-          .stream()
-          .filter(g -> g.getSelfMember().getVoiceState().inAudioChannel())
-          .count() +
-        " голосовых подключений",
-        null
-      );
-    event
-      .getChannel()
-      .sendMessage(builder.setEmbeds(ebuilder.build()).build())
-      .queue();
+        event.getJDA().getGuilds().size() + " servers | " +
+          event.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inAudioChannel()).count() + " голосовых подключений",
+        null);
+    event.getChannel().sendMessage(builder.setEmbeds(ebuilder.build()).build()).queue();
   }
 }

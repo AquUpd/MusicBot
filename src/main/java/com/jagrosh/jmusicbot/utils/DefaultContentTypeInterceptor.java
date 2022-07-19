@@ -13,9 +13,7 @@ public class DefaultContentTypeInterceptor implements Interceptor {
     Config config = ConfigFactory.load();
 
     Request originalRequest = chain.request();
-    Request requestWithUserAgent = originalRequest.newBuilder()
-      .header("Content-Type", "application/json").header("Authorization", "Bot " + config.getString("token"))
-      .build();
+    Request requestWithUserAgent = originalRequest.newBuilder().header("Content-Type", "application/json").header("Authorization", "Bot " + config.getString("token")).build();
 
     return chain.proceed(requestWithUserAgent);
   }

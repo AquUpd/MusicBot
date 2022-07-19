@@ -21,7 +21,6 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 
 /**
- *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class ShutdownCmd extends OwnerCommand {
