@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot.commands.music;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.RequestMetadata;
@@ -52,5 +53,10 @@ public class SkipCmd extends MusicCommand {
       );
       handler.getPlayer().stopTrack();
     }
+  }
+
+  @Override
+  public void doSlashCommand(SlashCommandEvent event) {
+
   }
 }

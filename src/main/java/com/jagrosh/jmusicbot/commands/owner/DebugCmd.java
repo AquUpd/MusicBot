@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot.commands.owner;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jdautilities.commons.JDAUtilitiesInfo;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
@@ -50,6 +51,11 @@ public class DebugCmd extends OwnerCommand {
     this.help = "показывает дебаг информацию";
     this.aliases = bot.getConfig().getAliases(this.name);
     this.guildOnly = false;
+  }
+
+  @Override
+  protected void execute(SlashCommandEvent event) {
+
   }
 
   @Override

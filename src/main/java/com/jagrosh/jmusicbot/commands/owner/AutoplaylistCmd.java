@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot.commands.owner;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
@@ -36,6 +37,11 @@ public class AutoplaylistCmd extends OwnerCommand {
     this.help =
       "делает автоматический плейлист который будет воспроизоводится при входе в канал";
     this.aliases = bot.getConfig().getAliases(this.name);
+  }
+
+  @Override
+  protected void execute(SlashCommandEvent event) {
+
   }
 
   @Override

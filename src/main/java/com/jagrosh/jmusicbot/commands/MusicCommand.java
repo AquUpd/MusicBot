@@ -17,6 +17,8 @@ package com.jagrosh.jmusicbot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.settings.Settings;
@@ -30,7 +32,7 @@ import net.dv8tion.jda.api.exceptions.PermissionException;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public abstract class MusicCommand extends Command {
+public abstract class MusicCommand extends SlashCommand {
 
   protected final Bot bot;
   protected boolean bePlaying;
@@ -113,5 +115,11 @@ public abstract class MusicCommand extends Command {
     doCommand(event);
   }
 
+  @Override
+  protected void execute(SlashCommandEvent event) {
+    doSlashCommand(event);
+  }
+
   public abstract void doCommand(CommandEvent event);
+  public abstract void doSlashCommand(SlashCommandEvent event);
 }

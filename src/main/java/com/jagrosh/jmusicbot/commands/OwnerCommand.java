@@ -15,13 +15,13 @@
  */
 package com.jagrosh.jmusicbot.commands;
 
-import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.command.SlashCommand;
 
 /**
  *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
-public abstract class OwnerCommand extends Command {
+public abstract class OwnerCommand extends SlashCommand {
 
   public OwnerCommand() {
     this.category = new Category("Owner");

@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot.commands.music;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jdautilities.menu.Paginator;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.JMusicBot;
@@ -119,6 +120,11 @@ public class QueueCmd extends MusicCommand {
       .setUsers(event.getAuthor())
       .setColor(event.getSelfMember().getColor());
     builder.build().paginate(event.getChannel(), pagenum);
+  }
+
+  @Override
+  public void doSlashCommand(SlashCommandEvent event) {
+
   }
 
   private String getQueueTitle(

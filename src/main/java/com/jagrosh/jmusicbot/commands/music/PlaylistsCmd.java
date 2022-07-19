@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot.commands.music;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import java.util.List;
@@ -64,5 +65,10 @@ public class PlaylistsCmd extends MusicCommand {
         .append("play playlist <название>` чтобы включить плейлист");
       event.reply(builder.toString());
     }
+  }
+
+  @Override
+  public void doSlashCommand(SlashCommandEvent event) {
+
   }
 }

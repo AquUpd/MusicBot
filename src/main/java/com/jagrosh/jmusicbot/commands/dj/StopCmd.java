@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot.commands.dj;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.DJCommand;
@@ -43,5 +44,10 @@ public class StopCmd extends DJCommand {
     handler.stopAndClear();
     event.getGuild().getAudioManager().closeAudioConnection();
     event.reply(event.getClient().getSuccess() + " Все было очищено.");
+  }
+
+  @Override
+  public void doSlashCommand(SlashCommandEvent event) {
+
   }
 }

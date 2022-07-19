@@ -1,6 +1,7 @@
 package com.jagrosh.jmusicbot.commands.fun;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.FunCommand;
 import com.jagrosh.jmusicbot.utils.DefaultContentTypeInterceptor;
@@ -24,7 +25,7 @@ public class RockPaperScissorsCmd extends FunCommand {
   }
 
   @Override
-  public void doCommand(CommandEvent event) throws IOException {
+  public void doCommand(CommandEvent event) {
     String argument = String.valueOf(event.getArgs());
     if (argument.length() != 0) {
       Random random = new Random(System.currentTimeMillis());
@@ -99,5 +100,10 @@ public class RockPaperScissorsCmd extends FunCommand {
         "Напишите \"камень\", \"ножницы\" или \"бумага\" после команды."
       );
     }
+  }
+
+  @Override
+  public void doSlashCommand(SlashCommandEvent event) {
+
   }
 }

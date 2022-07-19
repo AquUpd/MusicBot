@@ -17,6 +17,8 @@ package com.jagrosh.jmusicbot.commands.general;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.jagrosh.jmusicbot.settings.Settings;
@@ -31,7 +33,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class SettingsCmd extends Command {
+public class SettingsCmd extends SlashCommand {
 
   private static final String EMOJI = "\uD83C\uDFA7"; // 🎧
 
@@ -40,6 +42,11 @@ public class SettingsCmd extends Command {
     this.help = "показывает настройки бота";
     this.aliases = bot.getConfig().getAliases(this.name);
     this.guildOnly = true;
+  }
+
+  @Override
+  protected void execute(SlashCommandEvent slashCommandEvent) {
+
   }
 
   @Override

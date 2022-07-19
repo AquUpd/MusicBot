@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot.commands.owner;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import net.dv8tion.jda.api.entities.Activity;
@@ -38,6 +39,11 @@ public class SetgameCmd extends OwnerCommand {
         new SetstreamCmd(),
         new SetwatchCmd(),
       };
+  }
+
+  @Override
+  protected void execute(SlashCommandEvent event) {
+
   }
 
   @Override
@@ -72,6 +78,11 @@ public class SetgameCmd extends OwnerCommand {
       this.help = "отображает стрим другого человека";
       this.arguments = "<username> <game>";
       this.guildOnly = false;
+    }
+
+    @Override
+    protected void execute(SlashCommandEvent event) {
+
     }
 
     @Override
@@ -114,6 +125,11 @@ public class SetgameCmd extends OwnerCommand {
     }
 
     @Override
+    protected void execute(SlashCommandEvent event) {
+
+    }
+
+    @Override
     protected void execute(CommandEvent event) {
       if (event.getArgs().isEmpty()) {
         event.replyError("Напишите название того, что слушает бот!");
@@ -147,6 +163,11 @@ public class SetgameCmd extends OwnerCommand {
       this.help = "показывает что смотрит бот";
       this.arguments = "<title>";
       this.guildOnly = false;
+    }
+
+    @Override
+    protected void execute(SlashCommandEvent event) {
+
     }
 
     @Override

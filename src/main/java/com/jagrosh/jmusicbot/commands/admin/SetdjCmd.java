@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot.commands.admin;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.AdminCommand;
@@ -35,6 +36,11 @@ public class SetdjCmd extends AdminCommand {
     this.help = "Устанавливает роль для использования DJ команд";
     this.arguments = "<rolename|NONE>";
     this.aliases = bot.getConfig().getAliases(this.name);
+  }
+
+  @Override
+  protected void execute(SlashCommandEvent event) {
+
   }
 
   @Override

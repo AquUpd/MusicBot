@@ -17,6 +17,8 @@ package com.jagrosh.jmusicbot.commands;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.settings.Settings;
@@ -31,7 +33,7 @@ import net.dv8tion.jda.api.exceptions.PermissionException;
  *
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public abstract class FunCommand extends Command {
+public abstract class FunCommand extends SlashCommand {
 
   protected final Bot bot;
   protected boolean beInChannel;
@@ -98,12 +100,14 @@ public abstract class FunCommand extends Command {
         }
       }
     }
-    try {
-      doCommand(event);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    doCommand(event);
   }
 
-  public abstract void doCommand(CommandEvent event) throws IOException;
+  @Override
+  protected void execute(SlashCommandEvent event) {
+    doSlashCommand(event);
+  }
+
+  public abstract void doCommand(CommandEvent event);
+  public abstract void doSlashCommand(SlashCommandEvent event);
 }

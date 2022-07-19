@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot.commands.dj;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import com.jagrosh.jdautilities.menu.OrderedMenu;
 import com.jagrosh.jmusicbot.Bot;
@@ -102,6 +103,11 @@ public class ForceRemoveCmd extends DJCommand {
     }
 
     removeAllEntries(target, event);
+  }
+
+  @Override
+  public void doSlashCommand(SlashCommandEvent event) {
+
   }
 
   private void removeAllEntries(User target, CommandEvent event) {

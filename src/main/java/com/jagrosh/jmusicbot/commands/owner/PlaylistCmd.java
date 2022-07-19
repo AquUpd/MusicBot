@@ -17,6 +17,7 @@ package com.jagrosh.jmusicbot.commands.owner;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
@@ -49,6 +50,11 @@ public class PlaylistCmd extends OwnerCommand {
   }
 
   @Override
+  protected void execute(SlashCommandEvent event) {
+
+  }
+
+  @Override
   public void execute(CommandEvent event) {
     StringBuilder builder = new StringBuilder(
       event.getClient().getWarning() + " Команды управления плейлистом:\n"
@@ -74,6 +80,11 @@ public class PlaylistCmd extends OwnerCommand {
       this.help = "создает новый плейлист";
       this.arguments = "<name>";
       this.guildOnly = false;
+    }
+
+    @Override
+    protected void execute(SlashCommandEvent event) {
+
     }
 
     @Override
@@ -115,6 +126,11 @@ public class PlaylistCmd extends OwnerCommand {
     }
 
     @Override
+    protected void execute(SlashCommandEvent event) {
+
+    }
+
+    @Override
     protected void execute(CommandEvent event) {
       String pname = event.getArgs().replaceAll("\\s+", "_");
       if (bot.getPlaylistLoader().getPlaylist(pname) == null) event.reply(
@@ -150,6 +166,11 @@ public class PlaylistCmd extends OwnerCommand {
       this.help = "добавляет пластинки в плейлист";
       this.arguments = "<name> <URL> | <URL> | ...";
       this.guildOnly = false;
+    }
+
+    @Override
+    protected void execute(SlashCommandEvent event) {
+
     }
 
     @Override
@@ -218,11 +239,7 @@ public class PlaylistCmd extends OwnerCommand {
               break;
           }
         } catch (IOException e) {
-          event.reply(
-            event.getClient().getError() +
-            " Я не могу добавить пластинку в плейлист: " +
-            e.getLocalizedMessage()
-          );
+          event.reply(event.getClient().getError() + " Я не могу добавить пластинку в плейлист: " + e.getLocalizedMessage());
         }
       }
     }
@@ -246,6 +263,11 @@ public class PlaylistCmd extends OwnerCommand {
       this.aliases = new String[] { "available", "list" };
       this.help = "показывает список всех доступных плейлистов";
       this.guildOnly = true;
+    }
+
+    @Override
+    protected void execute(SlashCommandEvent event) {
+
     }
 
     @Override

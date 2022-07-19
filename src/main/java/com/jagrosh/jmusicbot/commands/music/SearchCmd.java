@@ -16,6 +16,7 @@
 package com.jagrosh.jmusicbot.commands.music;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jdautilities.menu.OrderedMenu;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
@@ -77,6 +78,11 @@ public class SearchCmd extends MusicCommand {
             new ResultHandler(m, event)
           )
     );
+  }
+
+  @Override
+  public void doSlashCommand(SlashCommandEvent event) {
+
   }
 
   private class ResultHandler implements AudioLoadResultHandler {

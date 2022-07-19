@@ -1,6 +1,7 @@
 package com.jagrosh.jmusicbot.commands.fun;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.FunCommand;
 import java.util.regex.Matcher;
@@ -77,6 +78,11 @@ public class ProfilePictureCmd extends FunCommand {
         }
       }
     }
+  }
+
+  @Override
+  public void doSlashCommand(SlashCommandEvent event) {
+
   }
 
   public static boolean discordtag(String str) {

@@ -17,6 +17,8 @@ package com.jagrosh.jmusicbot.commands.music;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jdautilities.menu.ButtonMenu;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
@@ -55,7 +57,7 @@ public class PlayCmd extends MusicCommand {
     this.aliases = bot.getConfig().getAliases(this.name);
     this.beListening = true;
     this.bePlaying = false;
-    this.children = new Command[] { new PlaylistCmd(bot) };
+    this.children = new SlashCommand[] { new PlaylistCmd(bot) };
   }
 
   @Override
@@ -126,6 +128,11 @@ public class PlayCmd extends MusicCommand {
             new ResultHandler(m, event, false)
           )
     );
+  }
+
+  @Override
+  public void doSlashCommand(SlashCommandEvent event) {
+
   }
 
   private class ResultHandler implements AudioLoadResultHandler {
@@ -461,6 +468,11 @@ public class PlayCmd extends MusicCommand {
             }
           );
         });
+    }
+
+    @Override
+    public void doSlashCommand(SlashCommandEvent event) {
+
     }
   }
 }
