@@ -40,7 +40,7 @@ public class DeleteCommandsCmd extends OwnerCommand {
   protected void execute(CommandEvent event) {
     List<Command> commands = event.getGuild().retrieveCommands().complete();
     if (commands.isEmpty()) event.reply("нет команд"); else {
-      for (Command command : commands) {
+      for (Command command: commands) {
         event.getGuild().deleteCommandById(command.getIdLong()).submit();
       }
       event.reply("Done");

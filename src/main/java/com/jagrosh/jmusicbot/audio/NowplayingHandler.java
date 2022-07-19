@@ -46,16 +46,12 @@ public class NowplayingHandler {
   }
 
   public void init() {
-    if (!bot.getConfig().useNPImages()) bot
-      .getThreadpool()
+    if (!bot.getConfig().useNPImages()) bot.getThreadpool()
       .scheduleWithFixedDelay(this::updateAll, 0, 5, TimeUnit.SECONDS);
   }
 
   public void setLastNPMessage(Message m) {
-    lastNP.put(
-      m.getGuild().getIdLong(),
-      new Pair<>(m.getTextChannel().getIdLong(), m.getIdLong())
-    );
+    lastNP.put(m.getGuild().getIdLong(), new Pair<>(m.getTextChannel().getIdLong(), m.getIdLong()));
   }
 
   public void clearLastNPMessage(Guild guild) {
@@ -76,18 +72,14 @@ public class NowplayingHandler {
         toRemove.add(guildId);
         continue;
       }
-      AudioHandler handler = (AudioHandler) guild
-        .getAudioManager()
-        .getSendingHandler();
+      AudioHandler handler = (AudioHandler) guild.getAudioManager().getSendingHandler();
       Message msg = handler.getNowPlaying(bot.getJDA());
       if (msg == null) {
         msg = handler.getNoMusicPlaying(bot.getJDA());
         toRemove.add(guildId);
       }
       try {
-        tc
-          .editMessageById(pair.getValue(), msg)
-          .queue(m -> {}, t -> lastNP.remove(guildId));
+        tc.editMessageById(pair.getValue(), msg).queue(m -> {}, t -> lastNP.remove(guildId));
       } catch (Exception e) {
         toRemove.add(guildId);
       }
@@ -100,17 +92,12 @@ public class NowplayingHandler {
     if (guild == null) return;
     Settings settings = bot.getSettingsManager().getSettings(guildId);
     TextChannel tchan = settings.getTextChannel(guild);
-    if (
-      tchan != null &&
-      guild.getSelfMember().hasPermission(tchan, Permission.MANAGE_CHANNEL)
-    ) {
+    if (tchan != null && guild.getSelfMember().hasPermission(tchan, Permission.MANAGE_CHANNEL)) {
       String otherText;
       String topic = tchan.getTopic();
-      if (topic == null || topic.isEmpty()) otherText = "\u200B"; else if (
-        topic.contains("\u200B")
-      ) otherText =
-        topic.substring(topic.lastIndexOf("\u200B")); else otherText =
-        "\u200B\n " + topic;
+      if (topic == null || topic.isEmpty()) otherText = "\u200B";
+      else if (topic.contains("\u200B")) otherText = topic.substring(topic.lastIndexOf("\u200B"));
+      else otherText = "\u200B\n " + topic;
       String text = handler.getTopicFormat(bot.getJDA()) + otherText;
       if (!text.equals(tchan.getTopic())) {
         try {
@@ -132,21 +119,9 @@ public class NowplayingHandler {
   ) {
     // update bot status if applicable
     if (bot.getConfig().getSongInStatus()) {
-      if (
-        track != null &&
-        bot
-          .getJDA()
-          .getGuilds()
-          .stream()
-          .filter(g -> g.getSelfMember().getVoiceState().inAudioChannel())
-          .count() <=
-        1
-      ) bot
-        .getJDA()
-        .getPresence()
-        .setActivity(
-          Activity.listening(track.getInfo().title)
-        ); else bot.resetGame();
+      if (track != null && bot.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inAudioChannel()).count() <= 1)
+        bot.getJDA().getPresence().setActivity(Activity.listening(track.getInfo().title));
+      else bot.resetGame();
     }
 
     // update channel topic if applicable

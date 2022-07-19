@@ -22,7 +22,6 @@ import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 
 /**
- *
  * @author John Grosh (john.a.grosh@gmail.com)
  */
 public class SkipratioCmd extends AdminCommand {
@@ -42,28 +41,16 @@ public class SkipratioCmd extends AdminCommand {
   @Override
   protected void execute(CommandEvent event) {
     try {
-      int val = Integer.parseInt(
-        event.getArgs().endsWith("%")
-          ? event.getArgs().substring(0, event.getArgs().length() - 1)
-          : event.getArgs()
-      );
+      int val = Integer.parseInt(event.getArgs().endsWith("%") ? event.getArgs().substring(0, event.getArgs().length() - 1) : event.getArgs());
       if (val < 0 || val > 100) {
         event.replyError("Число должно быть между 0 и 100!");
         return;
       }
       Settings s = event.getClient().getSettingsFor(event.getGuild());
       s.setSkipRatio(val / 100.0);
-      event.replySuccess(
-        "Теперь нужно`" +
-        val +
-        "%` прослушивающих чтобы пропустить пластинку в *" +
-        event.getGuild().getName() +
-        "*"
-      );
+      event.replySuccess("Теперь нужно`" + val + "%` прослушивающих чтобы пропустить пластинку в *" + event.getGuild().getName() + "*");
     } catch (NumberFormatException ex) {
-      event.replyError(
-        "Напишите число межу 1 и 100 (стандартное значение - 55). Это число означает процент слушающих необходимых для пропуска пластинок."
-      );
+      event.replyError("Напишите число межу 1 и 100 (стандартное значение - 55). Это число означает процент слушающих необходимых для пропуска пластинок.");
     }
   }
 }

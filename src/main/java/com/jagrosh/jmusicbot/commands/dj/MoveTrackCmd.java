@@ -48,24 +48,15 @@ public class MoveTrackCmd extends DJCommand {
     }
 
     // Validate that from and to are available
-    AudioHandler handler = (AudioHandler) event
-      .getGuild()
-      .getAudioManager()
-      .getSendingHandler();
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
     FairQueue<QueuedTrack> queue = handler.getQueue();
     if (isUnavailablePosition(queue, from)) {
-      String reply = String.format(
-        "`%d` положение в очереди не правильное!",
-        from
-      );
+      String reply = String.format("`%d` положение в очереди не правильное!", from);
       event.replyError(reply);
       return;
     }
     if (isUnavailablePosition(queue, to)) {
-      String reply = String.format(
-        "`%d` положение в очереди не правильное!",
-        to
-      );
+      String reply = String.format("`%d` положение в очереди не правильное!", to);
       event.replyError(reply);
       return;
     }
@@ -73,12 +64,7 @@ public class MoveTrackCmd extends DJCommand {
     // Move the track
     QueuedTrack track = queue.moveItem(from - 1, to - 1);
     String trackTitle = track.getTrack().getInfo().title;
-    String reply = String.format(
-      "Передвинули **%s** с позиции `%d` на позицию `%d`.",
-      trackTitle,
-      from,
-      to
-    );
+    String reply = String.format("Передвинули **%s** с позиции `%d` на позицию `%d`.", trackTitle, from, to);
     event.replySuccess(reply);
   }
 
@@ -87,10 +73,7 @@ public class MoveTrackCmd extends DJCommand {
 
   }
 
-  private static boolean isUnavailablePosition(
-    FairQueue<QueuedTrack> queue,
-    int position
-  ) {
+  private static boolean isUnavailablePosition(FairQueue<QueuedTrack> queue, int position) {
     return (position < 1 || position > queue.size());
   }
 }

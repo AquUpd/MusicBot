@@ -46,40 +46,22 @@ public class SettcCmd extends AdminCommand {
   @Override
   protected void execute(CommandEvent event) {
     if (event.getArgs().isEmpty()) {
-      event.reply(
-        event.getClient().getError() +
-        " Напшите нужный канал или 'NONE' для очистки"
-      );
+      event.reply(event.getClient().getError() + " Напшите нужный канал или 'NONE' для очистки");
       return;
     }
     Settings s = event.getClient().getSettingsFor(event.getGuild());
     if (event.getArgs().equalsIgnoreCase("none")) {
       s.setTextChannel(null);
-      event.reply(
-        event.getClient().getSuccess() +
-        " Теперь команды можно использовать повсюду"
-      );
+      event.reply(event.getClient().getSuccess() + " Теперь команды можно использовать повсюду");
     } else {
-      List<TextChannel> list = FinderUtil.findTextChannels(
-        event.getArgs(),
-        event.getGuild()
-      );
-      if (list.isEmpty()) event.reply(
-        event.getClient().getWarning() +
-        " Нет текстового канала с названием \"" +
-        event.getArgs() +
-        "\""
-      ); else if (list.size() > 1) event.reply(
-        event.getClient().getWarning() +
-        FormatUtil.listOfTChannels(list, event.getArgs())
-      ); else {
+      List<TextChannel> list = FinderUtil.findTextChannels(event.getArgs(), event.getGuild());
+      if (list.isEmpty())
+        event.reply(event.getClient().getWarning() + " Нет текстового канала с названием \"" + event.getArgs() + "\"");
+      else if (list.size() > 1)
+        event.reply(event.getClient().getWarning() + FormatUtil.listOfTChannels(list, event.getArgs()));
+      else {
         s.setTextChannel(list.get(0));
-        event.reply(
-          event.getClient().getSuccess() +
-          " Музыкальные каналы теперь можно использовать только в <#" +
-          list.get(0).getId() +
-          ">"
-        );
+        event.reply(event.getClient().getSuccess() + " Музыкальные каналы теперь можно использовать только в <#" + list.get(0).getId() + ">");
       }
     }
   }

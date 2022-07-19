@@ -43,22 +43,10 @@ public class TransformativeAudioSourceManager
   private final String name, regex, replacement, selector, format;
 
   public TransformativeAudioSourceManager(String name, Config object) {
-    this(
-      name,
-      object.getString("regex"),
-      object.getString("replacement"),
-      object.getString("selector"),
-      object.getString("format")
-    );
+    this(name, object.getString("regex"), object.getString("replacement"), object.getString("selector"), object.getString("format"));
   }
 
-  public TransformativeAudioSourceManager(
-    String name,
-    String regex,
-    String replacement,
-    String selector,
-    String format
-  ) {
+  public TransformativeAudioSourceManager(String name, String regex, String replacement, String selector, String format) {
     this.name = name;
     this.regex = regex;
     this.replacement = replacement;
@@ -81,35 +69,19 @@ public class TransformativeAudioSourceManager
       String formattedValue = String.format(format, value);
       return super.loadItem(apm, new AudioReference(formattedValue, null));
     } catch (PatternSyntaxException ex) {
-      log.info(
-        String.format("Invalid pattern syntax '%s' in source '%s'", regex, name)
-      );
+      log.info(String.format("Invalid pattern syntax '%s' in source '%s'", regex, name));
     } catch (IOException ex) {
-      log.warn(
-        String.format("Failed to resolve URL in source '%s': ", name),
-        ex
-      );
+      log.warn(String.format("Failed to resolve URL in source '%s': ", name), ex);
     } catch (Exception ex) {
       log.warn(String.format("Exception in source '%s'", name), ex);
     }
     return null;
   }
 
-  public static List<TransformativeAudioSourceManager> createTransforms(
-    Config transforms
-  ) {
+  public static List<TransformativeAudioSourceManager> createTransforms(Config transforms) {
     try {
-      return transforms
-        .root()
-        .entrySet()
-        .stream()
-        .map(e ->
-          new TransformativeAudioSourceManager(
-            e.getKey(),
-            transforms.getConfig(e.getKey())
-          )
-        )
-        .collect(Collectors.toList());
+      return transforms.root().entrySet().stream()
+        .map(e -> new TransformativeAudioSourceManager(e.getKey(), transforms.getConfig(e.getKey()))).collect(Collectors.toList());
     } catch (Exception ex) {
       log.warn("Invalid transform ", ex);
       return Collections.emptyList();

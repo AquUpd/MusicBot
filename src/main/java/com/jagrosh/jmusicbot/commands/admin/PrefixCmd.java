@@ -52,13 +52,7 @@ public class PrefixCmd extends AdminCommand {
       event.replySuccess("Префикс очищен.");
     } else {
       s.setPrefix(event.getArgs());
-      event.replySuccess(
-        "Префикс на сервере *" +
-        event.getGuild().getName() +
-        "* изменен на '" +
-        event.getArgs() +
-        "'"
-      );
+      event.replySuccess("Префикс на сервере *" + event.getGuild().getName() + "* изменен на '" + event.getArgs() + "'");
     }
   }
 }

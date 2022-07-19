@@ -49,29 +49,15 @@ public class PlaynextCmd extends DJCommand {
 
   @Override
   public void doCommand(CommandEvent event) {
-    if (
-      event.getArgs().isEmpty() && event.getMessage().getAttachments().isEmpty()
-    ) {
+    if (event.getArgs().isEmpty() && event.getMessage().getAttachments().isEmpty()) {
       event.replyWarning("Напишите имя пластинки или URL!");
       return;
     }
-    String args = event.getArgs().startsWith("<") &&
-      event.getArgs().endsWith(">")
-      ? event.getArgs().substring(1, event.getArgs().length() - 1)
-      : event.getArgs().isEmpty()
-        ? event.getMessage().getAttachments().get(0).getUrl()
-        : event.getArgs();
-    event.reply(
-      loadingEmoji + " Загрузка... `[" + args + "]`",
-      m ->
-        bot
-          .getPlayerManager()
-          .loadItemOrdered(
-            event.getGuild(),
-            args,
-            new ResultHandler(m, event, false)
-          )
-    );
+    String args = event.getArgs().startsWith("<") && event.getArgs().endsWith(">")
+      ? event.getArgs().substring(1, event.getArgs().length() - 1) : event.getArgs().isEmpty()
+      ? event.getMessage().getAttachments().get(0).getUrl() : event.getArgs();
+    event.reply(loadingEmoji + " Загрузка... `[" + args + "]`",
+      m -> bot.getPlayerManager().loadItemOrdered(event.getGuild(), args, new ResultHandler(m, event, false)));
   }
 
   @Override
@@ -93,37 +79,16 @@ public class PlaynextCmd extends DJCommand {
 
     private void loadSingle(AudioTrack track) {
       if (bot.getConfig().isTooLong(track)) {
-        m
-          .editMessage(
-            FormatUtil.filter(
-              event.getClient().getWarning() +
-              " Эта пластинка (**" +
-              track.getInfo().title +
-              "**) длиннее чем разрешенный лимит: `" +
-              FormatUtil.formatTime(track.getDuration()) +
-              "` > `" +
-              FormatUtil.formatTime(bot.getConfig().getMaxSeconds() * 1000) +
-              "`"
-            )
-          )
-          .queue();
+        m.editMessage(FormatUtil.filter(event.getClient().getWarning() +
+          " Эта пластинка (**" + track.getInfo().title + "**) длиннее чем разрешенный лимит: `" +
+          FormatUtil.formatTime(track.getDuration()) + "` > `" + FormatUtil.formatTime(bot.getConfig().getMaxSeconds() * 1000) + "`")).queue();
         return;
       }
-      AudioHandler handler = (AudioHandler) event
-        .getGuild()
-        .getAudioManager()
-        .getSendingHandler();
-      int pos =
-        handler.addTrackToFront(new QueuedTrack(track, event.getAuthor())) + 1;
-      String addMsg = FormatUtil.filter(
-        event.getClient().getSuccess() +
-        " Добавлена пластинка **" +
-        track.getInfo().title +
-        "** (`" +
-        FormatUtil.formatTime(track.getDuration()) +
-        "`) " +
-        (pos == 0 ? "" : " в очередь " + pos)
-      );
+      AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+      int pos = handler.addTrackToFront(new QueuedTrack(track, event.getAuthor())) + 1;
+      String addMsg = FormatUtil.filter(event.getClient().getSuccess() +
+        " Добавлена пластинка **" + track.getInfo().title + "** (`" +
+        FormatUtil.formatTime(track.getDuration()) + "`) " + (pos == 0 ? "" : " в очередь " + pos));
       m.editMessage(addMsg).queue();
     }
 
@@ -135,49 +100,27 @@ public class PlaynextCmd extends DJCommand {
     @Override
     public void playlistLoaded(AudioPlaylist playlist) {
       AudioTrack single;
-      if (
-        playlist.getTracks().size() == 1 || playlist.isSearchResult()
-      ) single =
-        playlist.getSelectedTrack() == null
-          ? playlist.getTracks().get(0)
-          : playlist.getSelectedTrack(); else if (
-        playlist.getSelectedTrack() != null
-      ) single = playlist.getSelectedTrack(); else single =
-        playlist.getTracks().get(0);
+      if (playlist.getTracks().size() == 1 || playlist.isSearchResult())
+        single = playlist.getSelectedTrack() == null ? playlist.getTracks().get(0) : playlist.getSelectedTrack();
+      else if (playlist.getSelectedTrack() != null)
+        single = playlist.getSelectedTrack(); else single = playlist.getTracks().get(0);
       loadSingle(single);
     }
 
     @Override
     public void noMatches() {
-      if (ytsearch) m
-        .editMessage(
-          FormatUtil.filter(
-            event.getClient().getWarning() +
-            " Результаты не найдены для `" +
-            event.getArgs() +
-            "`."
-          )
-        )
-        .queue(); else bot
-        .getPlayerManager()
-        .loadItemOrdered(
-          event.getGuild(),
-          "ytsearch:" + event.getArgs(),
-          new ResultHandler(m, event, true)
-        );
+      if (ytsearch)
+        m.editMessage(FormatUtil.filter(event.getClient().getWarning() + " Результаты не найдены для `" + event.getArgs() + "`.")).queue();
+      else
+        bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:" + event.getArgs(), new ResultHandler(m, event, true));
     }
 
     @Override
     public void loadFailed(FriendlyException throwable) {
       if (throwable.severity == FriendlyException.Severity.COMMON) m
-        .editMessage(
-          event.getClient().getError() +
-          " Ошибка загрузки: " +
-          throwable.getMessage()
-        )
-        .queue(); else m
-        .editMessage(event.getClient().getError() + " Ошибка загрузки трека.")
-        .queue();
+        .editMessage(event.getClient().getError() + " Ошибка загрузки: " + throwable.getMessage()).queue();
+      else m
+        .editMessage(event.getClient().getError() + " Ошибка загрузки трека.").queue();
     }
   }
 }

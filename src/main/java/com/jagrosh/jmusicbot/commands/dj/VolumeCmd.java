@@ -39,19 +39,11 @@ public class VolumeCmd extends DJCommand {
 
   @Override
   public void doCommand(CommandEvent event) {
-    AudioHandler handler = (AudioHandler) event
-      .getGuild()
-      .getAudioManager()
-      .getSendingHandler();
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
     Settings settings = event.getClient().getSettingsFor(event.getGuild());
     int volume = handler.getPlayer().getVolume();
     if (event.getArgs().isEmpty()) {
-      event.reply(
-        FormatUtil.volumeIcon(volume) +
-        " В данный момент громкость равна `" +
-        volume +
-        "`"
-      );
+      event.reply(FormatUtil.volumeIcon(volume) + " В данный момент громкость равна `" + volume + "`");
     } else {
       int nvolume;
       try {
@@ -59,20 +51,12 @@ public class VolumeCmd extends DJCommand {
       } catch (NumberFormatException e) {
         nvolume = -1;
       }
-      if (nvolume < 0 || nvolume > 500) event.reply(
-        event.getClient().getError() +
-        " Громкость должна быть целым числом между 0 и 500!"
-      ); else {
+      if (nvolume < 0 || nvolume > 500)
+        event.reply(event.getClient().getError() + " Громкость должна быть целым числом между 0 и 500!");
+      else {
         handler.getPlayer().setVolume(nvolume);
         settings.setVolume(nvolume);
-        event.reply(
-          FormatUtil.volumeIcon(nvolume) +
-          " Громкость изменена из `" +
-          volume +
-          "` до `" +
-          nvolume +
-          "`"
-        );
+        event.reply(FormatUtil.volumeIcon(nvolume) + " Громкость изменена из `" + volume + "` до `" + nvolume + "`");
       }
     }
   }

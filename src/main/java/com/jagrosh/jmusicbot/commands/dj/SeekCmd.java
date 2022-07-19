@@ -27,14 +27,8 @@ public class SeekCmd extends DJCommand {
     int seconds;
     int minutes;
     int hours;
-    AudioHandler handler = (AudioHandler) event
-      .getGuild()
-      .getAudioManager()
-      .getSendingHandler();
-    int musicduration = (int) handler
-      .getPlayer()
-      .getPlayingTrack()
-      .getDuration();
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+    int musicduration = (int) handler.getPlayer().getPlayingTrack().getDuration();
     int needseek = 0;
     String[] parts = event.getArgs().split(":+", 3);
 
@@ -53,9 +47,7 @@ public class SeekCmd extends DJCommand {
         needseek = seconds * 1000 + minutes * 60000 + hours * 3600000;
       }
     } catch (NumberFormatException e) {
-      event.replyError(
-        "Напишите время в формате `[час:][мин:]<сек>` без других символов."
-      );
+      event.replyError("Напишите время в формате `[час:][мин:]<сек>` без других символов.");
       return;
     }
     if (!handler.getPlayer().getPlayingTrack().isSeekable()) {
@@ -69,11 +61,7 @@ public class SeekCmd extends DJCommand {
           formatter = new SimpleDateFormat("mm:ss");
         }
         formatter.setTimeZone(TimeZone.getTimeZone("UTC+3"));
-        event.replyError(
-          "Время которое вы ввели превышает время пластинки. Максимальное время которое можно ввести: **" +
-          formatter.format(musicduration) +
-          "**"
-        );
+        event.replyError("Время которое вы ввели превышает время пластинки. Максимальное время которое можно ввести: **" + formatter.format(musicduration) + "**");
       } else {
         DateFormat formatter;
         if (needseek >= 3600000) {
@@ -84,10 +72,7 @@ public class SeekCmd extends DJCommand {
         formatter.setTimeZone(TimeZone.getTimeZone("UTC+3"));
 
         handler.getPlayer().getPlayingTrack().setPosition(needseek);
-        String reply =
-          "Пластинка успешно перемотана на: **" +
-          formatter.format(needseek) +
-          "**";
+        String reply = "Пластинка успешно перемотана на: **" + formatter.format(needseek) + "**";
         event.replySuccess(reply);
       }
     }

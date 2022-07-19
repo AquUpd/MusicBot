@@ -44,28 +44,19 @@ public class RepeatCmd extends DJCommand {
     RepeatMode value;
     Settings settings = event.getClient().getSettingsFor(event.getGuild());
     if (args.isEmpty()) {
-      if (settings.getRepeatMode() == RepeatMode.OFF) value =
-        RepeatMode.ALL; else value = RepeatMode.OFF;
+      if (settings.getRepeatMode() == RepeatMode.OFF) value = RepeatMode.ALL; else value = RepeatMode.OFF;
     } else if (args.equalsIgnoreCase("false") || args.equalsIgnoreCase("off")) {
       value = RepeatMode.OFF;
-    } else if (
-      args.equalsIgnoreCase("true") ||
-      args.equalsIgnoreCase("on") ||
-      args.equalsIgnoreCase("all")
-    ) {
+    } else if (args.equalsIgnoreCase("true") || args.equalsIgnoreCase("on") || args.equalsIgnoreCase("all")) {
       value = RepeatMode.ALL;
-    } else if (
-      args.equalsIgnoreCase("one") || args.equalsIgnoreCase("single")
-    ) {
+    } else if (args.equalsIgnoreCase("one") || args.equalsIgnoreCase("single")) {
       value = RepeatMode.SINGLE;
     } else {
       event.replyError("Разрешенные параметры: `off`, `all` или `single`");
       return;
     }
     settings.setRepeatMode(value);
-    event.replySuccess(
-      "Режим повтора пластинок: `" + value.getUserFriendlyName() + "`"
-    );
+    event.replySuccess("Режим повтора пластинок: `" + value.getUserFriendlyName() + "`");
   }
 
   @Override

@@ -52,20 +52,14 @@ public class ForceRemoveCmd extends DJCommand {
       return;
     }
 
-    AudioHandler handler = (AudioHandler) event
-      .getGuild()
-      .getAudioManager()
-      .getSendingHandler();
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
     if (handler.getQueue().isEmpty()) {
       event.replyError("В очереди ничего нет!");
       return;
     }
 
     User target;
-    List<Member> found = FinderUtil.findMembers(
-      event.getArgs(),
-      event.getGuild()
-    );
+    List<Member> found = FinderUtil.findMembers(event.getArgs(), event.getGuild());
 
     if (found.isEmpty()) {
       event.replyError("Не удалось найти пользователя!");
@@ -74,18 +68,10 @@ public class ForceRemoveCmd extends DJCommand {
       OrderedMenu.Builder builder = new OrderedMenu.Builder();
       for (int i = 0; i < found.size() && i < 4; i++) {
         Member member = found.get(i);
-        builder.addChoice(
-          "**" +
-          member.getUser().getName() +
-          "**#" +
-          member.getUser().getDiscriminator()
-        );
+        builder.addChoice("**" + member.getUser().getName() + "**#" + member.getUser().getDiscriminator());
       }
 
-      builder
-        .setSelection((msg, i) ->
-          removeAllEntries(found.get(i - 1).getUser(), event)
-        )
+      builder.setSelection((msg, i) -> removeAllEntries(found.get(i - 1).getUser(), event))
         .setText("Найдено несколько пользователей:")
         .setColor(event.getSelfMember().getColor())
         .useNumbers()
@@ -96,7 +82,6 @@ public class ForceRemoveCmd extends DJCommand {
         .setTimeout(1, TimeUnit.MINUTES)
         .build()
         .display(event.getChannel());
-
       return;
     } else {
       target = found.get(0).getUser();
@@ -111,25 +96,11 @@ public class ForceRemoveCmd extends DJCommand {
   }
 
   private void removeAllEntries(User target, CommandEvent event) {
-    int count =
-      (
-        (AudioHandler) event.getGuild().getAudioManager().getSendingHandler()
-      ).getQueue()
-        .removeAll(target.getIdLong());
+    int count = ((AudioHandler) event.getGuild().getAudioManager().getSendingHandler()).getQueue().removeAll(target.getIdLong());
     if (count == 0) {
-      event.replyWarning(
-        "Пользователь с ником **" +
-        target.getName() +
-        "** не добавлял пластинки в очередь!"
-      );
+      event.replyWarning("Пользователь с ником **" + target.getName() + "** не добавлял пластинки в очередь!");
     } else {
-      event.replySuccess(
-        "Успешно убраны пластинки пользователя **" +
-        target.getName() +
-        "**#" +
-        target.getDiscriminator() +
-        "."
-      );
+      event.replySuccess("Успешно убраны пластинки пользователя **" + target.getName() + "**#" + target.getDiscriminator() + ".");
     }
   }
 }

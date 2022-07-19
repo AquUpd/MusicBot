@@ -39,22 +39,11 @@ public class ForceskipCmd extends DJCommand {
 
   @Override
   public void doCommand(CommandEvent event) {
-    AudioHandler handler = (AudioHandler) event
-      .getGuild()
-      .getAudioManager()
-      .getSendingHandler();
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
     RequestMetadata rm = handler.getRequestMetadata();
-    event.reply(
-      event.getClient().getSuccess() +
-      " Пропущена пластинка **" +
-      handler.getPlayer().getPlayingTrack().getInfo().title +
-      "** " +
-      (
-        rm.getOwner() == 0L
-          ? "(автоматическая)"
-          : "(добавлена **" + rm.user.username + "**)"
-      )
-    );
+    event.reply(event.getClient().getSuccess() + " Пропущена пластинка **" +
+      handler.getPlayer().getPlayingTrack().getInfo().title + "** " +
+      (rm.getOwner() == 0L ? "(автоматическая)" : "(добавлена **" + rm.user.username + "**)"));
     handler.getPlayer().stopTrack();
   }
 

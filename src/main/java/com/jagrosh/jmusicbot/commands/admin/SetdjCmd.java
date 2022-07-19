@@ -46,37 +46,22 @@ public class SetdjCmd extends AdminCommand {
   @Override
   protected void execute(CommandEvent event) {
     if (event.getArgs().isEmpty()) {
-      event.reply(
-        event.getClient().getError() +
-        " Напшите нужную роль или 'NONE' для очистки(можно написать ID сервера чтобы все могли использовать команду)"
-      );
+      event.reply(event.getClient().getError() + " Напшите нужную роль или 'NONE' для очистки(можно написать ID сервера чтобы все могли использовать команду)");
       return;
     }
     Settings s = event.getClient().getSettingsFor(event.getGuild());
     if (event.getArgs().equalsIgnoreCase("none")) {
       s.setDJRole(null);
-      event.reply(
-        event.getClient().getSuccess() +
-        " DJ роль очищена; Теперь только администраторы могут её использовать."
-      );
+      event.reply(event.getClient().getSuccess() + " DJ роль очищена; Теперь только администраторы могут её использовать.");
     } else {
       List<Role> list = FinderUtil.findRoles(event.getArgs(), event.getGuild());
-      if (list.isEmpty()) event.reply(
-        event.getClient().getWarning() +
-        " Нет роли с названием \"" +
-        event.getArgs() +
-        "\""
-      ); else if (list.size() > 1) event.reply(
-        event.getClient().getWarning() +
-        FormatUtil.listOfRoles(list, event.getArgs())
-      ); else {
+      if (list.isEmpty())
+        event.reply(event.getClient().getWarning() + " Нет роли с названием \"" + event.getArgs() + "\"");
+      else if (list.size() > 1)
+        event.reply(event.getClient().getWarning() + FormatUtil.listOfRoles(list, event.getArgs()));
+      else {
         s.setDJRole(list.get(0));
-        event.reply(
-          event.getClient().getSuccess() +
-          " DJ команды теперь может использовать роль **" +
-          list.get(0).getName() +
-          "**.   "
-        );
+        event.reply(event.getClient().getSuccess() + " DJ команды теперь может использовать роль **" + list.get(0).getName() + "**.   ");
       }
     }
   }

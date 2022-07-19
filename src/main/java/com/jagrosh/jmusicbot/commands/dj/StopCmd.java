@@ -37,10 +37,7 @@ public class StopCmd extends DJCommand {
 
   @Override
   public void doCommand(CommandEvent event) {
-    AudioHandler handler = (AudioHandler) event
-      .getGuild()
-      .getAudioManager()
-      .getSendingHandler();
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
     handler.stopAndClear();
     event.getGuild().getAudioManager().closeAudioConnection();
     event.reply(event.getClient().getSuccess() + " Все было очищено.");

@@ -28,15 +28,7 @@ public class RequestMetadata {
   public final UserInfo user;
 
   public RequestMetadata(User user) {
-    this.user =
-      user == null
-        ? null
-        : new UserInfo(
-          user.getIdLong(),
-          user.getName(),
-          user.getDiscriminator(),
-          user.getEffectiveAvatarUrl()
-        );
+    this.user = user == null ? null : new UserInfo(user.getIdLong(), user.getName(), user.getDiscriminator(), user.getEffectiveAvatarUrl());
   }
 
   public long getOwner() {

@@ -50,17 +50,14 @@ public class PlayerManager extends DefaultAudioPlayerManager {
     String email = conf.getString("ytemail");
     String password = conf.getString("ytpassword");
 
-    TransformativeAudioSourceManager
-      .createTransforms(bot.getConfig().getTransforms())
-      .forEach(this::registerSourceManager);
+    TransformativeAudioSourceManager.createTransforms(bot.getConfig().getTransforms()).forEach(this::registerSourceManager);
 
     this.registerRemoteSources(email, password);
     AudioSourceManagers.registerLocalSource(this);
 
     source(YoutubeAudioSourceManager.class).setPlaylistPageCount(100);
     setHttpRequestConfigurator(config ->
-      RequestConfig
-        .copy(config)
+      RequestConfig.copy(config)
         .setSocketTimeout(20000)
         .setConnectTimeout(20000)
         .build()
