@@ -45,7 +45,7 @@ public class SettingsCmd extends SlashCommand {
   }
 
   @Override
-  protected void execute(SlashCommandEvent slashCommandEvent) {
+  protected void execute(SlashCommandEvent event) {
 
   }
 

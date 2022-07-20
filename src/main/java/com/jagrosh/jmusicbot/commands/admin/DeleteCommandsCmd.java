@@ -21,6 +21,8 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.commands.Command;
 
 public class DeleteCommandsCmd extends OwnerCommand {
@@ -33,13 +35,22 @@ public class DeleteCommandsCmd extends OwnerCommand {
 
   @Override
   protected void execute(SlashCommandEvent event) {
-
+    event.deferReply().queue();
+    List<Command> commands = event.getGuild().retrieveCommands().complete();
+    if (commands.isEmpty()) event.getHook().editOriginal("нет команд").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    else {
+      for (Command command: commands) {
+        event.getGuild().deleteCommandById(command.getIdLong()).submit();
+      }
+      event.getHook().editOriginal("Done").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    }
   }
 
   @Override
   protected void execute(CommandEvent event) {
     List<Command> commands = event.getGuild().retrieveCommands().complete();
-    if (commands.isEmpty()) event.reply("нет команд"); else {
+    if (commands.isEmpty()) event.reply("нет команд");
+    else {
       for (Command command: commands) {
         event.getGuild().deleteCommandById(command.getIdLong()).submit();
       }

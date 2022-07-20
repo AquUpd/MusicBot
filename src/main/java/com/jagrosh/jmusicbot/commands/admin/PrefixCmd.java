@@ -20,6 +20,11 @@ import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 /**
  *
@@ -31,12 +36,21 @@ public class PrefixCmd extends AdminCommand {
     this.name = "prefix";
     this.help = "выбирает префикс для определенного сервера";
     this.arguments = "<prefix|NONE>";
+    this.options = Collections.singletonList(new OptionData(OptionType.STRING, "prefix", "Префикс для команд. NONE чтобы очистить.").setRequired(true));
     this.aliases = bot.getConfig().getAliases(this.name);
   }
 
   @Override
-  protected void execute(SlashCommandEvent slashCommandEvent) {
-
+  protected void execute(SlashCommandEvent event) {
+    event.deferReply().queue();
+    Settings s = event.getClient().getSettingsFor(event.getGuild());
+    if (event.getOption("prefix").getAsString().equalsIgnoreCase("none")) {
+      s.setPrefix(null);
+      event.getHook().editOriginal("Префикс очищен.").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    } else {
+      s.setPrefix(event.getOption("prefix").getAsString());
+      event.getHook().editOriginal("Префикс на сервере **" + event.getGuild().getName() + "** изменен на '" + event.getOption("prefix").getAsString() + "'").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    }
   }
 
   @Override
@@ -52,7 +66,7 @@ public class PrefixCmd extends AdminCommand {
       event.replySuccess("Префикс очищен.");
     } else {
       s.setPrefix(event.getArgs());
-      event.replySuccess("Префикс на сервере *" + event.getGuild().getName() + "* изменен на '" + event.getArgs() + "'");
+      event.replySuccess("Префикс на сервере **" + event.getGuild().getName() + "** изменен на '" + event.getArgs() + "'");
     }
   }
 }

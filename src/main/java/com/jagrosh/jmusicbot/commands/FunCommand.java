@@ -20,10 +20,8 @@ import com.jagrosh.jdautilities.command.SlashCommand;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.settings.Settings;
-import net.dv8tion.jda.api.entities.AudioChannel;
-import net.dv8tion.jda.api.entities.GuildVoiceState;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import java.util.concurrent.TimeUnit;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
 /**
@@ -47,17 +45,19 @@ public abstract class FunCommand extends SlashCommand {
     if (tchannel != null && !event.getTextChannel().equals(tchannel)) {
       try {
         event.getMessage().delete().queue();
-      } catch (PermissionException ignore) {}
+      } catch (PermissionException ignore) {
+      }
       event.replyInDm(event.getClient().getError() + " Вы можете использовать данную команду только в " + tchannel.getAsMention() + "!");
       return;
     }
+
     bot.getPlayerManager().setUpHandler(event.getGuild()); // no point constantly checking for this later
     if (beInChannel) {
       AudioChannel current = event.getGuild().getSelfMember().getVoiceState().getChannel();
       if (current == null) current = settings.getVoiceChannel(event.getGuild());
       GuildVoiceState userState = event.getMember().getVoiceState();
       if (!userState.inAudioChannel() || (current != null && !userState.getChannel().equals(current))) {
-        event.replyError("Вы должны находится в канале!");
+        event.replyError("Вы должны находиться в войс канале!");
         return;
       }
 
@@ -81,6 +81,41 @@ public abstract class FunCommand extends SlashCommand {
 
   @Override
   protected void execute(SlashCommandEvent event) {
+    event.deferReply().queue();
+
+    Settings settings = event.getClient().getSettingsFor(event.getGuild());
+    TextChannel tchannel = settings.getTextChannel(event.getGuild());
+    if (tchannel != null && !event.getTextChannel().equals(tchannel)) {
+      event.getUser().openPrivateChannel().flatMap(channel -> channel.sendMessage(event.getClient().getError() + " Вы можете использовать данную команду только в " + tchannel.getAsMention() + "!")).queue();
+      event.getHook().deleteOriginal().queue();
+      return;
+    }
+
+    bot.getPlayerManager().setUpHandler(event.getGuild()); // no point constantly checking for this later
+    if (beInChannel) {
+      AudioChannel current = event.getGuild().getSelfMember().getVoiceState().getChannel();
+      if (current == null) current = settings.getVoiceChannel(event.getGuild());
+      GuildVoiceState userState = event.getMember().getVoiceState();
+      if (!userState.inAudioChannel() || (current != null && !userState.getChannel().equals(current))) {
+        event.getHook().editOriginal("Вы должны находиться в войс канале!").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        return;
+      }
+
+      VoiceChannel afkChannel = userState.getGuild().getAfkChannel();
+      if (afkChannel != null && afkChannel.equals(userState.getChannel())) {
+        event.getHook().editOriginal("Вы не можете использовать это в AFK канале!").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        return;
+      }
+
+      if (!event.getGuild().getSelfMember().getVoiceState().inAudioChannel()) {
+        try {
+          event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
+        } catch (PermissionException ex) {
+          event.getHook().editOriginal(event.getClient().getError() + " Я не могу подключится к **" + userState.getChannel().getName() + "**!").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          return;
+        }
+      }
+    }
     doSlashCommand(event);
   }
 
