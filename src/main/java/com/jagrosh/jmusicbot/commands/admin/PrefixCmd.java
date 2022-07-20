@@ -46,10 +46,13 @@ public class PrefixCmd extends AdminCommand {
     Settings s = event.getClient().getSettingsFor(event.getGuild());
     if (event.getOption("prefix").getAsString().equalsIgnoreCase("none")) {
       s.setPrefix(null);
-      event.getHook().editOriginal("Префикс очищен.").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      event.getHook().editOriginal("Префикс очищен.")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
     } else {
       s.setPrefix(event.getOption("prefix").getAsString());
-      event.getHook().editOriginal("Префикс на сервере **" + event.getGuild().getName() + "** изменен на '" + event.getOption("prefix").getAsString() + "'").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      event.getHook().editOriginal("Префикс на сервере **" + event.getGuild().getName() + "** изменен на '" +
+        event.getOption("prefix").getAsString() + "'")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
     }
   }
 

@@ -105,7 +105,99 @@ public class JMusicBot {
     aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
 
     // set up the command client
-    CommandClientBuilder cb = new CommandClientBuilder().setPrefix(config.getPrefix()).setAlternativePrefix(config.getAltPrefix()).setOwnerId(Long.toString(config.getOwnerId())).setEmojis(config.getSuccess(), config.getWarning(), config.getError()).setHelpWord(config.getHelp()).setLinkedCacheSize(200).setGuildSettingsManager(settings).addCommands(aboutCommand, new PingCommand(), new SettingsCmd(bot), new ChessCmd(bot), new DoodleCmd(bot), new PokerCmd(bot), new RockPaperScissorsCmd(bot), new YoutubeCmd(bot), new ProfilePictureCmd(bot), new LyricsCmd(bot), new NowplayingCmd(bot), new PlayCmd(bot), new PlaylistsCmd(bot), new QueueCmd(bot), new RemoveCmd(bot), new SearchCmd(bot), new SCSearchCmd(bot), new ShuffleCmd(bot), new SkipCmd(bot), new SeekCmd(bot), new ForceRemoveCmd(bot), new ForceskipCmd(bot), new MoveTrackCmd(bot), new PauseCmd(bot), new PlaynextCmd(bot), new RepeatCmd(bot), new SkiptoCmd(bot), new StopCmd(bot), new VolumeCmd(bot), new DeleteCommandsCmd(bot), new PrefixCmd(bot), new SetdjCmd(bot), new SkipratioCmd(bot), new SettcCmd(bot), new SetvcCmd(bot), new AutoplaylistCmd(bot), new DebugCmd(bot), new PlaylistCmd(bot), new SetavatarCmd(bot), new SetgameCmd(bot), new SetnameCmd(bot), new SetstatusCmd(bot), new ShutdownCmd(bot)).addSlashCommands(new SettingsCmd(bot), new ChessCmd(bot), new DoodleCmd(bot), new PokerCmd(bot), new RockPaperScissorsCmd(bot), new YoutubeCmd(bot), new ProfilePictureCmd(bot), new LyricsCmd(bot), new NowplayingCmd(bot), new PlayCmd(bot), new PlaylistsCmd(bot), new QueueCmd(bot), new RemoveCmd(bot), new SearchCmd(bot), new SCSearchCmd(bot), new ShuffleCmd(bot), new SkipCmd(bot), new SeekCmd(bot), new ForceRemoveCmd(bot), new ForceskipCmd(bot), new MoveTrackCmd(bot), new PauseCmd(bot), new PlaynextCmd(bot), new RepeatCmd(bot), new SkiptoCmd(bot), new StopCmd(bot), new VolumeCmd(bot), new DeleteCommandsCmd(bot), new PrefixCmd(bot), new SetdjCmd(bot), new SkipratioCmd(bot), new SettcCmd(bot), new SetvcCmd(bot), new AutoplaylistCmd(bot), new DebugCmd(bot), new PlaylistCmd(bot), new SetavatarCmd(bot), new SetgameCmd(bot), new SetnameCmd(bot), new SetstatusCmd(bot), new ShutdownCmd(bot));
+    CommandClientBuilder cb = new CommandClientBuilder()
+      .setPrefix(config.getPrefix())
+      .setAlternativePrefix(config.getAltPrefix())
+      .setOwnerId(Long.toString(config.getOwnerId()))
+      .setEmojis(config.getSuccess(), config.getWarning(), config.getError())
+      .setHelpWord(config.getHelp())
+      .setLinkedCacheSize(200)
+      .setGuildSettingsManager(settings)
+      .addCommands(
+        aboutCommand,
+        new PingCommand(),
+        new SettingsCmd(bot),
+        new ChessCmd(bot),
+        new DoodleCmd(bot),
+        new PokerCmd(bot),
+        new RockPaperScissorsCmd(bot),
+        new YoutubeCmd(bot),
+        new ProfilePictureCmd(bot),
+        new LyricsCmd(bot),
+        new NowplayingCmd(bot),
+        new PlayCmd(bot),
+        new PlaylistsCmd(bot),
+        new QueueCmd(bot),
+        new RemoveCmd(bot),
+        new SearchCmd(bot),
+        new SCSearchCmd(bot),
+        new ShuffleCmd(bot),
+        new SkipCmd(bot),
+        new SeekCmd(bot),
+        new ForceRemoveCmd(bot),
+        new ForceskipCmd(bot),
+        new MoveTrackCmd(bot),
+        new PauseCmd(bot),
+        new PlaynextCmd(bot),
+        new RepeatCmd(bot),
+        new SkiptoCmd(bot),
+        new StopCmd(bot),
+        new VolumeCmd(bot),
+        new DeleteCommandsCmd(bot),
+        new PrefixCmd(bot),
+        new SetdjCmd(bot),
+        new SettcCmd(bot),
+        new SetvcCmd(bot),
+        new AutoplaylistCmd(bot),
+        new DebugCmd(bot),
+        new PlaylistCmd(bot),
+        new SetavatarCmd(bot),
+        new SetgameCmd(bot),
+        new SetnameCmd(bot),
+        new SetstatusCmd(bot),
+        new ShutdownCmd(bot))
+      .addSlashCommands(
+        new SettingsCmd(bot),
+        new ChessCmd(bot),
+        new DoodleCmd(bot),
+        new PokerCmd(bot),
+        new RockPaperScissorsCmd(bot),
+        new YoutubeCmd(bot),
+        new ProfilePictureCmd(bot),
+        new LyricsCmd(bot),
+        new NowplayingCmd(bot),
+        new PlayCmd(bot),
+        new PlaylistsCmd(bot),
+        new QueueCmd(bot),
+        new RemoveCmd(bot),
+        new SearchCmd(bot),
+        new SCSearchCmd(bot),
+        new ShuffleCmd(bot),
+        new SkipCmd(bot),
+        new SeekCmd(bot),
+        new ForceRemoveCmd(bot),
+        new ForceskipCmd(bot),
+        new MoveTrackCmd(bot),
+        new PauseCmd(bot),
+        new PlaynextCmd(bot),
+        new RepeatCmd(bot),
+        new SkiptoCmd(bot),
+        new StopCmd(bot),
+        new VolumeCmd(bot),
+        new DeleteCommandsCmd(bot),
+        new PrefixCmd(bot),
+        new SetdjCmd(bot),
+        new SettcCmd(bot),
+        new SetvcCmd(bot),
+        new AutoplaylistCmd(bot),
+        new DebugCmd(bot),
+        new PlaylistCmd(bot),
+        new SetavatarCmd(bot),
+        new SetgameCmd(bot),
+        new SetnameCmd(bot),
+        new SetstatusCmd(bot),
+        new ShutdownCmd(bot));
+
     if (config.useEval()) cb.addCommand(new EvalCmd(bot));
     boolean nogame = false;
     if (config.getStatus() != OnlineStatus.UNKNOWN) cb.setStatus(config.getStatus());
@@ -129,7 +221,14 @@ public class JMusicBot {
 
     // attempt to log in and start
     try {
-      JDA jda = JDABuilder.create(config.getToken(), Arrays.asList(INTENTS)).enableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE, CacheFlag.ONLINE_STATUS).disableCache(CacheFlag.ACTIVITY).setActivity(nogame ? null : Activity.playing("загрузка...")).setStatus(config.getStatus() == OnlineStatus.INVISIBLE || config.getStatus() == OnlineStatus.OFFLINE ? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB).addEventListeners(cb.build(), waiter, new Listener(bot)).setBulkDeleteSplittingEnabled(true).build();
+      JDA jda = JDABuilder.create(config.getToken(), Arrays.asList(INTENTS))
+        .enableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE, CacheFlag.ONLINE_STATUS)
+        .disableCache(CacheFlag.ACTIVITY)
+        .setActivity(nogame ? null : Activity.playing("загрузка..."))
+        .setStatus(config.getStatus() == OnlineStatus.INVISIBLE || config.getStatus() == OnlineStatus.OFFLINE ? OnlineStatus.INVISIBLE : OnlineStatus.DO_NOT_DISTURB)
+        .addEventListeners(cb.build(), waiter, new Listener(bot))
+        .setBulkDeleteSplittingEnabled(true)
+        .build();
       bot.setJDA(jda);
     } catch (LoginException ex) {
       prompt.alert(Prompt.Level.ERROR, "JMusicBot", ex + "\nУбедитесь что вы " + "изменяете правильный config.go файл и применяете " + "правильный токен бота (не 'secret'!)\nРасположение config.go: " + config.getConfigLocation());

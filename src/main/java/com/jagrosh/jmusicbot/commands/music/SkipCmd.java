@@ -37,17 +37,8 @@ public class SkipCmd extends MusicCommand {
 
   @Override
   public void doCommand(CommandEvent event) {
-    AudioHandler handler = (AudioHandler) event
-      .getGuild()
-      .getAudioManager()
-      .getSendingHandler();
-    {
-      event.reply(
-        event.getClient().getSuccess() +
-          " Пропущена пластинка **" +
-          handler.getPlayer().getPlayingTrack().getInfo().title +
-          "**"
-      );
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();{
+      event.reply(event.getClient().getSuccess() + " Пропущена пластинка **" + handler.getPlayer().getPlayingTrack().getInfo().title + "**");
       handler.getPlayer().stopTrack();
     }
   }

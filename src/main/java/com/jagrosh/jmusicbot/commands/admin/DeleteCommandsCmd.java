@@ -37,7 +37,8 @@ public class DeleteCommandsCmd extends OwnerCommand {
   protected void execute(SlashCommandEvent event) {
     event.deferReply().queue();
     List<Command> commands = event.getGuild().retrieveCommands().complete();
-    if (commands.isEmpty()) event.getHook().editOriginal("нет команд").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    if (commands.isEmpty()) event.getHook().editOriginal("нет команд")
+      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
     else {
       for (Command command: commands) {
         event.getGuild().deleteCommandById(command.getIdLong()).submit();

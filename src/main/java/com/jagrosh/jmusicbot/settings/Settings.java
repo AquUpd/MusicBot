@@ -36,9 +36,8 @@ public class Settings implements GuildSettingsProvider {
   private String defaultPlaylist;
   private RepeatMode repeatMode;
   private String prefix;
-  private double skipRatio;
 
-  public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio) {
+  public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix) {
     this.manager = manager;
     try {
       this.textId = Long.parseLong(textId);
@@ -59,10 +58,9 @@ public class Settings implements GuildSettingsProvider {
     this.defaultPlaylist = defaultPlaylist;
     this.repeatMode = repeatMode;
     this.prefix = prefix;
-    this.skipRatio = skipRatio;
   }
 
-  public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix, double skipRatio) {
+  public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix) {
     this.manager = manager;
     this.textId = textId;
     this.voiceId = voiceId;
@@ -71,7 +69,6 @@ public class Settings implements GuildSettingsProvider {
     this.defaultPlaylist = defaultPlaylist;
     this.repeatMode = repeatMode;
     this.prefix = prefix;
-    this.skipRatio = skipRatio;
   }
 
   // Getters
@@ -120,15 +117,6 @@ public class Settings implements GuildSettingsProvider {
 
   public void setPrefix(String prefix) {
     this.prefix = prefix;
-    this.manager.writeSettings();
-  }
-
-  public double getSkipRatio() {
-    return skipRatio;
-  }
-
-  public void setSkipRatio(double skipRatio) {
-    this.skipRatio = skipRatio;
     this.manager.writeSettings();
   }
 

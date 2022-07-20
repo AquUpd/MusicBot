@@ -36,6 +36,7 @@ public class SetstatusCmd extends OwnerCommand {
 
   @Override
   protected void execute(SlashCommandEvent event) {
+    event.deferReply().queue();
 
   }
 

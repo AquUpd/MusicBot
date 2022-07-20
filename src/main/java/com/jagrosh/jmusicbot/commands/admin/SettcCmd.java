@@ -22,8 +22,13 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 /**
  *
@@ -35,12 +40,33 @@ public class SettcCmd extends AdminCommand {
     this.name = "settc";
     this.help = "устанавливает текстовый канал для команд";
     this.arguments = "<channel|NONE>";
+    this.options = Collections.singletonList(new OptionData(OptionType.STRING, "channel", "Текстовый канал для команд. NONE чтобы очистить.").setRequired(true));
     this.aliases = bot.getConfig().getAliases(this.name);
   }
 
   @Override
   protected void execute(SlashCommandEvent event) {
-
+    event.deferReply().queue();
+    Settings s = event.getClient().getSettingsFor(event.getGuild());
+    if (event.getOption("channel").getAsString().equalsIgnoreCase("none")) {
+      s.setTextChannel(null);
+      event.getHook().editOriginal(event.getClient().getSuccess() + " Теперь команды можно использовать повсюду")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    } else {
+      List<TextChannel> list = FinderUtil.findTextChannels(event.getOption("channel").getAsString(), event.getGuild());
+      if (list.isEmpty())
+        event.getHook().editOriginal(event.getClient().getWarning() + " Нет текстового канала с названием \"" +
+          event.getOption("channel").getAsString() + "\"")
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      else if (list.size() > 1)
+        event.getHook().editOriginal(event.getClient().getWarning() + FormatUtil.listOfTChannels(list, event.getOption("channel").getAsString()))
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      else {
+        s.setTextChannel(list.get(0));
+        event.getHook().editOriginal(event.getClient().getSuccess() + " Музыкальные каналы теперь можно использовать только в <#" + list.get(0).getId() + ">")
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      }
+    }
   }
 
   @Override

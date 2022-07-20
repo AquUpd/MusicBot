@@ -50,16 +50,20 @@ public class SetdjCmd extends AdminCommand {
     Settings s = event.getClient().getSettingsFor(event.getGuild());
     if (event.getOption("rolename").getAsString().equalsIgnoreCase("none")) {
       s.setDJRole(null);
-      event.getHook().editOriginal(event.getClient().getSuccess() + " DJ роль очищена; Теперь только администраторы могут её использовать.").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      event.getHook().editOriginal(event.getClient().getSuccess() + " DJ роль очищена; Теперь только администраторы могут её использовать.")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
     } else {
       List<Role> list = FinderUtil.findRoles(event.getOption("rolename").getAsString(), event.getGuild());
       if (list.isEmpty())
-        event.getHook().editOriginal(event.getClient().getWarning() + " Нет роли с названием \"" + event.getOption("rolename").getAsString() + "\"").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        event.getHook().editOriginal(event.getClient().getWarning() + " Нет роли с названием \"" + event.getOption("rolename").getAsString() + "\"")
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
       else if (list.size() > 1)
-        event.getHook().editOriginal(event.getClient().getWarning() + FormatUtil.listOfRoles(list, event.getOption("rolename").getAsString())).delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        event.getHook().editOriginal(event.getClient().getWarning() + FormatUtil.listOfRoles(list, event.getOption("rolename").getAsString()))
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
       else {
         s.setDJRole(list.get(0));
-        event.getHook().editOriginal(event.getClient().getSuccess() + " DJ команды теперь может использовать роль **" + list.get(0).getName() + "**.   ").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        event.getHook().editOriginal(event.getClient().getSuccess() + " DJ команды теперь может использовать роль **" + list.get(0).getName() + "**.   ")
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
       }
     }
   }
