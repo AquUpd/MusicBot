@@ -20,6 +20,8 @@ import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.DJCommand;
+import java.util.concurrent.TimeUnit;
+import net.dv8tion.jda.api.entities.Message;
 
 /**
  *
@@ -39,16 +41,27 @@ public class PauseCmd extends DJCommand {
   public void doCommand(CommandEvent event) {
     AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
     if (handler.getPlayer().isPaused()) {
-      event.replyWarning("Пластинки уже стоят на паузе! Используйте `" + event.getClient().getPrefix() + "play` чтобы возобновить прослушивание!");
+      event.replyWarning("Пластинки уже стоят на паузе! Используйте `" + event.getClient().getPrefix() +
+        "play` или `/play` чтобы возобновить прослушивание!");
       return;
     }
     handler.getPlayer().setPaused(true);
     event.replySuccess("**" + handler.getPlayer().getPlayingTrack().getInfo().title +
-      "** теперь на паузе. Используйте `" + event.getClient().getPrefix() + "play` чтобы возобновить прослушивание!");
+      "** теперь на паузе. Используйте `" + event.getClient().getPrefix() + "play` или `/play` чтобы возобновить прослушивание!");
   }
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
-
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+    if (handler.getPlayer().isPaused()) {
+      event.getHook().editOriginal("Пластинки уже стоят на паузе! Используйте `" + event.getClient().getPrefix() +
+          "play` или `/play` чтобы возобновить прослушивание!")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      return;
+    }
+    handler.getPlayer().setPaused(true);
+    event.getHook().editOriginal("**" + handler.getPlayer().getPlayingTrack().getInfo().title +
+      "** теперь на паузе. Используйте `" + event.getClient().getPrefix() + "play` или `/play` чтобы возобновить прослушивание!")
+      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
   }
 }

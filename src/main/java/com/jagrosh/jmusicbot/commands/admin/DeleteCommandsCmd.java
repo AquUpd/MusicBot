@@ -43,7 +43,8 @@ public class DeleteCommandsCmd extends OwnerCommand {
       for (Command command: commands) {
         event.getGuild().deleteCommandById(command.getIdLong()).submit();
       }
-      event.getHook().editOriginal("Done").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      event.getHook().editOriginal("Done")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
     }
   }
 

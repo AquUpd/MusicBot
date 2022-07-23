@@ -32,10 +32,13 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.exceptions.PermissionException;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 /**
  *
@@ -53,11 +56,11 @@ public class PlayCmd extends MusicCommand {
     this.loadingEmoji = bot.getConfig().getLoading();
     this.name = "play";
     this.arguments = "<название|URL|сабкоманда>";
+    this.options = Collections.singletonList(new OptionData(OptionType.STRING, "пластинка", "Название или URL пластинки").setRequired(true));
     this.help = "играет пластинку";
     this.aliases = bot.getConfig().getAliases(this.name);
     this.beListening = true;
     this.bePlaying = false;
-    this.children = new SlashCommand[] { new PlaylistCmd(bot) };
   }
 
   @Override
@@ -149,7 +152,7 @@ public class PlayCmd extends MusicCommand {
 
     private int loadPlaylist(AudioPlaylist playlist, AudioTrack exclude) {
       int[] count = { 0 };
-      playlist.getTracks().stream().forEach(track -> {
+      playlist.getTracks().forEach(track -> {
         if (!bot.getConfig().isTooLong(track) && !track.equals(exclude)) {
           AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
           handler.addTrack(new QueuedTrack(track, event.getAuthor()));
@@ -185,7 +188,7 @@ public class PlayCmd extends MusicCommand {
               (count < playlist.getTracks().size() ? "\n" + event.getClient().getWarning() + "Некоторые пластинки были убраны" : ""))).queue();
           } else {
             m.editMessage(FormatUtil.filter(event.getClient().getSuccess() + " Найден " + (playlist.getName() == null ? "неизвестный плейлист" : "плейлист **" + playlist.getName() + "**") +
-                  " с `" + playlist.getTracks().size() + "` пластинками; Он добавлена в очередь!" +
+                  " с `" + playlist.getTracks().size() + "` пластинками; Они были добавлены в очередь!" +
                   (count < playlist.getTracks().size() ? "\n" + event.getClient().getWarning() + "Некоторые пластинки были убраны" : ""))).queue();
           }
         }
@@ -209,6 +212,7 @@ public class PlayCmd extends MusicCommand {
     }
   }
 
+  /* need to move to other command
   public class PlaylistCmd extends MusicCommand {
 
     public PlaylistCmd(Bot bot) {
@@ -258,5 +262,5 @@ public class PlayCmd extends MusicCommand {
     public void doSlashCommand(SlashCommandEvent event) {
 
     }
-  }
+  }*/
 }

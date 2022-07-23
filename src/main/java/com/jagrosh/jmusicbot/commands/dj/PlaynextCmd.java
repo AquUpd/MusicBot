@@ -26,7 +26,12 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 /**
  *
@@ -41,6 +46,7 @@ public class PlaynextCmd extends DJCommand {
     this.loadingEmoji = bot.getConfig().getLoading();
     this.name = "playnext";
     this.arguments = "<title|URL>";
+    this.options = Collections.singletonList(new OptionData(OptionType.STRING, "track", "название/URL пластинки").setRequired(true));
     this.help = "воспроизводит пластинку следующей";
     this.aliases = bot.getConfig().getAliases(this.name);
     this.beListening = true;
@@ -62,7 +68,10 @@ public class PlaynextCmd extends DJCommand {
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
-
+    String arg = event.getOption("track").getAsString();
+    String args = (arg.startsWith("<") && arg.endsWith(">")) ? arg.substring(1, arg.length() - 1) : "";
+    event.getHook().editOriginal(loadingEmoji + " Загрузка... `[" + args + "]`").queue();
+    bot.getPlayerManager().loadItemOrdered(event.getGuild(), args, new SlashResultHandler(event.getHook(), event, false));
   }
 
   private class ResultHandler implements AudioLoadResultHandler {
@@ -121,6 +130,70 @@ public class PlaynextCmd extends DJCommand {
         .editMessage(event.getClient().getError() + " Ошибка загрузки: " + throwable.getMessage()).queue();
       else m
         .editMessage(event.getClient().getError() + " Ошибка загрузки трека.").queue();
+    }
+  }
+
+  private class SlashResultHandler implements AudioLoadResultHandler {
+
+    private final InteractionHook m;
+    private final SlashCommandEvent event;
+    private final boolean ytsearch;
+
+    private SlashResultHandler(InteractionHook m, SlashCommandEvent event, boolean ytsearch) {
+      this.m = m;
+      this.event = event;
+      this.ytsearch = ytsearch;
+    }
+
+    private void loadSingle(AudioTrack track) {
+      if (bot.getConfig().isTooLong(track)) {
+        m.editOriginal(FormatUtil.filter(event.getClient().getWarning() +
+          " Эта пластинка (**" + track.getInfo().title + "**) длиннее чем разрешенный лимит: `" +
+          FormatUtil.formatTime(track.getDuration()) + "` > `" + FormatUtil.formatTime(bot.getConfig().getMaxSeconds() * 1000) + "`"))
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        return;
+      }
+      AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+      int pos = handler.addTrackToFront(new QueuedTrack(track, event.getUser())) + 1;
+      String addMsg = FormatUtil.filter(event.getClient().getSuccess() +
+        " Добавлена пластинка **" + track.getInfo().title + "** (`" +
+        FormatUtil.formatTime(track.getDuration()) + "`) " + (pos == 0 ? "" : " в очередь " + pos));
+      m.editOriginal(addMsg)
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    }
+
+    @Override
+    public void trackLoaded(AudioTrack track) {
+      loadSingle(track);
+    }
+
+    @Override
+    public void playlistLoaded(AudioPlaylist playlist) {
+      AudioTrack single;
+      if (playlist.getTracks().size() == 1 || playlist.isSearchResult())
+        single = playlist.getSelectedTrack() == null ? playlist.getTracks().get(0) : playlist.getSelectedTrack();
+      else if (playlist.getSelectedTrack() != null)
+        single = playlist.getSelectedTrack(); else single = playlist.getTracks().get(0);
+      loadSingle(single);
+    }
+
+    @Override
+    public void noMatches() {
+      if (ytsearch)
+        m.editOriginal(FormatUtil.filter(event.getClient().getWarning() + " Результаты не найдены для `" + event.getOption("track").getAsString() + "`."))
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      else
+        bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:" + event.getOption("track").getAsString(), new SlashResultHandler(m, event, true));
+    }
+
+    @Override
+    public void loadFailed(FriendlyException throwable) {
+      if (throwable.severity == FriendlyException.Severity.COMMON)
+        m.editOriginal(event.getClient().getError() + " Ошибка загрузки: " + throwable.getMessage())
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      else
+        m.editOriginal(event.getClient().getError() + " Ошибка загрузки трека.")
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
     }
   }
 }

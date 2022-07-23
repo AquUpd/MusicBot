@@ -20,6 +20,11 @@ import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.DJCommand;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 /**
  *
@@ -32,13 +37,14 @@ public class SkiptoCmd extends DJCommand {
     this.name = "skipto";
     this.help = "пропускает пластинки до определенного места";
     this.arguments = "<position>";
+    this.options = Collections.singletonList(new OptionData(OptionType.INTEGER, "position", "Позиция в очереди.").setRequired(true));
     this.aliases = bot.getConfig().getAliases(this.name);
     this.bePlaying = true;
   }
 
   @Override
   public void doCommand(CommandEvent event) {
-    int index = 0;
+    int index;
     try {
       index = Integer.parseInt(event.getArgs());
     } catch (NumberFormatException e) {
@@ -57,6 +63,17 @@ public class SkiptoCmd extends DJCommand {
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
+    int index = event.getOption("position").getAsInt();
 
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+    if (index < 1 || index > handler.getQueue().size()) {
+      event.getHook().editOriginal(event.getClient().getError() + " Позиция должна быть между 1 и " + handler.getQueue().size() + "!")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      return;
+    }
+    handler.getQueue().skip(index - 1);
+    event.getHook().editOriginal(event.getClient().getSuccess() + " Пропущены пластинки до **" + handler.getQueue().get(0).getTrack().getInfo().title + "**")
+      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    handler.getPlayer().stopTrack();
   }
 }

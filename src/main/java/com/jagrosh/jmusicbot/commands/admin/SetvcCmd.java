@@ -40,7 +40,7 @@ public class SetvcCmd extends AdminCommand {
     this.name = "setvc";
     this.help = "Устанавливает голосовой канал для использования пластинок";
     this.arguments = "<channel|NONE>";
-    this.options = Collections.singletonList(new OptionData(OptionType.STRING, "channel", "Голосовой канал для бота. NONE чтобы очистить.").setRequired(true));
+    this.options = Collections.singletonList(new OptionData(OptionType.CHANNEL, "channel", "Голосовой канал для бота. NONE чтобы очистить.").setRequired(true));
 
     this.aliases = bot.getConfig().getAliases(this.name);
   }

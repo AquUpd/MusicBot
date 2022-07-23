@@ -51,7 +51,7 @@ public class PrefixCmd extends AdminCommand {
     } else {
       s.setPrefix(event.getOption("prefix").getAsString());
       event.getHook().editOriginal("Префикс на сервере **" + event.getGuild().getName() + "** изменен на '" +
-        event.getOption("prefix").getAsString() + "'")
+          event.getOption("prefix").getAsString() + "'")
         .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
     }
   }

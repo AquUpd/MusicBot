@@ -20,6 +20,8 @@ import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.DJCommand;
+import java.util.concurrent.TimeUnit;
+import net.dv8tion.jda.api.entities.Message;
 
 /**
  *
@@ -45,6 +47,10 @@ public class StopCmd extends DJCommand {
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
-
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+    handler.stopAndClear();
+    event.getGuild().getAudioManager().closeAudioConnection();
+    event.getHook().editOriginal(event.getClient().getSuccess() + " Все было очищено.")
+      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
   }
 }

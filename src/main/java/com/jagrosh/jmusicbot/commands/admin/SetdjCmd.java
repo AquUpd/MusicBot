@@ -40,7 +40,7 @@ public class SetdjCmd extends AdminCommand {
     this.name = "setdj";
     this.help = "Устанавливает роль для использования DJ команд";
     this.arguments = "<rolename|NONE>";
-    this.options = Collections.singletonList(new OptionData(OptionType.STRING, "rolename", "Роль для DJ команд. NONE чтобы очистить.").setRequired(true));
+    this.options = Collections.singletonList(new OptionData(OptionType.ROLE, "rolename", "Роль для DJ команд. NONE чтобы очистить.").setRequired(true));
     this.aliases = bot.getConfig().getAliases(this.name);
   }
 

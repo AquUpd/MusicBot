@@ -40,7 +40,7 @@ public class SettcCmd extends AdminCommand {
     this.name = "settc";
     this.help = "устанавливает текстовый канал для команд";
     this.arguments = "<channel|NONE>";
-    this.options = Collections.singletonList(new OptionData(OptionType.STRING, "channel", "Текстовый канал для команд. NONE чтобы очистить.").setRequired(true));
+    this.options = Collections.singletonList(new OptionData(OptionType.CHANNEL, "channel", "Текстовый канал для команд. NONE чтобы очистить.").setRequired(true));
     this.aliases = bot.getConfig().getAliases(this.name);
   }
 

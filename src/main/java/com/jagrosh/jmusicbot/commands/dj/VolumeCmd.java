@@ -22,6 +22,11 @@ import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 /**
  *
@@ -35,6 +40,7 @@ public class VolumeCmd extends DJCommand {
     this.aliases = bot.getConfig().getAliases(this.name);
     this.help = "Устанавливает громкость пластинок";
     this.arguments = "[0-500]";
+    this.options = Collections.singletonList(new OptionData(OptionType.INTEGER, "volume", "Громкость бота (От 0 до 500).").setRequired(false).setRequiredRange(0, 500));
   }
 
   @Override
@@ -63,6 +69,19 @@ public class VolumeCmd extends DJCommand {
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+    Settings settings = event.getClient().getSettingsFor(event.getGuild());
+    int volume = handler.getPlayer().getVolume();
 
+    if (!event.hasOption("volume")) {
+      event.getHook().editOriginal(FormatUtil.volumeIcon(volume) + " В данный момент громкость равна `" + volume + "`")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    } else {
+      int nvolume = event.getOption("volume").getAsInt();
+      handler.getPlayer().setVolume(nvolume);
+      settings.setVolume(nvolume);
+      event.getHook().editOriginal(FormatUtil.volumeIcon(nvolume) + " Громкость изменена из `" + volume + "` до `" + nvolume + "`")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    }
   }
 }

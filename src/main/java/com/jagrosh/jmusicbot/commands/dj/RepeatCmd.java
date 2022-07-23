@@ -21,6 +21,11 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.jagrosh.jmusicbot.settings.Settings;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 /**
  *
@@ -33,6 +38,7 @@ public class RepeatCmd extends DJCommand {
     this.name = "repeat";
     this.help = "добавляет пластинку каждый раз когда она заканичвается";
     this.arguments = "[off|all|single]";
+    this.options = Collections.singletonList(new OptionData(OptionType.STRING, "mode", "режим повтора: [off|all|single]").setRequired(false));
     this.aliases = bot.getConfig().getAliases(this.name);
     this.guildOnly = true;
   }
@@ -60,12 +66,35 @@ public class RepeatCmd extends DJCommand {
   }
 
   @Override
+  protected void execute(SlashCommandEvent event) {
+    String args = event.getOption("mode").getAsString();
+    RepeatMode value;
+    Settings settings = event.getClient().getSettingsFor(event.getGuild());
+    if (args.isEmpty()) {
+      if (settings.getRepeatMode() == RepeatMode.OFF) value = RepeatMode.ALL; else value = RepeatMode.OFF;
+    } else if (args.equalsIgnoreCase("false") || args.equalsIgnoreCase("off")) {
+      value = RepeatMode.OFF;
+    } else if (args.equalsIgnoreCase("true") || args.equalsIgnoreCase("on") || args.equalsIgnoreCase("all")) {
+      value = RepeatMode.ALL;
+    } else if (args.equalsIgnoreCase("one") || args.equalsIgnoreCase("single")) {
+      value = RepeatMode.SINGLE;
+    } else {
+      event.getHook().editOriginal("Разрешенные параметры: `off`, `all` или `single`")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      return;
+    }
+    settings.setRepeatMode(value);
+    event.getHook().editOriginal("Режим повтора пластинок: `" + value.getUserFriendlyName() + "`")
+      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+  }
+
+  @Override
   public void doCommand(CommandEvent event) {
     /* Intentionally Empty */
   }
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
-
+    // ^^^
   }
 }
