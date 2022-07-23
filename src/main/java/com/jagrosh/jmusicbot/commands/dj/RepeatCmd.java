@@ -67,6 +67,7 @@ public class RepeatCmd extends DJCommand {
 
   @Override
   protected void execute(SlashCommandEvent event) {
+    event.deferReply().queue();
     String args = event.getOption("mode").getAsString();
     RepeatMode value;
     Settings settings = event.getClient().getSettingsFor(event.getGuild());

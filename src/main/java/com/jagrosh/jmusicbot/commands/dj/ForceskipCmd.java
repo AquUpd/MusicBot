@@ -21,6 +21,8 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.RequestMetadata;
 import com.jagrosh.jmusicbot.commands.DJCommand;
+import java.util.concurrent.TimeUnit;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
 /**
@@ -53,7 +55,8 @@ public class ForceskipCmd extends DJCommand {
     RequestMetadata rm = handler.getRequestMetadata();
     event.getHook().editOriginal(event.getClient().getSuccess() + " Пропущена пластинка **" +
       handler.getPlayer().getPlayingTrack().getInfo().title + "** " +
-      (rm.getOwner() == 0L ? "(автоматическая)" : "(добавлена **" + rm.user.username + "**)"));
+      (rm.getOwner() == 0L ? "(автоматическая)" : "(добавлена **" + rm.user.username + "**)"))
+      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
     handler.getPlayer().stopTrack();
   }
 }
