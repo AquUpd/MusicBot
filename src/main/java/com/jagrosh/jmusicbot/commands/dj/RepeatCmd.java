@@ -70,7 +70,7 @@ public class RepeatCmd extends DJCommand {
     String args = event.getOption("mode").getAsString();
     RepeatMode value;
     Settings settings = event.getClient().getSettingsFor(event.getGuild());
-    if (args.isEmpty()) {
+    if (!event.hasOption("mode")) {
       if (settings.getRepeatMode() == RepeatMode.OFF) value = RepeatMode.ALL; else value = RepeatMode.OFF;
     } else if (args.equalsIgnoreCase("false") || args.equalsIgnoreCase("off")) {
       value = RepeatMode.OFF;
