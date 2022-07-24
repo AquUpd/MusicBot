@@ -4,17 +4,23 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.FunCommand;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 public class ProfilePictureCmd extends FunCommand {
 
   public ProfilePictureCmd(Bot bot) {
     super(bot);
     this.name = "ppicture";
-    this.arguments =
-      "[имя пользователя / дискорд тег пользователя / id пользователя]";
+    this.arguments = "[имя пользователя / дискорд тег пользователя / id пользователя]";
+    this.options = Collections.singletonList(new OptionData(OptionType.USER, "user", "Пользователь, чью аватарку нужно получить.").setRequired(false));
     this.help = "получает изображение профиля";
   }
 
@@ -93,7 +99,7 @@ public class ProfilePictureCmd extends FunCommand {
             event.replyError("Есть несколько пользователей с таким ником");
           else {
             Member member = event.getGuild().getMembersByName(argument, true).get(0);
-            event.reply("Изображение профиля " + member.getEffectiveName() + " \n" + member.getEffectiveAvatarUrl());
+            event.reply("Изображение профиля **" + member.getEffectiveName() + "** \n" + member.getEffectiveAvatarUrl());
           }
         }
       }
@@ -102,6 +108,17 @@ public class ProfilePictureCmd extends FunCommand {
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
-
+    if (event.getGuild().getId().equals("745746205144776774")) {
+      event.getHook().editOriginal("Нельзя использовать данную команду на этом сервере")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    } else {
+      if (!event.hasOption("user")) {
+        event.getHook().editOriginal("Ваше изображение профиля: \n" + event.getUser().getAvatarUrl()).queue();
+      } else {
+        event.getGuild().loadMembers();
+        User user = event.getOption("user").getAsUser();
+        event.getHook().editOriginal("Изображение профиля **" + user.getName() + "** \n" + user.getEffectiveAvatarUrl()).queue();
+      }
+    }
   }
 }

@@ -7,10 +7,15 @@ import com.jagrosh.jmusicbot.commands.FunCommand;
 import com.jagrosh.jmusicbot.utils.DefaultContentTypeInterceptor;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import okhttp3.*;
 import org.json.JSONObject;
 
@@ -20,69 +25,35 @@ public class RockPaperScissorsCmd extends FunCommand {
     super(bot);
     this.name = "rps";
     this.arguments = "<камень|ножницы|бумага>";
+    this.options = Collections.singletonList(new OptionData(OptionType.STRING, "rps", "<камень|ножницы|бумага>").setRequired(true));
     this.help = "камень, ножницы, бумага";
     this.botPermissions = new Permission[] { Permission.MESSAGE_EMBED_LINKS };
   }
 
   @Override
   public void doCommand(CommandEvent event) {
-    String argument = String.valueOf(event.getArgs());
+    String argument = String.valueOf(event.getArgs()).toLowerCase();
     if (argument.length() != 0) {
-      Random random = new Random(System.currentTimeMillis());
-      int rpsbot = random.nextInt(3);
-      int rpsplayer;
-      String rpsbotname;
-      String rpsplayername;
-      String result;
-      String emoji;
-
-      switch (rpsbot) {
-        case 0:
-          rpsbotname = "камень";
+      String arg;
+      switch(rps(argument)) {
+        case -1:
+          event.replyError("Напишите \"камень\", \"ножницы\" или \"бумага\" после команды.");
           break;
         case 1:
-          rpsbotname = "ножницы";
+          event.reply(":upside_down: Бот выбрал: `" + argument + "`, Игрок выбрал: `" + argument + "`. Ничья!");
           break;
         case 2:
-          rpsbotname = "бумага";
+          if(argument.equals("камень")) arg = "ножницы";
+          else if(argument.equals("ножницы")) arg = "бумага";
+          else arg = "камень";
+          event.reply(":sunglasses: Бот выбрал: `" + arg + "`, Игрок выбрал: `" + argument + "`. Вы выйграли!");
           break;
-        default:
-          rpsbotname = "ничего";
-          break;
+        case 3:
+          if(argument.equals("камень")) arg = "бумага";
+          else if(argument.equals("ножницы")) arg = "камень";
+          else arg = "ножницы";
+          event.reply(":sob: Бот выбрал: `" + arg + "`, Игрок выбрал: `" + argument + "`. Вы проиграли!");
       }
-
-      switch (argument.toLowerCase(Locale.ENGLISH)) {
-        case "камень":
-          rpsplayer = 0;
-          rpsplayername = "камень";
-          break;
-        case "ножницы":
-          rpsplayer = 1;
-          rpsplayername = "ножницы";
-          break;
-        case "бумага":
-          rpsplayer = 2;
-          rpsplayername = "бумага";
-          break;
-        default:
-          event.replyError(
-            "Напишите \"камень\", \"ножницы\" или \"бумага\" после команды."
-          );
-          return;
-      }
-
-      if (rpsbot == rpsplayer) {
-        result = "Ничья!";
-        emoji = ":upside_down: ";
-      } else if ((rpsplayer == 0 && rpsbot == 1) || (rpsplayer == 1 && rpsbot == 2) || (rpsplayer == 2 && rpsbot == 0)) {
-        result = "Вы победили!";
-        emoji = ":sunglasses: ";
-      } else {
-        result = "Вы проиграли!";
-        emoji = ":sob: ";
-      }
-
-      event.reply(emoji + "Бот выбрал: `" + rpsbotname + "`, Игрок выбрал: `" + rpsplayername + "`. " + result);
     } else {
       event.replyError("Напишите \"камень\", \"ножницы\" или \"бумага\" после команды.");
     }
@@ -90,6 +61,58 @@ public class RockPaperScissorsCmd extends FunCommand {
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
+    String argument = event.getOption("rps").getAsString();
+    String arg;
+    switch(rps(argument)) {
+      case -1:
+        event.getHook().editOriginal("Напишите \"камень\", \"ножницы\" или \"бумага\" после команды.")
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        break;
+      case 1:
+        event.getHook().editOriginal(":upside_down: Бот выбрал: `" + argument + "`, Игрок выбрал: `" + argument + "`. Ничья!")
+          .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        break;
+      case 2:
+        if (argument.equals("камень")) arg = "ножницы";
+        else if (argument.equals("ножницы")) arg = "бумага";
+        else arg = "камень";
+        event.getHook().editOriginal(":sunglasses: Бот выбрал: `" + arg + "`, Игрок выбрал: `" + argument + "`. Вы выйграли!")
+          .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        break;
+      case 3:
+        if (argument.equals("камень")) arg = "бумага";
+        else if (argument.equals("ножницы")) arg = "камень";
+        else arg = "ножницы";
+        event.getHook().editOriginal(":sob: Бот выбрал: `" + arg + "`, Игрок выбрал: `" + argument + "`. Вы проиграли!")
+          .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    }
+  }
 
+  private int rps(String input){
+    Random random = new Random(System.currentTimeMillis());
+    int rpsbot = random.nextInt(3);
+    int rpsplayer;
+
+    switch (input.toLowerCase(Locale.ENGLISH)) {
+      case "камень":
+        rpsplayer = 0;
+        break;
+      case "ножницы":
+        rpsplayer = 1;
+        break;
+      case "бумага":
+        rpsplayer = 2;
+        break;
+      default:
+        return -1;
+    }
+
+    if (rpsbot == rpsplayer) {
+      return 1; //Ничья
+    } else if ((rpsplayer == 0 && rpsbot == 1) || (rpsplayer == 1 && rpsbot == 2) || (rpsplayer == 2 && rpsbot == 0)) {
+      return 2; //Выигрыш
+    } else {
+      return 3; //Проигрыш
+    }
   }
 }

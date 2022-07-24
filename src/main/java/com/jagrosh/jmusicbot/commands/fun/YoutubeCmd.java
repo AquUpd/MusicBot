@@ -7,7 +7,9 @@ import com.jagrosh.jmusicbot.commands.FunCommand;
 import com.jagrosh.jmusicbot.utils.DefaultContentTypeInterceptor;
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
 import okhttp3.*;
 import org.json.*;
 
@@ -21,32 +23,42 @@ public class YoutubeCmd extends FunCommand {
     this.beInChannel = true;
   }
 
+  //880218394199220334
   @Override
   public void doCommand(CommandEvent event) {
+    String code = genLink(event.getMember().getVoiceState().getChannel().getId(), 880218394199220334L);
+    if(code != null) event.reply("https://discord.com/invite/" + code);
+    else event.replyError("Я не смог создать ссылку");
+  }
+
+  @Override
+  public void doSlashCommand(SlashCommandEvent event) {
+    String code = genLink(event.getMember().getVoiceState().getChannel().getId(), 880218394199220334L);
+    if(code != null)
+      event.getHook().editOriginal("https://discord.com/invite/" + code).queue();
+    else
+      event.getHook().editOriginal("Я не смог создать ссылку")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+  }
+
+  private String genLink(String channelId, long gameId) {
     try {
-      String current = event.getMember().getVoiceState().getChannel().getId();
-      URL url = new URL("https://discord.com/api/v8/channels/" + current + "/invites");
-      String postBody = "{\"max_age\": \"86400\", \"max_uses\": 0, \"target_application_id\":\"880218394199220334\", \"target_type\":2, \"temporary\": false, \"validate\": null}";
+
+      URL url = new URL("https://discord.com/api/v8/channels/" + channelId + "/invites");
+      String postBody = "{\"max_age\": \"86400\", \"max_uses\": 0, \"target_application_id\":\""+ gameId +"\", \"target_type\":2, \"temporary\": false, \"validate\": null}";
 
       RequestBody body = RequestBody.create(MediaType.parse("application/json"), postBody);
-
       OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new DefaultContentTypeInterceptor()).build();
-
       Request request = new Request.Builder().url(url).post(body).build();
 
       Call call = client.newCall(request);
       Response response = call.execute();
       JSONObject obj = new JSONObject(response.body().string());
       String code = obj.getString("code");
-      event.reply("https://discord.com/invite/" + code);
       response.close();
+      return code;
     } catch (IOException exception) {
-      event.replyError("Я не смог создать ссылку");
+      return null;
     }
-  }
-
-  @Override
-  public void doSlashCommand(SlashCommandEvent event) {
-
   }
 }
