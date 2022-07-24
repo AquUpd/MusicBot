@@ -22,9 +22,11 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary;
+import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Message;
 
 /**
  * @author John Grosh (john.a.grosh@gmail.com)
@@ -46,7 +48,22 @@ public class DebugCmd extends OwnerCommand {
   @Override
   protected void execute(SlashCommandEvent event) {
     event.deferReply().queue();
+    StringBuilder sb = new StringBuilder();
+    sb.append("System Properties:");
+    for (String key : PROPERTIES) sb.append("\n  ").append(key).append(" = ").append(System.getProperty(key));
+    sb.append("\n\nJMusicBot Information:").append("\n  Version = ").append(OtherUtil.getCurrentVersion()).append("\n  Owner = ").append(bot.getConfig().getOwnerId()).append("\n  Prefix = ").append(bot.getConfig().getPrefix()).append("\n  AltPrefix = ").append(bot.getConfig().getAltPrefix()).append("\n  MaxSeconds = ").append(bot.getConfig().getMaxSeconds()).append("\n  NPImages = ").append(bot.getConfig().useNPImages()).append("\n  SongInStatus = ").append(bot.getConfig().getSongInStatus()).append("\n  StayInChannel = ").append(bot.getConfig().getStay()).append("\n  UseEval = ").append(bot.getConfig().useEval()).append("\n  UpdateAlerts = ").append(bot.getConfig().useUpdateAlerts());
+    sb.append("\n\nDependency Information:").append("\n  JDA Version = ").append(JDAInfo.VERSION).append("\n  JDA-Utilities Version = ").append(JDAUtilitiesInfo.VERSION).append("\n  Lavaplayer Version = ").append(PlayerLibrary.VERSION);
+    long total = Runtime.getRuntime().totalMemory() / 1024 / 1024;
+    long used = total - (Runtime.getRuntime().freeMemory() / 1024 / 1024);
+    sb.append("\n\nRuntime Information:").append("\n  Total Memory = ").append(total).append("\n  Used Memory = ").append(used);
+    sb.append("\n\nDiscord Information:").append("\n  ID = ").append(event.getJDA().getSelfUser().getId()).append("\n  Guilds = ").append(event.getJDA().getGuildCache().size()).append("\n  Users = ").append(event.getJDA().getUserCache().size());
+    sb.append("\n");
 
+    if (event.isFromType(ChannelType.PRIVATE) || event.getGuild().getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ATTACH_FILES))
+      event.getHook().editOriginal(sb.toString().getBytes(), "debug_information.txt")
+        .delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    else event.getHook().editOriginal("Debug Information: " + sb)
+      .delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
   }
 
   @Override

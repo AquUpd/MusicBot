@@ -191,14 +191,9 @@ public class JMusicBot {
         new SetvcCmd(bot),
         new AutoplaylistCmd(bot),
         new DebugCmd(bot),
-        new PlaylistCmd(bot),
-        new SetavatarCmd(bot),
-        new SetgameCmd(bot),
-        new SetnameCmd(bot),
-        new SetstatusCmd(bot),
         new ShutdownCmd(bot));
 
-    if (config.useEval()) cb.addCommand(new EvalCmd(bot));
+    if (config.useEval()) cb.addCommand(new EvalCmd(bot)).addSlashCommands(new EvalCmd(bot));
     boolean nogame = false;
     if (config.getStatus() != OnlineStatus.UNKNOWN) cb.setStatus(config.getStatus());
     if (config.getGame() == null) cb.useDefaultGame();

@@ -19,8 +19,13 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 /**
  * @author John Grosh (jagrosh)
@@ -33,6 +38,7 @@ public class EvalCmd extends OwnerCommand {
     this.bot = bot;
     this.name = "eval";
     this.help = "evaluates nashorn code";
+    this.options = Collections.singletonList(new OptionData(OptionType.STRING, "code", "Код.").setRequired(true));
     this.aliases = bot.getConfig().getAliases(this.name);
     this.guildOnly = false;
   }
@@ -40,7 +46,19 @@ public class EvalCmd extends OwnerCommand {
   @Override
   protected void execute(SlashCommandEvent event) {
     event.deferReply().queue();
-
+    ScriptEngine se = new ScriptEngineManager().getEngineByName("Nashorn");
+    se.put("bot", bot);
+    se.put("event", event);
+    se.put("jda", event.getJDA());
+    se.put("guild", event.getGuild());
+    se.put("channel", event.getChannel());
+    try {
+      event.getHook().editOriginal(event.getClient().getSuccess() + " Evaluated Successfully:\n```\n" + se.eval(event.getOption("code").getAsString()) + " ```")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    } catch (Exception e) {
+      event.getHook().editOriginal(event.getClient().getError() + " An exception was thrown:\n```\n" + e + " ```")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    }
   }
 
   @Override
