@@ -23,8 +23,10 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
@@ -47,7 +49,27 @@ public class SettingsCmd extends SlashCommand {
   @Override
   protected void execute(SlashCommandEvent event) {
     event.deferReply().queue();
-
+    Settings s = event.getClient().getSettingsFor(event.getGuild());
+    MessageBuilder builder = new MessageBuilder()
+      .append(EMOJI + " **")
+      .append(FormatUtil.filter(event.getJDA().getSelfUser().getName()))
+      .append("** настройки:");
+    TextChannel tchan = s.getTextChannel(event.getGuild());
+    VoiceChannel vchan = s.getVoiceChannel(event.getGuild());
+    Role role = s.getRole(event.getGuild());
+    EmbedBuilder ebuilder = new EmbedBuilder()
+      .setColor(event.getGuild().getSelfMember().getColor())
+      .setDescription("Текстовый канал: " + (tchan == null ? "Any" : "**#" + tchan.getName() + "**") +
+          "\nГолосовой канал: " + (vchan == null ? "Any" : vchan.getAsMention()) +
+          "\nDJ Роль: " + (role == null ? "None" : "**" + role.getName() + "**") +
+          "\nКастомный префикс: " + (s.getPrefix() == null ? "None" : "`" + s.getPrefix() + "`") +
+          "\nПовторение: " + (s.getRepeatMode() == RepeatMode.OFF ? s.getRepeatMode().getUserFriendlyName() : "**" + s.getRepeatMode().getUserFriendlyName() + "**") +
+          "\nАвтоплейлист: " + (s.getDefaultPlaylist() == null ? "None" : "**" + s.getDefaultPlaylist() + "**"))
+      .setFooter(event.getJDA().getGuilds().size() + " servers | " +
+          event.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inAudioChannel()).count() + " голосовых подключений",
+        null);
+    event.getHook().editOriginal(builder.setEmbeds(ebuilder.build()).build())
+      .delay(20, TimeUnit.SECONDS).flatMap(Message::delete).queue();
   }
 
   @Override
@@ -62,15 +84,13 @@ public class SettingsCmd extends SlashCommand {
     Role role = s.getRole(event.getGuild());
     EmbedBuilder ebuilder = new EmbedBuilder()
       .setColor(event.getSelfMember().getColor())
-      .setDescription(
-        "Текстовый канал: " + (tchan == null ? "Any" : "**#" + tchan.getName() + "**") +
+      .setDescription("Текстовый канал: " + (tchan == null ? "Any" : "**#" + tchan.getName() + "**") +
         "\nГолосовой канал: " + (vchan == null ? "Any" : vchan.getAsMention()) +
         "\nDJ Роль: " + (role == null ? "None" : "**" + role.getName() + "**") +
         "\nКастомный префикс: " + (s.getPrefix() == null ? "None" : "`" + s.getPrefix() + "`") +
         "\nПовторение: " + (s.getRepeatMode() == RepeatMode.OFF ? s.getRepeatMode().getUserFriendlyName() : "**" + s.getRepeatMode().getUserFriendlyName() + "**") +
         "\nАвтоплейлист: " + (s.getDefaultPlaylist() == null ? "None" : "**" + s.getDefaultPlaylist() + "**"))
-      .setFooter(
-        event.getJDA().getGuilds().size() + " servers | " +
+      .setFooter(event.getJDA().getGuilds().size() + " servers | " +
           event.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inAudioChannel()).count() + " голосовых подключений",
         null);
     event.getChannel().sendMessage(builder.setEmbeds(ebuilder.build()).build()).queue();
