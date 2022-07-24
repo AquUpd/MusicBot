@@ -26,12 +26,15 @@ import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.settings.RepeatMode;
 import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.exceptions.PermissionException;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 /**
  *
@@ -46,6 +49,7 @@ public class QueueCmd extends MusicCommand {
     this.name = "queue";
     this.help = "показывает очередь";
     this.arguments = "[страница]";
+    this.options = Collections.singletonList(new OptionData(OptionType.INTEGER, "page", "Страница очереди").setRequired(false));
     this.aliases = bot.getConfig().getAliases(this.name);
     this.bePlaying = true;
     this.botPermissions = new Permission[] {Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_EMBED_LINKS,};
@@ -95,7 +99,30 @@ public class QueueCmd extends MusicCommand {
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
-
+    int pagenum = 1;
+    if(event.hasOption("page")) pagenum = event.getOption("page").getAsInt();
+    AudioHandler ah = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+    List<QueuedTrack> list = ah.getQueue().getList();
+    if (list.isEmpty()) {
+      Message nowp = ah.getNowPlaying(event.getJDA());
+      Message nonowp = ah.getNoMusicPlaying(event.getJDA());
+      Message built = new MessageBuilder().setContent(event.getClient().getWarning() + " Нет пластинок в очереди!")
+        .setEmbeds((nowp == null ? nonowp : nowp).getEmbeds().get(0)).build();
+      event.getHook().editOriginal(built).delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      return;
+    }
+    String[] songs = new String[list.size()];
+    long total = 0;
+    for (int i = 0; i < list.size(); i++) {
+      total += list.get(i).getTrack().getDuration();
+      songs[i] = list.get(i).toString();
+    }
+    Settings settings = event.getClient().getSettingsFor(event.getGuild());
+    long fintotal = total;
+    event.getHook().deleteOriginal().queue();
+    builder.setText((i1, i2) -> getQueueTitle(ah, event.getClient().getSuccess(), songs.length, fintotal, settings.getRepeatMode()))
+      .setItems(songs).setUsers(event.getUser()).setColor(event.getGuild().getSelfMember().getColor());
+    builder.build().paginate(event.getChannel(), pagenum);
   }
 
   private String getQueueTitle(AudioHandler ah, String success, int songslength, long total, RepeatMode repeatmode) {

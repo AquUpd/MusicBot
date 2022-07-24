@@ -69,7 +69,7 @@ public class PlaynextCmd extends DJCommand {
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
     String arg = event.getOption("track").getAsString();
-    String args = (arg.startsWith("<") && arg.endsWith(">")) ? arg.substring(1, arg.length() - 1) : "";
+    String args = (arg.startsWith("<") && arg.endsWith(">")) ? arg.substring(1, arg.length() - 1) : arg;
     event.getHook().editOriginal(loadingEmoji + " Загрузка... `[" + args + "]`").queue();
     bot.getPlayerManager().loadItemOrdered(event.getGuild(), args, new SlashResultHandler(event.getHook(), event, false));
   }

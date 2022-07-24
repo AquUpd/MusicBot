@@ -20,6 +20,8 @@ import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import net.dv8tion.jda.api.entities.Message;
 
 /**
  *
@@ -59,6 +61,26 @@ public class PlaylistsCmd extends MusicCommand {
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
-
+    if (!bot.getPlaylistLoader().folderExists())
+      bot.getPlaylistLoader().createFolder();
+    if (!bot.getPlaylistLoader().folderExists()) {
+      event.getHook().editOriginal(event.getClient().getWarning() + " Папки с плейлистами не существует и она будет создана!")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      return;
+    }
+    List<String> list = bot.getPlaylistLoader().getPlaylistNames();
+    if (list == null)
+      event.getHook().editOriginal(event.getClient().getError() + " Не удалось получить список плейлистов!")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    else if (list.isEmpty())
+      event.getHook().editOriginal(event.getClient().getWarning() + " В папке плейлистов нет плейлистов(грустно)!")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    else {
+      StringBuilder builder = new StringBuilder(event.getClient().getSuccess() + " Доступные плейлисты:\n");
+      list.forEach(str -> builder.append("`").append(str).append("` "));
+      builder.append("\nнапишите `").append(event.getClient().getTextualPrefix()).append("pplaylist <название>` чтобы включить плейлист");
+      event.getHook().editOriginal(builder.toString())
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    }
   }
 }

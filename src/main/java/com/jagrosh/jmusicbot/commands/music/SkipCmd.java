@@ -20,6 +20,8 @@ import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
+import java.util.concurrent.TimeUnit;
+import net.dv8tion.jda.api.entities.Message;
 
 /**
  * @author John Grosh <john.a.grosh@gmail.com>
@@ -37,14 +39,17 @@ public class SkipCmd extends MusicCommand {
 
   @Override
   public void doCommand(CommandEvent event) {
-    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();{
-      event.reply(event.getClient().getSuccess() + " Пропущена пластинка **" + handler.getPlayer().getPlayingTrack().getInfo().title + "**");
-      handler.getPlayer().stopTrack();
-    }
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+    event.reply(event.getClient().getSuccess() + " Пропущена пластинка **" + handler.getPlayer().getPlayingTrack().getInfo().title + "**");
+    handler.getPlayer().stopTrack();
   }
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
-
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+    event.getHook().editOriginal(event.getClient().getSuccess() + " Пропущена пластинка **" +
+        handler.getPlayer().getPlayingTrack().getInfo().title + "**")
+      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    handler.getPlayer().stopTrack();
   }
 }

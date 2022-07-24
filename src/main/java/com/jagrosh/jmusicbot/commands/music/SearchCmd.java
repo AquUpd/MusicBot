@@ -28,9 +28,13 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException.Severity;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 /**
  * @author John Grosh <john.a.grosh@gmail.com>
@@ -46,7 +50,8 @@ public class SearchCmd extends MusicCommand {
     this.searchingEmoji = bot.getConfig().getSearching();
     this.name = "search";
     this.aliases = bot.getConfig().getAliases(this.name);
-    this.arguments = "<аргументы>";
+    this.arguments = "<название>";
+    this.options = Collections.singletonList(new OptionData(OptionType.STRING, "name", "Название пластинки").setRequired(true));
     this.help = "поиск пластинок в YouTube";
     this.beListening = true;
     this.bePlaying = false;
@@ -65,7 +70,9 @@ public class SearchCmd extends MusicCommand {
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
-
+    String args = event.getOption("name").getAsString();
+    event.getHook().editOriginal(searchingEmoji + " Поиск... `[" + args + "]`").queue();
+    bot.getPlayerManager().loadItemOrdered(event.getGuild(), searchPrefix + args, new SlashResultHandler(event.getHook(), event));
   }
 
   private class ResultHandler implements AudioLoadResultHandler {
@@ -81,7 +88,7 @@ public class SearchCmd extends MusicCommand {
     @Override
     public void trackLoaded(AudioTrack track) {
       if (bot.getConfig().isTooLong(track)) {
-        m.editMessage(FormatUtil.filter(event.getClient().getWarning() + " This track (**" + track.getInfo().title + "**) is longer than the allowed maximum: `" + FormatUtil.formatTime(track.getDuration()) + "` > `" + bot.getConfig().getMaxTime() + "`")).queue();
+        m.editMessage(FormatUtil.filter(event.getClient().getWarning() + " Эта пластинка (**" + track.getInfo().title + "**)**) длиннее чем разрешенный лимит : `" + FormatUtil.formatTime(track.getDuration()) + "` > `" + bot.getConfig().getMaxTime() + "`")).queue();
         return;
       }
       AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
@@ -118,6 +125,74 @@ public class SearchCmd extends MusicCommand {
       if (throwable.severity == Severity.COMMON)
         m.editMessage(event.getClient().getError() + " Ошибка загрузки: " + throwable.getMessage()).queue();
       else m.editMessage(event.getClient().getError() + " Ошибка загрузки пластинки.").queue();
+    }
+  }
+
+  private class SlashResultHandler implements AudioLoadResultHandler {
+
+    private final InteractionHook m;
+    private final SlashCommandEvent event;
+
+    private SlashResultHandler(InteractionHook m, SlashCommandEvent event) {
+      this.m = m;
+      this.event = event;
+    }
+
+    @Override
+    public void trackLoaded(AudioTrack track) {
+      if (bot.getConfig().isTooLong(track)) {
+        m.editOriginal(FormatUtil.filter(event.getClient().getWarning() +
+          " Эта пластинка (**" + track.getInfo().title + "**) длиннее чем разрешенный лимит : `" +
+          FormatUtil.formatTime(track.getDuration()) + "` > `" + bot.getConfig().getMaxTime() + "`"))
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        return;
+      }
+      AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+      int pos = handler.addTrack(new QueuedTrack(track, event.getUser())) + 1;
+      m.editOriginal(FormatUtil.filter(event.getClient().getSuccess() +
+        " Добавлен **" + track.getInfo().title + "** (`" + FormatUtil.formatTime(track.getDuration()) + "`) " +
+        (pos == 0 ? "" : " в очередь " + pos)))
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    }
+
+    @Override
+    public void playlistLoaded(AudioPlaylist playlist) {
+      builder.setColor(event.getGuild().getSelfMember().getColor()).setText(FormatUtil.filter(event.getClient().getSuccess() +
+        " Результаты поиска: `" + event.getOption("name").getAsString() + "`:")).setChoices().setSelection((msg, i) -> {
+        AudioTrack track = playlist.getTracks().get(i - 1);
+        if (bot.getConfig().isTooLong(track)) {
+          m.editOriginal("Эта пластинка (**" + track.getInfo().title + "**) длиннее чем разрешенный лимит : `" +
+            FormatUtil.formatTime(track.getDuration()) + "` > `" + bot.getConfig().getMaxTime() + "`")
+            .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          return;
+        }
+        AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+        int pos = handler.addTrack(new QueuedTrack(track, event.getUser())) + 1;
+        m.editOriginal("Добавлена пластинка **" + FormatUtil.filter(track.getInfo().title) + "** (`" +
+          FormatUtil.formatTime(track.getDuration()) + "`) " + (pos == 0 ? "" : " в очередь " + pos))
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      }).setCancel(msg -> {}).setUsers(event.getUser());
+      for (int i = 0; i < 4 && i < playlist.getTracks().size(); i++) {
+        AudioTrack track = playlist.getTracks().get(i);
+        builder.addChoices("`[" + FormatUtil.formatTime(track.getDuration()) + "]` [**" + track.getInfo().title + "**](" + track.getInfo().uri + ")");
+      }
+      builder.build().display(event.getChannel());
+    }
+
+    @Override
+    public void noMatches() {
+      m.editOriginal(FormatUtil.filter(event.getClient().getWarning() + " Результаты не найдены для `" +
+        event.getOption("name").getAsString() + "`."))
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    }
+
+    @Override
+    public void loadFailed(FriendlyException throwable) {
+      if (throwable.severity == Severity.COMMON)
+        m.editOriginal(event.getClient().getError() + " Ошибка загрузки: " + throwable.getMessage())
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      else m.editOriginal(event.getClient().getError() + " Ошибка загрузки пластинки.")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
     }
   }
 }

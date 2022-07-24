@@ -20,6 +20,7 @@ import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
+import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 
@@ -51,6 +52,14 @@ public class NowplayingCmd extends MusicCommand {
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
-
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+    Message m = handler.getNowPlaying(event.getJDA());
+    if (m == null) {
+      event.getHook().editOriginal(handler.getNoMusicPlaying(event.getJDA()))
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    } else {
+      event.getHook().editOriginal(m)
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    }
   }
 }

@@ -49,9 +49,9 @@
             <version>e9fbfeadc3</version>
         </dependency>
         <dependency>
-            <groupId>com.github.jagrosh</groupId>
+            <groupId>com.github.caneleex</groupId>
             <artifactId>JLyrics</artifactId>
-            <version>0f9ac5df83</version>
+            <version>532b058</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

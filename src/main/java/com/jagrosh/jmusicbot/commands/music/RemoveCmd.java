@@ -22,8 +22,13 @@ import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
+import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 /**
  *
@@ -36,6 +41,7 @@ public class RemoveCmd extends MusicCommand {
     this.name = "remove";
     this.help = "убирает пластинку из очереди";
     this.arguments = "<позиция|ALL>";
+    this.options = Collections.singletonList(new OptionData(OptionType.STRING, "pos", "Позиция пластинки или ALL для всех").setRequired(true));
     this.aliases = bot.getConfig().getAliases(this.name);
     this.beListening = true;
     this.bePlaying = true;
@@ -43,8 +49,7 @@ public class RemoveCmd extends MusicCommand {
 
   @Override
   public void doCommand(CommandEvent event) {
-    AudioHandler handler = (AudioHandler)
-      event.getGuild().getAudioManager().getSendingHandler();
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
     if (handler.getQueue().isEmpty()) {
       event.replyError("В очереди ничего нет!");
       return;
@@ -88,6 +93,53 @@ public class RemoveCmd extends MusicCommand {
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
-
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+    String args = event.getOption("pos").getAsString();
+    if (handler.getQueue().isEmpty()) {
+      event.getHook().editOriginal("В очереди ничего нет!")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      return;
+    }
+    if (args.equalsIgnoreCase("all")) {
+      int count = handler.getQueue().removeAll(event.getUser().getIdLong());
+      if (count == 0) event.getHook().editOriginal("В очереди ничего нет!")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      event.getHook().editOriginal("Успешно очищена очередь.")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      return;
+    }
+    int pos;
+    try {
+      pos = Integer.parseInt(args);
+    } catch (NumberFormatException e) {
+      pos = 0;
+    }
+    if (pos < 1 || pos > handler.getQueue().size()) {
+      event.getHook().editOriginal("Позиция в очереди должна быть между 1 и " + handler.getQueue().size() + "!")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      return;
+    }
+    Settings settings = event.getClient().getSettingsFor(event.getGuild());
+    boolean isDJ = event.getMember().hasPermission(Permission.MANAGE_SERVER);
+    if (!isDJ) isDJ = event.getMember().getRoles().contains(settings.getRole(event.getGuild()));
+    QueuedTrack qt = handler.getQueue().get(pos - 1);
+    if (qt.getIdentifier() == event.getUser().getIdLong()) {
+      handler.getQueue().remove(pos - 1);
+      event.getHook().editOriginal("Убрана **" + qt.getTrack().getInfo().title + "** из очереди")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    } else if (isDJ) {
+      handler.getQueue().remove(pos - 1);
+      User u;
+      try {
+        u = event.getJDA().getUserById(qt.getIdentifier());
+      } catch (Exception e) {
+        u = null;
+      }
+      event.getHook().editOriginal("Убрана **" + qt.getTrack().getInfo().title + "** из очереди (запрошено " + (u == null ? "кем-то" : "**" + u.getName() + "**") + ")")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    } else {
+      event.getHook().editOriginal("Вы не можете убрать **" + qt.getTrack().getInfo().title + "** потому что вы его не добавляли!")
+        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    }
   }
 }

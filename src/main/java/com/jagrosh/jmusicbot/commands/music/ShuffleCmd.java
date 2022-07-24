@@ -20,6 +20,8 @@ import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.commands.MusicCommand;
+import java.util.concurrent.TimeUnit;
+import net.dv8tion.jda.api.entities.Message;
 
 /**
  * @author John Grosh <john.a.grosh@gmail.com>
@@ -54,6 +56,21 @@ public class ShuffleCmd extends MusicCommand {
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
-
+    AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+    int s = handler.getQueue().shuffle(event.getUser().getIdLong());
+    switch (s) {
+      case 0:
+        event.getHook().editOriginal("У вас нет пластинок в очереди!")
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        break;
+      case 1:
+        event.getHook().editOriginal("У вас только `1` пластинка в очереди!")
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        break;
+      default:
+        event.getHook().editOriginal("Успешно перемешано `" + s + "` пластинок.")
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        break;
+    }
   }
 }
