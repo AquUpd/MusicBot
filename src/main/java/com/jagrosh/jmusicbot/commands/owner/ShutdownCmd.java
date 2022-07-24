@@ -40,8 +40,7 @@ public class ShutdownCmd extends OwnerCommand {
   @Override
   protected void execute(SlashCommandEvent event) {
     event.deferReply().queue();
-    event.getHook().editOriginal("Прощайте...")
-      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    event.getHook().editOriginal("Прощайте...").queue();
     bot.shutdown();
   }
 

@@ -135,8 +135,7 @@ public class PlayCmd extends MusicCommand {
       if (bot.getConfig().isTooLong(track)) {
         m.editMessage(FormatUtil.filter(event.getClient().getWarning() +
           " Эта пластинка (**" + track.getInfo().title + "**) длиннее чем разрешенный лимит: `" + FormatUtil.formatTime(track.getDuration()) +
-          "` > `" + FormatUtil.formatTime(bot.getConfig().getMaxSeconds() * 1000) + "`"))
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          "` > `" + FormatUtil.formatTime(bot.getConfig().getMaxSeconds() * 1000) + "`")).queue();
         return;
       }
       AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
@@ -144,8 +143,7 @@ public class PlayCmd extends MusicCommand {
       String addMsg = FormatUtil.filter(event.getClient().getSuccess() + " Добавлена пластинка **" + track.getInfo().title +
         "** (`" + FormatUtil.formatTime(track.getDuration()) + "`) " + (pos == 0 ? "" : " в очередь " + pos));
       if (playlist == null || !event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ADD_REACTION))
-        m.editMessage(addMsg)
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        m.editMessage(addMsg).queue();
       else {
         new ButtonMenu.Builder().setText(addMsg + "\n" + event.getClient().getWarning() + " Этот плейлист имеет **" +
             playlist.getTracks().size() + "** пластинок. Выберите " + LOAD + " чтобы выбрать их.")
@@ -157,25 +155,21 @@ public class PlayCmd extends MusicCommand {
               switch (loadPlaylist(playlist, track)) {
                 case 1:
                   m.editMessage(addMsg + "\n" + event.getClient().getSuccess() + " Загружена **" +
-                    loadPlaylist(playlist, track) + "** пластинка!")
-                    .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                    loadPlaylist(playlist, track) + "** пластинка!").queue();
                   break;
                 case 2:
                 case 3:
                 case 4:
                   m.editMessage(addMsg + "\n" + event.getClient().getSuccess() + " Загружено **" +
-                    loadPlaylist(playlist, track) + "** пластинки!")
-                    .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                    loadPlaylist(playlist, track) + "** пластинки!").queue();
                   break;
                 default:
                   m.editMessage(addMsg + "\n" + event.getClient().getSuccess() + " Загружено **" +
-                      loadPlaylist(playlist, track) + "** пластинок!")
-                    .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                      loadPlaylist(playlist, track) + "** пластинок!").queue();
                   break;
               }
             } else
-              m.editMessage(addMsg)
-                .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();})
+              m.editMessage(addMsg).queue();})
           .setFinalAction(m -> {try {m.clearReactions().queue();} catch (PermissionException ignore) {}}).build().display(m);
       }
     }
@@ -210,19 +204,16 @@ public class PlayCmd extends MusicCommand {
         if (count == 0) {
           m.editMessage(FormatUtil.filter(event.getClient().getWarning() + " Все пластинки в данном плейлисте " +
             (playlist.getName() == null ? "" : "(**" + playlist.getName() + "**) ") +
-            "были длиннее чем разрешенный лимит (`" + bot.getConfig().getMaxTime() + "`)"))
-            .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+            "были длиннее чем разрешенный лимит (`" + bot.getConfig().getMaxTime() + "`)")).queue();
         } else {
           if (playlist.getTracks().size() == 1) {
             m.editMessage(FormatUtil.filter(event.getClient().getSuccess() + " Найден " + (playlist.getName() == null ? "неизвестный плейлист" : "плейлист **" + playlist.getName() + "**") +
               " с `" + playlist.getTracks().size() + "` пластинкой; Она добавлена в очередь!" +
-              (count < playlist.getTracks().size() ? "\n" + event.getClient().getWarning() + "Некоторые пластинки были убраны" : "")))
-              .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+              (count < playlist.getTracks().size() ? "\n" + event.getClient().getWarning() + "Некоторые пластинки были убраны" : ""))).queue();
           } else {
             m.editMessage(FormatUtil.filter(event.getClient().getSuccess() + " Найден " + (playlist.getName() == null ? "неизвестный плейлист" : "плейлист **" + playlist.getName() + "**") +
                   " с `" + playlist.getTracks().size() + "` пластинками; Они были добавлены в очередь!" +
-                  (count < playlist.getTracks().size() ? "\n" + event.getClient().getWarning() + "Некоторые пластинки были убраны" : "")))
-              .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                  (count < playlist.getTracks().size() ? "\n" + event.getClient().getWarning() + "Некоторые пластинки были убраны" : ""))).queue();
           }
         }
       }
@@ -261,14 +252,15 @@ public class PlayCmd extends MusicCommand {
       if (bot.getConfig().isTooLong(track)) {
         m.editOriginal(FormatUtil.filter(event.getClient().getWarning() +
           " Эта пластинка (**" + track.getInfo().title + "**) длиннее чем разрешенный лимит: `" + FormatUtil.formatTime(track.getDuration()) +
-          "` > `" + FormatUtil.formatTime(bot.getConfig().getMaxSeconds() * 1000) + "`")).queue();
+          "` > `" + FormatUtil.formatTime(bot.getConfig().getMaxSeconds() * 1000) + "`"))
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
         return;
       }
       AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
       int pos = handler.addTrack(new QueuedTrack(track, event.getUser())) + 1;
       String addMsg = FormatUtil.filter(event.getClient().getSuccess() + " Добавлена пластинка **" + track.getInfo().title +
         "** (`" + FormatUtil.formatTime(track.getDuration()) + "`) " + (pos == 0 ? "" : " в очередь " + pos));
-      if (playlist == null) m.editOriginal(addMsg).queue();
+      if (playlist == null) m.editOriginal(addMsg).delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
       else {
         ItemComponent[] components = new ItemComponent[2];
         components[0] = Button.primary("add", "добавить");
@@ -282,17 +274,20 @@ public class PlayCmd extends MusicCommand {
             switch (loadPlaylist(playlist, track)) {
               case 1:
                 m.editOriginal(addMsg + "\n" + event.getClient().getSuccess() + " Загружена **" +
-                  loadPlaylist(playlist, track) + "** пластинка!").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                  loadPlaylist(playlist, track) + "** пластинка!")
+                  .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                 break;
               case 2:
               case 3:
               case 4:
                 m.editOriginal(addMsg + "\n" + event.getClient().getSuccess() + " Загружено **" +
-                  loadPlaylist(playlist, track) + "** пластинки!").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                  loadPlaylist(playlist, track) + "** пластинки!")
+                  .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                 break;
               default:
                 m.editOriginal(addMsg + "\n" + event.getClient().getSuccess() + " Загружено **" +
-                  loadPlaylist(playlist, track) + "** пластинок!").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                  loadPlaylist(playlist, track) + "** пластинок!")
+                  .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
                 break;
             }
           } else m.editOriginal(addMsg)

@@ -155,7 +155,8 @@ public class JMusicBot {
         new SetgameCmd(bot),
         new SetnameCmd(bot),
         new SetstatusCmd(bot),
-        new ShutdownCmd(bot)
+        new ShutdownCmd(bot),
+        new SendToAllOwnersCmd(bot)
       ).addSlashCommands(
         new SettingsCmd(bot),
         new ChessCmd(bot),
@@ -191,7 +192,8 @@ public class JMusicBot {
         new SetvcCmd(bot),
         new AutoplaylistCmd(bot),
         new DebugCmd(bot),
-        new ShutdownCmd(bot)
+        new ShutdownCmd(bot),
+        new SendToAllOwnersCmd(bot)
       );
 
     if (config.useEval()) cb.addCommand(new EvalCmd(bot)).addSlashCommands(new EvalCmd(bot));
