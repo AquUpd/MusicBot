@@ -14,6 +14,8 @@ import net.dv8tion.jda.api.entities.Message;
 import okhttp3.*;
 import org.json.JSONObject;
 
+import static com.jagrosh.jmusicbot.commands.fun.FunUtils.genLink;
+
 public class PokerCmd extends FunCommand {
 
   public PokerCmd(Bot bot) {
@@ -42,24 +44,4 @@ public class PokerCmd extends FunCommand {
         .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
   }
 
-  private String genLink(String channelId, long gameId) {
-    try {
-
-      URL url = new URL("https://discord.com/api/v8/channels/" + channelId + "/invites");
-      String postBody = "{\"max_age\": \"86400\", \"max_uses\": 0, \"target_application_id\":\""+ gameId +"\", \"target_type\":2, \"temporary\": false, \"validate\": null}";
-
-      RequestBody body = RequestBody.create(MediaType.parse("application/json"), postBody);
-      OkHttpClient client = new OkHttpClient.Builder().addInterceptor(new DefaultContentTypeInterceptor()).build();
-      Request request = new Request.Builder().url(url).post(body).build();
-
-      Call call = client.newCall(request);
-      Response response = call.execute();
-      JSONObject obj = new JSONObject(response.body().string());
-      String code = obj.getString("code");
-      response.close();
-      return code;
-    } catch (IOException exception) {
-      return null;
-    }
-  }
 }
