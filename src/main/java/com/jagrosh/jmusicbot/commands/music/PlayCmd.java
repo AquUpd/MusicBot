@@ -346,7 +346,8 @@ public class PlayCmd extends MusicCommand {
     @Override
     public void noMatches() {
       if (ytsearch)
-        m.editOriginal(FormatUtil.filter(event.getClient().getWarning() + " Нет результатов для `" + event.getOption("track").getAsString() + "`.")).queue();
+        m.editOriginal(FormatUtil.filter(event.getClient().getWarning() + " Нет результатов для `" + event.getOption("track").getAsString() + "`."))
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
       else
         bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:" + event.getOption("track").getAsString(), new SlashResultHandler(m, event, true));
     }
@@ -354,9 +355,11 @@ public class PlayCmd extends MusicCommand {
     @Override
     public void loadFailed(FriendlyException throwable) {
       if (throwable.severity == Severity.COMMON)
-        m.editOriginal(event.getClient().getError() + " Ошибка загрузки: " + throwable.getMessage()).queue();
+        m.editOriginal(event.getClient().getError() + " Ошибка загрузки: " + throwable.getMessage())
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
       else
-        m.editOriginal(event.getClient().getError() + " Ошибка загрузки пластинки. ").queue();
+        m.editOriginal(event.getClient().getError() + " Ошибка загрузки пластинки. ")
+          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
     }
   }
 

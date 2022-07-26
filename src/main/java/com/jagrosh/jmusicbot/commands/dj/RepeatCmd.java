@@ -38,7 +38,7 @@ public class RepeatCmd extends DJCommand {
     this.name = "repeat";
     this.help = "добавляет пластинку каждый раз когда она заканичвается";
     this.arguments = "[off|all|single]";
-    this.options = Collections.singletonList(new OptionData(OptionType.STRING, "mode", "режим повтора: [off|all|single]").setRequired(false));
+    this.options = Collections.singletonList(new OptionData(OptionType.STRING, "mode", "режим повтора").addChoice("Выключить", "off").addChoice("Повтор всех пластинок", "all").addChoice("Повтор одной пластинки", "single").setRequired(false));
     this.aliases = bot.getConfig().getAliases(this.name);
     this.guildOnly = true;
   }

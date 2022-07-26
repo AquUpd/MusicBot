@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.exceptions.ContextException;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
@@ -29,14 +30,16 @@ public class SendToAllOwnersCmd extends OwnerCommand {
 
   @Override
   protected void execute(SlashCommandEvent event) {
-    event.deferReply().queue();
     for (Guild g: event.getJDA().getGuilds()) {
-      User owner = g.getOwner().getUser();
-      if(!sendUsers.contains(owner)) {
-        try {
+      try {
+        User owner = g.getOwner().getUser();
+        if(!sendUsers.contains(owner)) {
           owner.openPrivateChannel().flatMap(m -> m.sendMessage(event.getOption("text").getAsString())).queue();
-        } catch (Exception ignored) {}
-        sendUsers.add(owner);
+          System.out.println("Получилось отправить сообщение пользователю " + owner.getName() + " с id " + owner.getIdLong() + "");
+          sendUsers.add(owner);
+        }
+      } catch (Exception ex) {
+        System.out.println("Не получилось отправить сообщение пользователю");
       }
     }
     event.getHook().editOriginal("done!")
@@ -46,12 +49,15 @@ public class SendToAllOwnersCmd extends OwnerCommand {
   @Override
   protected void execute(CommandEvent event) {
     for (Guild g: event.getJDA().getGuilds()) {
-      User owner = g.getOwner().getUser();
-      if(!sendUsers.contains(owner)) {
-        try {
+      try {
+        User owner = g.getOwner().getUser();
+        if(!sendUsers.contains(owner)) {
           owner.openPrivateChannel().flatMap(m -> m.sendMessage(event.getArgs())).queue();
-        } catch (Exception ignored) {}
-        sendUsers.add(owner);
+          System.out.println("Получилось отправить сообщение пользователю " + owner.getName() + " с id " + owner.getIdLong() + "");
+          sendUsers.add(owner);
+        }
+      } catch (Exception ex) {
+        System.out.println("Не получилось отправить сообщение пользователю");
       }
     }
     event.reply("done!");

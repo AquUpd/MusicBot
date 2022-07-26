@@ -100,10 +100,6 @@ public class JMusicBot {
     SettingsManager settings = new SettingsManager();
     Bot bot = new Bot(waiter, config, settings);
 
-    AboutCommand aboutCommand = new AboutCommand(Color.BLUE.brighter(), "Музыкальный бот. [Вот соурс код!](https://github.com/AquUpd/MusicBot)", new String[]{"Воспроизведение данных типов файлов: MP3, MP4, FLAC, WAV, WEBM, OGG, AAC, M3U", "Воспроизведение из Youtube, SoundCloud, Vimeo, Twitch", "Переведенный на русский язык!",}, RECOMMENDED_PERMS);
-    aboutCommand.setIsAuthor(false);
-    aboutCommand.setReplacementCharacter("\uD83C\uDFB6"); // 🎶
-
     // set up the command client
     CommandClientBuilder cb = new CommandClientBuilder()
       .setPrefix(config.getPrefix())
@@ -114,7 +110,7 @@ public class JMusicBot {
       .setLinkedCacheSize(200)
       .setGuildSettingsManager(settings)
       .addCommands(
-        aboutCommand,
+        new AboutCmd(bot, RECOMMENDED_PERMS),
         new PingCommand(),
         new SettingsCmd(bot),
         new ChessCmd(bot),
@@ -158,6 +154,7 @@ public class JMusicBot {
         new ShutdownCmd(bot),
         new SendToAllOwnersCmd(bot)
       ).addSlashCommands(
+        new AboutCmd(bot, RECOMMENDED_PERMS),
         new SettingsCmd(bot),
         new ChessCmd(bot),
         new DoodleCmd(bot),
