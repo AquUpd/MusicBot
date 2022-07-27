@@ -91,7 +91,7 @@ public abstract class MusicCommand extends SlashCommand {
 
     Settings settings = event.getClient().getSettingsFor(event.getGuild());
     TextChannel tchannel = settings.getTextChannel(event.getGuild());
-    if (tchannel != null && !event.getTextChannel().equals(tchannel)) {
+    if (tchannel != null && !event.getChannel().equals(tchannel)) {
       event.getUser().openPrivateChannel().flatMap(channel -> channel.sendMessage(event.getClient().getError() + " Вы можете использовать данную команду только в " + tchannel.getAsMention() + "!")).queue();
       event.getHook().deleteOriginal().queue();
       return;

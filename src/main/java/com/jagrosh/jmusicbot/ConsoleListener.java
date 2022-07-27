@@ -61,7 +61,8 @@ public class ConsoleListener implements Runnable {
           String mesg = String.valueOf(mesgbuilder);
 
           try {
-            jda.getGuildById(gld).getTextChannelById(chnl).sendMessage(mesg).queue();
+            //jda.getGuildById(gld).getTextChannelById(chnl).sendMessage(mesg).queue();
+            jda.getGuildById(gld).getVoiceChannelById(chnl).sendMessage(mesg).queue();
             log.info("Отправлено!");
           } catch (InsufficientPermissionException ipe) {
             log.error("Я не могу отправлять сообщения в этот чат: ");

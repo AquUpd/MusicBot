@@ -51,7 +51,7 @@ public class NowplayingHandler {
   }
 
   public void setLastNPMessage(Message m) {
-    lastNP.put(m.getGuild().getIdLong(), new Pair<>(m.getTextChannel().getIdLong(), m.getIdLong()));
+    lastNP.put(m.getGuild().getIdLong(), new Pair<>(m.getChannel().getIdLong(), m.getIdLong()));
   }
 
   public void clearLastNPMessage(Guild guild) {

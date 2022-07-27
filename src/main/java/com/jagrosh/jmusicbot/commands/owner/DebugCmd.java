@@ -33,7 +33,8 @@ import net.dv8tion.jda.api.entities.Message;
  */
 public class DebugCmd extends OwnerCommand {
 
-  private static final String[] PROPERTIES = {"java.version", "java.vm.name", "java.vm.specification.version", "java.runtime.name", "java.runtime.version", "java.specification.version", "os.arch", "os.name",};
+  private static final String[] PROPERTIES = {"java.version", "java.vm.name", "java.vm.specification.version", "java.runtime.name", "java.runtime.version",
+      "java.specification.version", "os.arch", "os.name",};
 
   private final Bot bot;
 
@@ -49,38 +50,37 @@ public class DebugCmd extends OwnerCommand {
   protected void execute(SlashCommandEvent event) {
     event.deferReply().queue();
     StringBuilder sb = new StringBuilder();
-    sb.append("System Properties:");
-    for (String key : PROPERTIES) sb.append("\n  ").append(key).append(" = ").append(System.getProperty(key));
-    sb.append("\n\nJMusicBot Information:").append("\n  Version = ").append(OtherUtil.getCurrentVersion()).append("\n  Owner = ").append(bot.getConfig().getOwnerId()).append("\n  Prefix = ").append(bot.getConfig().getPrefix()).append("\n  AltPrefix = ").append(bot.getConfig().getAltPrefix()).append("\n  MaxSeconds = ").append(bot.getConfig().getMaxSeconds()).append("\n  NPImages = ").append(bot.getConfig().useNPImages()).append("\n  SongInStatus = ").append(bot.getConfig().getSongInStatus()).append("\n  StayInChannel = ").append(bot.getConfig().getStay()).append("\n  UseEval = ").append(bot.getConfig().useEval()).append("\n  UpdateAlerts = ").append(bot.getConfig().useUpdateAlerts());
-    sb.append("\n\nDependency Information:").append("\n  JDA Version = ").append(JDAInfo.VERSION).append("\n  JDA-Utilities Version = ").append(JDAUtilitiesInfo.VERSION).append("\n  Lavaplayer Version = ").append(PlayerLibrary.VERSION);
-    long total = Runtime.getRuntime().totalMemory() / 1024 / 1024;
-    long used = total - (Runtime.getRuntime().freeMemory() / 1024 / 1024);
-    sb.append("\n\nRuntime Information:").append("\n  Total Memory = ").append(total).append("\n  Used Memory = ").append(used);
-    sb.append("\n\nDiscord Information:").append("\n  ID = ").append(event.getJDA().getSelfUser().getId()).append("\n  Guilds = ").append(event.getJDA().getGuildCache().size()).append("\n  Users = ").append(event.getJDA().getUserCache().size());
-    sb.append("\n");
+    buildString(sb, event.getJDA());
 
-    if (event.isFromType(ChannelType.PRIVATE) || event.getGuild().getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ATTACH_FILES))
-      event.getHook().editOriginal(sb.toString().getBytes(), "debug_information.txt")
+    event.getHook().editOriginal("Debug Information: " + sb)
         .delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
-    else event.getHook().editOriginal("Debug Information: " + sb)
-      .delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
   }
 
   @Override
   protected void execute(CommandEvent event) {
     StringBuilder sb = new StringBuilder();
-    sb.append("```\nSystem Properties:");
-    for (String key : PROPERTIES) sb.append("\n  ").append(key).append(" = ").append(System.getProperty(key));
-    sb.append("\n\nJMusicBot Information:").append("\n  Version = ").append(OtherUtil.getCurrentVersion()).append("\n  Owner = ").append(bot.getConfig().getOwnerId()).append("\n  Prefix = ").append(bot.getConfig().getPrefix()).append("\n  AltPrefix = ").append(bot.getConfig().getAltPrefix()).append("\n  MaxSeconds = ").append(bot.getConfig().getMaxSeconds()).append("\n  NPImages = ").append(bot.getConfig().useNPImages()).append("\n  SongInStatus = ").append(bot.getConfig().getSongInStatus()).append("\n  StayInChannel = ").append(bot.getConfig().getStay()).append("\n  UseEval = ").append(bot.getConfig().useEval()).append("\n  UpdateAlerts = ").append(bot.getConfig().useUpdateAlerts());
-    sb.append("\n\nDependency Information:").append("\n  JDA Version = ").append(JDAInfo.VERSION).append("\n  JDA-Utilities Version = ").append(JDAUtilitiesInfo.VERSION).append("\n  Lavaplayer Version = ").append(PlayerLibrary.VERSION);
-    long total = Runtime.getRuntime().totalMemory() / 1024 / 1024;
-    long used = total - (Runtime.getRuntime().freeMemory() / 1024 / 1024);
-    sb.append("\n\nRuntime Information:").append("\n  Total Memory = ").append(total).append("\n  Used Memory = ").append(used);
-    sb.append("\n\nDiscord Information:").append("\n  ID = ").append(event.getJDA().getSelfUser().getId()).append("\n  Guilds = ").append(event.getJDA().getGuildCache().size()).append("\n  Users = ").append(event.getJDA().getUserCache().size());
-    sb.append("\n```");
+    buildString(sb, event.getJDA());
 
     if (event.isFromType(ChannelType.PRIVATE) || event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ATTACH_FILES))
       event.getChannel().sendFile(sb.toString().getBytes(), "debug_information.txt").queue();
     else event.reply("Debug Information: " + sb);
+  }
+
+  private void buildString(StringBuilder sb, JDA jda) {
+    for (String key : PROPERTIES) sb.append("\n  ").append(key).append(" = ").append(System.getProperty(key));
+    sb.append("\n\nJMusicBot Information:").append("\n  Version = ").append(OtherUtil.getCurrentVersion())
+        .append("\n  Owner = ").append(bot.getConfig().getOwnerId()).append("\n  Prefix = ").append(bot.getConfig().getPrefix())
+        .append("\n  AltPrefix = ").append(bot.getConfig().getAltPrefix()).append("\n  MaxSeconds = ").append(bot.getConfig().getMaxSeconds())
+        .append("\n  NPImages = ").append(bot.getConfig().useNPImages()).append("\n  SongInStatus = ").append(bot.getConfig().getSongInStatus())
+        .append("\n  StayInChannel = ").append(bot.getConfig().getStay()).append("\n  UseEval = ").append(bot.getConfig().useEval()).append("\n  UpdateAlerts = ")
+        .append(bot.getConfig().useUpdateAlerts());
+    sb.append("\n\nDependency Information:").append("\n  JDA Version = ").append(JDAInfo.VERSION).append("\n  JDA-Utilities Version = ")
+        .append(JDAUtilitiesInfo.VERSION).append("\n  Lavaplayer Version = ").append(PlayerLibrary.VERSION);
+    long total = Runtime.getRuntime().totalMemory() / 1024 / 1024;
+    long used = total - (Runtime.getRuntime().freeMemory() / 1024 / 1024);
+    sb.append("\n\nRuntime Information:").append("\n  Total Memory = ").append(total).append("\n  Used Memory = ").append(used);
+    sb.append("\n\nDiscord Information:").append("\n  ID = ").append(jda.getSelfUser().getId()).append("\n  Guilds = ")
+        .append(jda.getGuildCache().size()).append("\n  Users = ").append(jda.getUserCache().size());
+    sb.append("\n");
   }
 }
