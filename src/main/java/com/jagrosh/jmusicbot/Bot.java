@@ -74,7 +74,7 @@ public class Bot {
     return waiter;
   }
 
-  public ScheduledExecutorService getThreadpool() {
+  public ScheduledExecutorService getThreadPool() {
     return threadpool;
   }
 
