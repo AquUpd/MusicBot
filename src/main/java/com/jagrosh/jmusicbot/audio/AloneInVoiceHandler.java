@@ -43,7 +43,7 @@ public class AloneInVoiceHandler {
     aloneTimeUntilStop = bot.getConfig().getAloneTimeUntilStop();
     if (aloneTimeUntilStop > 0)
       bot.getThreadPool()
-      .scheduleWithFixedDelay(() -> check(), 0, 5, TimeUnit.SECONDS);
+      .scheduleWithFixedDelay(this::check, 0, 5, TimeUnit.SECONDS);
   }
 
   private void check() {
@@ -63,7 +63,7 @@ public class AloneInVoiceHandler {
 
       toRemove.add(entrySet.getKey());
     }
-    toRemove.forEach(id -> aloneSince.remove(id));
+    toRemove.forEach(aloneSince::remove);
   }
 
   public void onVoiceUpdate(GuildVoiceUpdateEvent event) {

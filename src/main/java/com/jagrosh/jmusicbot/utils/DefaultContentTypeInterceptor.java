@@ -6,10 +6,11 @@ import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 
 public class DefaultContentTypeInterceptor implements Interceptor {
 
-  public Response intercept(Interceptor.Chain chain) throws IOException {
+  public @NotNull Response intercept(Interceptor.Chain chain) throws IOException {
     Config config = ConfigFactory.load();
 
     Request originalRequest = chain.request();

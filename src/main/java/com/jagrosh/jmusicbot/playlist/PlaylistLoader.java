@@ -49,10 +49,10 @@ public class PlaylistLoader {
     }
   }
 
-  public List<String> getPlaylistNames() {
+  public List getPlaylistNames() {
     if (folderExists()) {
       File folder = new File(OtherUtil.getPath(config.getPlaylistsFolder()).toString());
-      return Arrays.asList(folder.listFiles(pathname -> pathname.getName().endsWith(".txt"))).stream().map(f -> f.getName().substring(0, f.getName().length() - 4)).collect(Collectors.toList());
+      return Arrays.stream(folder.listFiles(pathname -> pathname.getName().endsWith(".txt"))).map(f -> f.getName().substring(0, f.getName().length() - 4)).collect(Collectors.toList());
     } else {
       createFolder();
       return Collections.EMPTY_LIST;
@@ -162,10 +162,10 @@ public class PlaylistLoader {
                 loaded.set(first, loaded.get(second));
                 loaded.set(second, tmp);
               }
-              loaded.removeIf(track -> config.isTooLong(track));
+              loaded.removeIf(config::isTooLong);
               loaded.forEach(at -> at.setUserData(0L));
               tracks.addAll(loaded);
-              loaded.forEach(at -> consumer.accept(at));
+              loaded.forEach(consumer::accept);
             }
             done();
           }

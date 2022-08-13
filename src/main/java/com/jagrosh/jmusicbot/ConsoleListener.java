@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@SuppressWarnings("InfiniteRecursion")
 public class ConsoleListener implements Runnable {
 
   static Thread thread;

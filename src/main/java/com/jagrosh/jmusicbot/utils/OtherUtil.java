@@ -16,29 +16,21 @@
 package com.jagrosh.jmusicbot.utils;
 
 import com.jagrosh.jmusicbot.JMusicBot;
-import com.jagrosh.jmusicbot.entities.Prompt;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 
 /**
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class OtherUtil {
 
-  public static final String NEW_VERSION_AVAILABLE = "There is a new version of JMusicBot available!\n" + "Current version: %s\n" + "New Version: %s\n\n" + "Please visit https://github.com/jagrosh/MusicBot/releases/latest to get the latest release.";
   private static final String WINDOWS_INVALID_PATH = "c:\\windows\\system32\\";
 
   /**
@@ -55,8 +47,7 @@ public class OtherUtil {
     if (result.toAbsolutePath().toString().toLowerCase().startsWith(WINDOWS_INVALID_PATH)) {
       try {
         result = Paths.get(new File(JMusicBot.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getPath() + File.separator + path);
-      } catch (URISyntaxException ex) {
-      }
+      } catch (URISyntaxException ignored) {}
     }
     return result;
   }
@@ -128,41 +119,9 @@ public class OtherUtil {
     return st == null ? OnlineStatus.ONLINE : st;
   }
 
-  public static String checkVersion(Prompt prompt) {
-    // Get current version number
-    String version = getCurrentVersion();
-
-    // Check for new version
-    String latestVersion = getLatestVersion();
-
-    if (latestVersion != null && !latestVersion.equals(version)) {
-      prompt.alert(Prompt.Level.WARNING, "Version", String.format(NEW_VERSION_AVAILABLE, version, latestVersion));
-    }
-
-    // Return the current version
-    return version;
-  }
-
   public static String getCurrentVersion() {
     if (JMusicBot.class.getPackage() != null && JMusicBot.class.getPackage().getImplementationVersion() != null)
       return JMusicBot.class.getPackage().getImplementationVersion();
     else return "UNKNOWN";
-  }
-
-  public static String getLatestVersion() {
-    try {
-      Response response = new OkHttpClient.Builder().build().newCall(new Request.Builder().get().url("https://api.github.com/repos/jagrosh/MusicBot/releases/latest").build()).execute();
-      ResponseBody body = response.body();
-      if (body != null) {
-        try (Reader reader = body.charStream()) {
-          JSONObject obj = new JSONObject(new JSONTokener(reader));
-          return obj.getString("tag_name");
-        } finally {
-          response.close();
-        }
-      } else return null;
-    } catch (IOException | JSONException | NullPointerException ex) {
-      return null;
-    }
   }
 }

@@ -70,7 +70,7 @@ public class SettingsManager implements GuildSettingsManager {
 
   protected void writeSettings() {
     JSONObject obj = new JSONObject();
-    settings.keySet().stream().forEach(key -> {
+    settings.keySet().forEach(key -> {
       JSONObject o = new JSONObject();
       Settings s = settings.get(key);
       if (s.textId != 0) o.put("text_channel_id", Long.toString(s.textId));

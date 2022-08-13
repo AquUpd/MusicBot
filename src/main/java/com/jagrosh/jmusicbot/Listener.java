@@ -55,8 +55,7 @@ public class Listener extends ListenerAdapter {
         if (defpl != null && vc != null && bot.getPlayerManager().setUpHandler(guild).playFromDefault()) {
           guild.getAudioManager().openAudioConnection(vc);
         }
-      } catch (Exception ignore) {
-      }
+      } catch (Exception ignore) {}
     });
   }
 

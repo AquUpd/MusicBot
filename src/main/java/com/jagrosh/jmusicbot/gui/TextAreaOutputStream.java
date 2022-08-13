@@ -15,6 +15,8 @@
  */
 package com.jagrosh.jmusicbot.gui;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.awt.*;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -78,12 +80,12 @@ public class TextAreaOutputStream extends OutputStream {
   }
 
   @Override
-  public synchronized void write(byte[] ba) {
+  public synchronized void write(byte @NotNull [] ba) {
     write(ba, 0, ba.length);
   }
 
   @Override
-  public synchronized void write(byte[] ba, int str, int len) {
+  public synchronized void write(byte @NotNull [] ba, int str, int len) {
     if (appender != null) {
       appender.append(bytesToString(ba, str, len));
     }
@@ -143,10 +145,7 @@ public class TextAreaOutputStream extends OutputStream {
       if (clear) {
         textArea.setText("");
       }
-      values.stream().map(val -> {
-        curLength += val.length();
-        return val;
-      }).map(val -> {
+      values.stream().peek(val -> curLength += val.length()).peek(val -> {
         if (val.endsWith(EOL1) || val.endsWith(EOL2)) {
           if (lengths.size() >= maxLines) {
             textArea.replaceRange("", 0, lengths.removeFirst());
@@ -154,10 +153,7 @@ public class TextAreaOutputStream extends OutputStream {
           lengths.addLast(curLength);
           curLength = 0;
         }
-        return val;
-      }).forEach(val -> {
-        textArea.append(val);
-      });
+      }).forEach(textArea::append);
       values.clear();
       clear = false;
       queue = true;
