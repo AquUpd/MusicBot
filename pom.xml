@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.jagrosh</groupId>
     <artifactId>JMusicBotRus-JDA5</artifactId>
-    <version>1.4.08</version>
+    <version>1.6.01</version>
     <packaging>jar</packaging>
     
     <repositories>
@@ -34,24 +34,24 @@
     
     <dependencies>
         <dependency>
-	          <groupId>net.dv8tion</groupId>
+            <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId> 
-            <version>5.0.0-alpha.15</version>
+            <version>5.0.0-beta.9</version>
         </dependency>
         <dependency>
             <groupId>com.github.Walkyst</groupId>
             <artifactId>lavaplayer-fork</artifactId>
-            <version>1.3.98.1</version>
+            <version>1.4.1</version>
         </dependency>
         <dependency>
             <groupId>com.github.Chew</groupId>
-            <artifactId>JDA-Chewtils</artifactId>
-            <version>c892064b0f</version>
+            <artifactId>jda-chewtils</artifactId>
+            <version>5e1a9f93f9</version>
         </dependency>
         <dependency>
-            <groupId>com.github.caneleex</groupId>
+            <groupId>com.github.Ree6-Applications</groupId>
             <artifactId>JLyrics</artifactId>
-            <version>532b058</version>
+            <version>master-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

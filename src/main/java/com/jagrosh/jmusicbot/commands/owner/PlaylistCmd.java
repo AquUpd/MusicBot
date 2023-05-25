@@ -29,6 +29,8 @@ import java.util.List;
  */
 public class PlaylistCmd extends OwnerCommand {
 
+  //TODO: Сделать чтобы команда была досутпна всем и у каждого сервера была своя папка со своими плейлистами
+
   private final Bot bot;
 
   public PlaylistCmd(Bot bot) {

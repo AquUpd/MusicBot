@@ -25,11 +25,14 @@ import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
+import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 /**
  *
@@ -50,10 +53,8 @@ public class SettingsCmd extends SlashCommand {
   protected void execute(SlashCommandEvent event) {
     event.deferReply().queue();
     Settings s = event.getClient().getSettingsFor(event.getGuild());
-    MessageBuilder builder = new MessageBuilder()
-      .append(EMOJI + " **")
-      .append(FormatUtil.filter(event.getJDA().getSelfUser().getName()))
-      .append("** настройки:");
+    MessageEditBuilder builder = new MessageEditBuilder()
+        .setContent(EMOJI + " **" + FormatUtil.filter(event.getJDA().getSelfUser().getName()) + "** настройки:");
     TextChannel tchan = s.getTextChannel(event.getGuild());
     VoiceChannel vchan = s.getVoiceChannel(event.getGuild());
     Role role = s.getRole(event.getGuild());
@@ -75,10 +76,8 @@ public class SettingsCmd extends SlashCommand {
   @Override
   protected void execute(CommandEvent event) {
     Settings s = event.getClient().getSettingsFor(event.getGuild());
-    MessageBuilder builder = new MessageBuilder()
-      .append(EMOJI + " **")
-      .append(FormatUtil.filter(event.getSelfUser().getName()))
-      .append("** настройки:");
+    MessageCreateBuilder builder = new MessageCreateBuilder()
+        .setContent(EMOJI + " **" + FormatUtil.filter(event.getSelfUser().getName()) + "** настройки:");
     TextChannel tchan = s.getTextChannel(event.getGuild());
     VoiceChannel vchan = s.getVoiceChannel(event.getGuild());
     Role role = s.getRole(event.getGuild());

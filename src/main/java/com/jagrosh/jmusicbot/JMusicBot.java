@@ -17,7 +17,6 @@ package com.jagrosh.jmusicbot;
 
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import com.jagrosh.jdautilities.examples.command.AboutCommand;
 import com.jagrosh.jdautilities.examples.command.PingCommand;
 import com.jagrosh.jmusicbot.commands.admin.*;
 import com.jagrosh.jmusicbot.commands.dj.*;
@@ -28,12 +27,10 @@ import com.jagrosh.jmusicbot.commands.owner.*;
 import com.jagrosh.jmusicbot.entities.Prompt;
 import com.jagrosh.jmusicbot.gui.GUI;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
-import java.awt.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.TimeZone;
-import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -47,7 +44,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author John Grosh (jagrosh)
  */
-public class JMusicBot {
+public class  JMusicBot {
 
   public static final String PLAY_EMOJI = "\u25B6"; // ▶
   public static final String PAUSE_EMOJI = "\u23F8"; // ⏸
@@ -86,10 +83,6 @@ public class JMusicBot {
     }
     int v_num = Integer.parseInt(version);
 
-    if (!System.getProperty("java.vm.name").contains("64") || !(v_num >= 8 && v_num <= 16)) {
-      prompt.alert(Prompt.Level.WARNING, "Java Version", "Вы используете неподдерживаемую версию JAVA. Пожалуйста используйте JAVA 8-16 64-bit.");
-      System.exit(1);
-    }
     // load config
     BotConfig config = new BotConfig(prompt);
     config.load();
@@ -225,9 +218,6 @@ public class JMusicBot {
         .setBulkDeleteSplittingEnabled(true)
         .build();
       bot.setJDA(jda);
-    } catch (LoginException ex) {
-      prompt.alert(Prompt.Level.ERROR, "JMusicBot", ex + "\nУбедитесь что вы " + "изменяете правильный config.go файл и применяете " + "правильный токен бота (не 'secret'!)\nРасположение config.go: " + config.getConfigLocation());
-      System.exit(1);
     } catch (IllegalArgumentException ex) {
       prompt.alert(Prompt.Level.ERROR, "JMusicBot", "Некоторые строчки конфигурационного файла " + "не правильные: " + ex + "\nРасположение config.go: " + config.getConfigLocation());
       System.exit(1);

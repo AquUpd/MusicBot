@@ -363,7 +363,7 @@ public class PlayCmd extends MusicCommand {
     }
   }
 
-  /* need to move to other command
+  /* TODO: need to move to other command
   public class PlaylistCmd extends MusicCommand {
 
     public PlaylistCmd(Bot bot) {

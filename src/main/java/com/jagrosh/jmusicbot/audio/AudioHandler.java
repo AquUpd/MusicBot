@@ -31,11 +31,11 @@ import java.nio.ByteBuffer;
 import java.util.*;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.utils.messages.*;
 
 /**
  *
@@ -165,12 +165,12 @@ public class AudioHandler
   }
 
   // Formatting
-  public Message getNowPlaying(JDA jda) {
+  public MessageEditData getNowPlaying(JDA jda) {
     if (isMusicPlaying(jda)) {
       Guild guild = guild(jda);
       AudioTrack track = audioPlayer.getPlayingTrack();
-      MessageBuilder mb = new MessageBuilder();
-      mb.append(FormatUtil.filter(manager.getBot().getConfig().getSuccess() +
+      MessageEditBuilder mb = new MessageEditBuilder();
+      mb.setContent(FormatUtil.filter(manager.getBot().getConfig().getSuccess() +
         " **Now Playing in " + guild.getSelfMember().getVoiceState().getChannel().getAsMention() + "...**"));
       EmbedBuilder eb = new EmbedBuilder();
       eb.setColor(guild.getSelfMember().getColor());
@@ -200,12 +200,13 @@ public class AudioHandler
         "/" + FormatUtil.formatTime(track.getDuration()) +
         "]` " + FormatUtil.volumeIcon(audioPlayer.getVolume()));
       return mb.setEmbeds(eb.build()).build();
+
     } else return null;
   }
 
-  public Message getNoMusicPlaying(JDA jda) {
+  public MessageCreateData getNoMusicPlayingD(JDA jda) {
     Guild guild = guild(jda);
-    return new MessageBuilder()
+    return new MessageCreateBuilder()
       .setContent(FormatUtil.filter(manager.getBot().getConfig().getSuccess() + " **Now Playing...**"))
       .setEmbeds(new EmbedBuilder()
           .setTitle("No music playing")
@@ -217,6 +218,22 @@ public class AudioHandler
           .build()
       )
       .build();
+  }
+
+  public MessageEditData getNoMusicPlayingE(JDA jda) {
+    Guild guild = guild(jda);
+    return new MessageEditBuilder()
+        .setContent(FormatUtil.filter(manager.getBot().getConfig().getSuccess() + " **Now Playing...**"))
+        .setEmbeds(new EmbedBuilder()
+            .setTitle("No music playing")
+            .setDescription(
+                JMusicBot.STOP_EMOJI + " " +
+                    FormatUtil.progressBar(-1) + " " +
+                    FormatUtil.volumeIcon(audioPlayer.getVolume()))
+            .setColor(guild.getSelfMember().getColor())
+            .build()
+        )
+        .build();
   }
 
   public String getTopicFormat(JDA jda) {

@@ -23,6 +23,7 @@ import com.jagrosh.jmusicbot.commands.MusicCommand;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 /**
  *
@@ -41,21 +42,21 @@ public class NowplayingCmd extends MusicCommand {
   @Override
   public void doCommand(CommandEvent event) {
     AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
-    Message m = handler.getNowPlaying(event.getJDA());
+    MessageEditData m = handler.getNowPlaying(event.getJDA());
     if (m == null) {
-      event.reply(handler.getNoMusicPlaying(event.getJDA()));
+      event.reply(handler.getNoMusicPlayingD(event.getJDA()));
       bot.getNowplayingHandler().clearLastNPMessage(event.getGuild());
     } else {
-      event.reply(m, msg -> bot.getNowplayingHandler().setLastNPMessage(msg));
+      event.reply(m.getContent(), msg -> bot.getNowplayingHandler().setLastNPMessage(msg));
     }
   }
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
     AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
-    Message m = handler.getNowPlaying(event.getJDA());
+    MessageEditData m = handler.getNowPlaying(event.getJDA());
     if (m == null) {
-      event.getHook().editOriginal(handler.getNoMusicPlaying(event.getJDA()))
+      event.getHook().editOriginal(handler.getNoMusicPlayingE(event.getJDA()))
         .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
     } else {
       event.getHook().editOriginal(m)

@@ -29,12 +29,13 @@ import com.jagrosh.jmusicbot.utils.FormatUtil;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 /**
  *
@@ -77,11 +78,11 @@ public class QueueCmd extends MusicCommand {
       .getSendingHandler();
     List<QueuedTrack> list = ah.getQueue().getList();
     if (list.isEmpty()) {
-      Message nowp = ah.getNowPlaying(event.getJDA());
-      Message nonowp = ah.getNoMusicPlaying(event.getJDA());
-      Message built = new MessageBuilder().setContent(event.getClient().getWarning() + " Нет пластинок в очереди!")
+      MessageEditData nowp = ah.getNowPlaying(event.getJDA());
+      MessageEditData nonowp = ah.getNoMusicPlayingE(event.getJDA());
+      MessageEditData built = new MessageEditBuilder().setContent(event.getClient().getWarning() + " Нет пластинок в очереди!")
         .setEmbeds((nowp == null ? nonowp : nowp).getEmbeds().get(0)).build();
-      event.reply(built, m -> {if (nowp != null) bot.getNowplayingHandler().setLastNPMessage(m);});
+      event.reply(built.getContent(), m -> {if (nowp != null) bot.getNowplayingHandler().setLastNPMessage(m);});
       return;
     }
     String[] songs = new String[list.size()];
@@ -104,9 +105,9 @@ public class QueueCmd extends MusicCommand {
     AudioHandler ah = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
     List<QueuedTrack> list = ah.getQueue().getList();
     if (list.isEmpty()) {
-      Message nowp = ah.getNowPlaying(event.getJDA());
-      Message nonowp = ah.getNoMusicPlaying(event.getJDA());
-      Message built = new MessageBuilder().setContent(event.getClient().getWarning() + " Нет пластинок в очереди!")
+      MessageEditData nowp = ah.getNowPlaying(event.getJDA());
+      MessageEditData nonowp = ah.getNoMusicPlayingE(event.getJDA());
+      MessageEditData built = new MessageEditBuilder().setContent(event.getClient().getWarning() + " Нет пластинок в очереди!")
         .setEmbeds((nowp == null ? nonowp : nowp).getEmbeds().get(0)).build();
       event.getHook().editOriginal(built).delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
       return;

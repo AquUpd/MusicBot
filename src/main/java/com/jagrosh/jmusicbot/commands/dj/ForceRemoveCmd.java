@@ -131,7 +131,7 @@ public class ForceRemoveCmd extends DJCommand {
       bot.getWaiter().waitForEvent(ButtonInteractionEvent.class, (e) -> true, e -> {
         int buttonID = Integer.parseInt(e.getInteraction().getComponentId());
         if(buttonID == found.size()) {
-          e.editMessage("Отменено!").setActionRows()
+          e.editMessage("Отменено!").setActionRow()
             .delay(5, TimeUnit.SECONDS).flatMap(InteractionHook::deleteOriginal).queue();
         } else {
           removeAllEntriesSlash(found.get(buttonID).getUser(), event);
@@ -159,10 +159,10 @@ public class ForceRemoveCmd extends DJCommand {
   private void removeAllEntriesSlash(User target, SlashCommandEvent event) {
     int count = ((AudioHandler) event.getGuild().getAudioManager().getSendingHandler()).getQueue().removeAll(target.getIdLong());
     if (count == 0) {
-      event.getHook().editOriginal("Пользователь с ником **" + target.getName() + "** не добавлял пластинки в очередь!").setActionRows()
+      event.getHook().editOriginal("Пользователь с ником **" + target.getName() + "** не добавлял пластинки в очередь!").setActionRow()
         .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
     } else {
-      event.getHook().editOriginal("Успешно убраны пластинки пользователя **" + target.getName() + "**#" + target.getDiscriminator() + ".").setActionRows()
+      event.getHook().editOriginal("Успешно убраны пластинки пользователя **" + target.getName() + "**#" + target.getDiscriminator() + ".").setActionRow()
         .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
     }
   }
