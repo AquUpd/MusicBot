@@ -39,16 +39,19 @@ public class NowplayingCmd extends MusicCommand {
     this.botPermissions = new Permission[] { Permission.MESSAGE_EMBED_LINKS };
   }
 
+  //TODO: https://media.discordapp.net/attachments/921833564809617428/1111390519503900803/image.png
   @Override
   public void doCommand(CommandEvent event) {
     AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
     MessageEditData m = handler.getNowPlaying(event.getJDA());
-    if (m == null) {
-      event.reply(handler.getNoMusicPlayingD(event.getJDA()));
-      bot.getNowplayingHandler().clearLastNPMessage(event.getGuild());
-    } else {
-      event.reply(m.getContent(), msg -> bot.getNowplayingHandler().setLastNPMessage(msg));
-    }
+    event.reply("loading...", (e) -> {
+      if (m == null) {
+        e.editMessage(handler.getNoMusicPlayingE(event.getJDA())).queue();
+        bot.getNowplayingHandler().clearLastNPMessage(event.getGuild());
+      } else {
+        e.editMessage(m).queue();
+      }
+    });
   }
 
   @Override

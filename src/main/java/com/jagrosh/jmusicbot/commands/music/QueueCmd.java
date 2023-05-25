@@ -34,6 +34,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
@@ -82,7 +83,7 @@ public class QueueCmd extends MusicCommand {
       MessageEditData nonowp = ah.getNoMusicPlayingE(event.getJDA());
       MessageEditData built = new MessageEditBuilder().setContent(event.getClient().getWarning() + " Нет пластинок в очереди!")
         .setEmbeds((nowp == null ? nonowp : nowp).getEmbeds().get(0)).build();
-      event.reply(built.getContent(), m -> {if (nowp != null) bot.getNowplayingHandler().setLastNPMessage(m);});
+      event.reply(MessageCreateData.fromEditData(built), m -> {if (nowp != null) bot.getNowplayingHandler().setLastNPMessage(m);});
       return;
     }
     String[] songs = new String[list.size()];
