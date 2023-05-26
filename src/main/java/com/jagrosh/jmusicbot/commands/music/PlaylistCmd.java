@@ -19,10 +19,14 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.audio.AudioHandler;
+import com.jagrosh.jmusicbot.audio.QueuedTrack;
 import com.jagrosh.jmusicbot.commands.DJCommand;
+import com.jagrosh.jmusicbot.commands.MusicCommand;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import com.jagrosh.jmusicbot.commands.music.PlayCmd;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader.Playlist;
+import com.jagrosh.jmusicbot.utils.FormatUtil;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
@@ -48,7 +52,7 @@ public class PlaylistCmd extends DJCommand {
     this.arguments = "<append|delete|make|setdefault>";
     this.help = "управление плейлистами";
     this.aliases = bot.getConfig().getAliases(this.name);
-    this.children = new DJCommand[]{new ListCmd(bot), new AppendlistCmd(bot), new DeletelistCmd(bot), new MakelistCmd(bot), new PlayCmd(bot)};
+    this.children = new MusicCommand[]{new ListCmd(bot), new AppendlistCmd(bot), new DeletelistCmd(bot), new MakelistCmd(bot), new PlayCmd(bot)};
   }
 
   @Override
@@ -72,13 +76,17 @@ public class PlaylistCmd extends DJCommand {
       this.aliases = new String[]{"create"};
       this.help = "создает новый плейлист";
       this.arguments = "<name>";
-      this.options = Collections.singletonList(new OptionData(OptionType.STRING, "name", "Название плейлиста", true));
+      this.options = Collections.singletonList(new OptionData(OptionType.STRING, "name", "Название плейлиста", true).setMaxLength(16).setMinLength(3));
       this.guildOnly = true;
     }
 
     @Override
     public void doSlashCommand(SlashCommandEvent event) {
       String pname = event.getOption("name").getAsString().replaceAll("\\s+", "_");
+      if (!validateName(pname)) {
+        event.getHook().editOriginal(event.getClient().getError() + " Название плейлиста не может содержать сиимволы кроме: a-z, A-Z, а-я, А-Я, 0-9").queue();
+        return;
+      }
       if (bot.getPlaylistLoader().getPlaylist(event.getGuild(), pname) == null) {
         try {
           bot.getPlaylistLoader().createPlaylist(event.getGuild(), pname);
@@ -92,6 +100,10 @@ public class PlaylistCmd extends DJCommand {
     @Override
     public void doCommand(CommandEvent event) {
       String pname = event.getArgs().replaceAll("\\s+", "_");
+      if (!validateName(pname)) {
+        event.reply(event.getClient().getError() + " Название плейлиста не может содержать сиимволы кроме: a-z, A-Z, а-я, А-Я, 0-9");
+        return;
+      }
       if (bot.getPlaylistLoader().getPlaylist(event.getGuild(), pname) == null) {
         try {
           bot.getPlaylistLoader().createPlaylist(event.getGuild(), pname);
@@ -111,13 +123,18 @@ public class PlaylistCmd extends DJCommand {
       this.aliases = new String[]{"remove"};
       this.help = "удаляет плейлист";
       this.arguments = "<name>";
-      this.options = Collections.singletonList(new OptionData(OptionType.STRING, "name", "Название плейлиста", true));
+      this.options = Collections.singletonList(new OptionData(OptionType.STRING, "name", "Название плейлиста", true).setMaxLength(16).setMinLength(3));
       this.guildOnly = true;
     }
 
     @Override
     public void doSlashCommand(SlashCommandEvent event) {
       String pname = event.getOption("name").getAsString().replaceAll("\\s+", "_");
+      if (!validateName(pname)) {
+        event.getHook().editOriginal(event.getClient().getError() + " Название плейлиста не может содержать сиимволы кроме: a-z, A-Z, а-я, А-Я, 0-9").queue();
+        return;
+      }
+
       if (bot.getPlaylistLoader().getPlaylist(event.getGuild(), pname) == null)
         event.getHook().editOriginal(event.getClient().getError() + " Плейлист с названием `" + pname + "` не существует!").queue();
       else {
@@ -133,6 +150,11 @@ public class PlaylistCmd extends DJCommand {
     @Override
     public void doCommand(CommandEvent event) {
       String pname = event.getArgs().replaceAll("\\s+", "_");
+      if (!validateName(pname)) {
+        event.reply(event.getClient().getError() + " Название плейлиста не может содержать сиимволы кроме: a-z, A-Z, а-я, А-Я, 0-9");
+        return;
+      }
+
       if (bot.getPlaylistLoader().getPlaylist(event.getGuild(), pname) == null)
         event.reply(event.getClient().getError() + " Плейлист с названием `" + pname + "` не существует!");
       else {
@@ -153,8 +175,8 @@ public class PlaylistCmd extends DJCommand {
       this.name = "append";
       this.aliases = new String[]{"add"};
       this.help = "добавляет пластинки в плейлист";
-      this.arguments = "<name> <URL> | <playlist name> <music name>";
-      this.options = new ArrayList<OptionData>(){{ add(new OptionData(OptionType.STRING, "name", "Название плейлиста", true)); add(new OptionData(OptionType.STRING, "music", "Ссылка(и)/Название(я) пластинки(ок)/плейлиста(ов)", true)); }};
+      this.arguments = "<name> <URL>";
+      this.options = new ArrayList<OptionData>(){{ add(new OptionData(OptionType.STRING, "name", "Название плейлиста", true).setMaxLength(16).setMinLength(3)); add(new OptionData(OptionType.STRING, "music", "Ссылка пластинки/плейлиста", true)); }};
       this.guildOnly = true;
     }
 
@@ -163,6 +185,11 @@ public class PlaylistCmd extends DJCommand {
       String[] parts = {event.getOption("name").getAsString(), event.getOption("music").getAsString()};
 
       String pname = parts[0];
+      if (!validateName(pname)) {
+        event.getHook().editOriginal(event.getClient().getError() + " Название плейлиста не может содержать сиимволы кроме: a-z, A-Z, а-я, А-Я, 0-9").queue();
+        return;
+      }
+
       Playlist playlist = bot.getPlaylistLoader().getPlaylist(event.getGuild(), pname);
       if (playlist == null)
         event.getHook().editOriginal(event.getClient().getError() + " Плейлист с названием `" + pname + "` не существует!").queue();
@@ -205,6 +232,11 @@ public class PlaylistCmd extends DJCommand {
         return;
       }
       String pname = parts[0];
+      if (!validateName(pname)) {
+        event.reply(event.getClient().getError() + " Название плейлиста не может содержать сиимволы кроме: a-z, A-Z, а-я, А-Я, 0-9");
+        return;
+      }
+
       Playlist playlist = bot.getPlaylistLoader().getPlaylist(event.getGuild(), pname);
       if (playlist == null)
         event.reply(event.getClient().getError() + " Плейлист с названием `" + pname + "` не существует!");
@@ -238,19 +270,6 @@ public class PlaylistCmd extends DJCommand {
       }
     }
   }
-
-  /*
-  public class DefaultlistCmd extends AutoplaylistCmd {
-
-    public DefaultlistCmd(Bot bot) {
-      super(bot);
-      this.name = "setdefault";
-      this.aliases = new String[]{"default"};
-      this.arguments = "<playlistname|NONE>";
-      this.guildOnly = true;
-    }
-  }
-  */
 
   public class ListCmd extends DJCommand {
 
@@ -299,25 +318,93 @@ public class PlaylistCmd extends DJCommand {
     }
   }
 
-  public class PlayCmd extends DJCommand {
+  public class PlayCmd extends MusicCommand {
+    private final String loadingEmoji;
+
     public PlayCmd(Bot bot) {
       super(bot);
+      this.loadingEmoji = bot.getConfig().getLoading();
       this.name = "play";
       this.aliases = new String[] { "pl" };
       this.arguments = "<name>";
+      this.options = Collections.singletonList(new OptionData(OptionType.STRING, "name", "Название плейлиста", true).setMaxLength(16).setMinLength(3));
       this.help = "проигрывает нужный плейлист";
+      this.guildOnly = true;
       this.beListening = true;
       this.bePlaying = false;
     }
 
     @Override
     public void doSlashCommand(SlashCommandEvent event) {
+      String pname = event.getOption("name").getAsString().replaceAll("\\s+", "_");
+      if (!validateName(pname)) {
+        event.getHook().editOriginal(event.getClient().getError() + " Название плейлиста не может содержать сиимволы кроме: a-z, A-Z, а-я, А-Я, 0-9").queue();
+        return;
+      }
 
+      Playlist playlist = bot.getPlaylistLoader().getPlaylist(event.getGuild(), pname);
+      if (playlist == null) {
+        event.getHook().editOriginal("Плейлист с названием `" + pname + ".txt` не существует.");
+        return;
+      }
+      event
+        .getHook()
+        .editOriginal(loadingEmoji + " Загружен плейлист с **" + pname + "**... (" + playlist.getItems().size() + " пластинками)")
+        .queue(m -> {
+          AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+          playlist.loadTracks(bot.getPlayerManager(),
+            at -> handler.addTrack(new QueuedTrack(at, event.getUser())),
+            () -> {
+              StringBuilder builder = new StringBuilder(playlist.getTracks().isEmpty()
+                ? event.getClient().getWarning() + " Пластинки не были загружены!" : event.getClient().getSuccess() + " Пластинки были загружены");
+              if (!playlist.getErrors().isEmpty())
+                builder.append("\nНе удалось загрузить данные пластинки:");
+              playlist.getErrors().forEach(err ->
+                builder.append("\n`[").append(err.getIndex() + 1).append("]` **").append(err.getItem()).append("**: ").append(err.getReason()));
+              String str = builder.toString();
+              if (str.length() > 2000) str = str.substring(0, 1994) + " (...)";
+              m.editMessage(FormatUtil.filter(str)).queue();
+            }
+          );
+        });
     }
 
     @Override
     public void doCommand(CommandEvent event) {
+      String pname = event.getArgs().replaceAll("\\s+", "_");
+      if (!validateName(pname)) {
+        event.reply(event.getClient().getError() + " Название плейлиста не может содержать сиимволы кроме: a-z, A-Z, а-я, А-Я, 0-9");
+        return;
+      }
 
+      Playlist playlist = bot.getPlaylistLoader().getPlaylist(event.getGuild(), pname);
+      if (playlist == null) {
+        event.replyError("Плейлист с названием `" + pname + ".txt` не существует.");
+        return;
+      }
+      event.getChannel()
+        .sendMessage(loadingEmoji + " Загружен плейлист с **" + pname + "**... (" + playlist.getItems().size() + " пластинками)")
+        .queue(m -> {
+          AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
+          playlist.loadTracks(bot.getPlayerManager(),
+            at -> handler.addTrack(new QueuedTrack(at, event.getAuthor())),
+            () -> {
+              StringBuilder builder = new StringBuilder(playlist.getTracks().isEmpty()
+                ? event.getClient().getWarning() + " Пластинки не были загружены!" : event.getClient().getSuccess() + " Пластинки были загружены");
+              if (!playlist.getErrors().isEmpty())
+                builder.append("\nНе удалось загрузить данные пластинки:");
+              playlist.getErrors().forEach(err ->
+                builder.append("\n`[").append(err.getIndex() + 1).append("]` **").append(err.getItem()).append("**: ").append(err.getReason()));
+              String str = builder.toString();
+              if (str.length() > 2000) str = str.substring(0, 1994) + " (...)";
+              m.editMessage(FormatUtil.filter(str)).queue();
+            }
+          );
+        });
     }
+  }
+
+  public boolean validateName(String name) {
+    return name.matches("^[a-zA-Z0-9а-яА-Я]+$");
   }
 }
