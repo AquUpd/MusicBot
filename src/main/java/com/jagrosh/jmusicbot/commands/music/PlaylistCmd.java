@@ -39,9 +39,6 @@ import java.util.List;
  * @author John Grosh <john.a.grosh@gmail.com>
  */
 public class PlaylistCmd extends DJCommand {
-
-  //TODO: Сделать чтобы команда была досутпна всем и у каждого сервера была своя папка со своими плейлистами
-
   private final Bot bot;
 
   public PlaylistCmd(Bot bot) {
