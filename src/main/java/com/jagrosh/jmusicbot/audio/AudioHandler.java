@@ -33,7 +33,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.audio.AudioSendHandler;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.utils.messages.*;
 
@@ -112,18 +111,7 @@ public class AudioHandler
       audioPlayer.playTrack(defaultQueue.remove(0));
       return true;
     }
-    Settings settings = manager.getBot()
-      .getSettingsManager()
-      .getSettings(guildId);
-    if (settings == null || settings.getDefaultPlaylist() == null) return false;
 
-    Playlist pl = manager.getBot()
-      .getPlaylistLoader()
-      .getPlaylist(settings.getDefaultPlaylist());
-    if (pl == null || pl.getItems().isEmpty()) return false;
-    pl.loadTracks(manager,
-      at -> { if (audioPlayer.getPlayingTrack() == null) audioPlayer.playTrack(at); else defaultQueue.add(at); },
-      () -> { if (pl.getTracks().isEmpty() && !manager.getBot().getConfig().getStay()) manager.getBot().closeAudioConnection(guildId); });
     return true;
   }
 

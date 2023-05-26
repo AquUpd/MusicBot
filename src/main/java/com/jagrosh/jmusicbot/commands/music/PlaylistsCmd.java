@@ -40,13 +40,13 @@ public class PlaylistsCmd extends MusicCommand {
 
   @Override
   public void doCommand(CommandEvent event) {
-    if (!bot.getPlaylistLoader().folderExists())
-      bot.getPlaylistLoader().createFolder();
-    if (!bot.getPlaylistLoader().folderExists()) {
+    if (!bot.getPlaylistLoader().folderExists(event.getGuild()))
+      bot.getPlaylistLoader().createFolder(event.getGuild());
+    if (!bot.getPlaylistLoader().folderExists(event.getGuild())) {
       event.reply(event.getClient().getWarning() + " Папки с плейлистами не существует и она будет создана!");
       return;
     }
-    List<String> list = bot.getPlaylistLoader().getPlaylistNames();
+    List<String> list = bot.getPlaylistLoader().getPlaylistNames(event.getGuild());
     if (list == null)
       event.reply(event.getClient().getError() + " Не удалось получить список плейлистов!");
     else if (list.isEmpty())
@@ -61,14 +61,14 @@ public class PlaylistsCmd extends MusicCommand {
 
   @Override
   public void doSlashCommand(SlashCommandEvent event) {
-    if (!bot.getPlaylistLoader().folderExists())
-      bot.getPlaylistLoader().createFolder();
-    if (!bot.getPlaylistLoader().folderExists()) {
+    if (!bot.getPlaylistLoader().folderExists(event.getGuild()))
+      bot.getPlaylistLoader().createFolder(event.getGuild());
+    if (!bot.getPlaylistLoader().folderExists(event.getGuild())) {
       event.getHook().editOriginal(event.getClient().getWarning() + " Папки с плейлистами не существует и она будет создана!")
         .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
       return;
     }
-    List<String> list = bot.getPlaylistLoader().getPlaylistNames();
+    List<String> list = bot.getPlaylistLoader().getPlaylistNames(event.getGuild());
     if (list == null)
       event.getHook().editOriginal(event.getClient().getError() + " Не удалось получить список плейлистов!")
         .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();

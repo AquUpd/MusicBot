@@ -18,6 +18,7 @@ package com.jagrosh.jmusicbot.commands.owner;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
+import com.jagrosh.jmusicbot.commands.DJCommand;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import com.jagrosh.jmusicbot.settings.Settings;
 import java.util.Collections;
@@ -29,11 +30,12 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 /**
  * @author John Grosh <john.a.grosh@gmail.com>
  */
-public class AutoplaylistCmd extends OwnerCommand {
+public class AutoplaylistCmd extends DJCommand {
 
   private final Bot bot;
 
   public AutoplaylistCmd(Bot bot) {
+    super(bot);
     this.bot = bot;
     this.guildOnly = true;
     this.name = "autoplaylist";
@@ -44,7 +46,7 @@ public class AutoplaylistCmd extends OwnerCommand {
   }
 
   @Override
-  protected void execute(SlashCommandEvent event) {
+  public void doSlashCommand(SlashCommandEvent event) {
     event.deferReply().queue();
     String args = event.getOption("name").getAsString();
     if (args.equalsIgnoreCase("none")) {
@@ -55,7 +57,7 @@ public class AutoplaylistCmd extends OwnerCommand {
       return;
     }
     String pname = args.replaceAll("\\s+", "_");
-    if (bot.getPlaylistLoader().getPlaylist(pname) == null) {
+    if (bot.getPlaylistLoader().getPlaylist(event.getGuild(), pname) == null) {
       event.getHook().editOriginal(event.getClient().getError() + " Не могу найти `" + pname + ".txt`!")
         .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
     } else {
@@ -67,7 +69,7 @@ public class AutoplaylistCmd extends OwnerCommand {
   }
 
   @Override
-  public void execute(CommandEvent event) {
+  public void doCommand(CommandEvent event) {
     if (event.getArgs().isEmpty()) {
       event.reply(event.getClient().getError() + " Пожалуйста напишите название плейлиста или NONE");
       return;
@@ -79,7 +81,7 @@ public class AutoplaylistCmd extends OwnerCommand {
       return;
     }
     String pname = event.getArgs().replaceAll("\\s+", "_");
-    if (bot.getPlaylistLoader().getPlaylist(pname) == null) {
+    if (bot.getPlaylistLoader().getPlaylist(event.getGuild(), pname) == null) {
       event.reply(event.getClient().getError() + " Не могу найти `" + pname + ".txt`!");
     } else {
       Settings settings = event.getClient().getSettingsFor(event.getGuild());

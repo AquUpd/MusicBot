@@ -65,7 +65,7 @@ public class PlayerManager extends DefaultAudioPlayerManager {
   }
 
   public void registerRemoteSources(String email, String password) {
-    this.registerSourceManager(new YoutubeAudioSourceManager(true, email, password));
+    this.registerSourceManager(new YoutubeAudioSourceManager());
     this.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
     this.registerSourceManager(new BandcampAudioSourceManager());
     this.registerSourceManager(new VimeoAudioSourceManager());

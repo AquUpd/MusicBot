@@ -39,7 +39,6 @@ public class NowplayingCmd extends MusicCommand {
     this.botPermissions = new Permission[] { Permission.MESSAGE_EMBED_LINKS };
   }
 
-  //TODO: https://media.discordapp.net/attachments/921833564809617428/1111390519503900803/image.png
   @Override
   public void doCommand(CommandEvent event) {
     AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();

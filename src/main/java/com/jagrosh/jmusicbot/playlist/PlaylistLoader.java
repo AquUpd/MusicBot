@@ -22,6 +22,9 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -49,46 +52,46 @@ public class PlaylistLoader {
     }
   }
 
-  public List<String> getPlaylistNames() {
-    if (folderExists()) {
-      File folder = new File(OtherUtil.getPath(config.getPlaylistsFolder()).toString());
+  public List<String> getPlaylistNames(Guild guild) {
+    if (folderExists(guild)) {
+      File folder = new File(OtherUtil.getPath(config.getPlaylistsFolder() + File.separator + guild.getId()).toString());
       return Arrays.asList(folder.listFiles(pathname -> pathname.getName().endsWith(".txt"))).stream().map(f -> f.getName().substring(0, f.getName().length() - 4)).collect(Collectors.toList());
     } else {
-      createFolder();
+      createFolder(guild);
       return Collections.EMPTY_LIST;
     }
   }
 
-  public void createFolder() {
+  public void createFolder(Guild guild) {
     try {
-      Files.createDirectory(OtherUtil.getPath(config.getPlaylistsFolder()));
+      Files.createDirectory(OtherUtil.getPath(config.getPlaylistsFolder() + File.separator + guild.getId()));
     } catch (IOException ignore) {
     }
   }
 
-  public boolean folderExists() {
-    return Files.exists(OtherUtil.getPath(config.getPlaylistsFolder()));
+  public boolean folderExists(Guild guild) {
+    return Files.exists(OtherUtil.getPath(config.getPlaylistsFolder() + File.separator + guild.getId()));
   }
 
-  public void createPlaylist(String name) throws IOException {
-    Files.createFile(OtherUtil.getPath(config.getPlaylistsFolder() + File.separator + name + ".txt"));
+  public void createPlaylist(Guild guild, String name) throws IOException {
+    Files.createFile(OtherUtil.getPath(config.getPlaylistsFolder() + File.separator + guild.getId() + File.separator + name + ".txt"));
   }
 
-  public void deletePlaylist(String name) throws IOException {
-    Files.delete(OtherUtil.getPath(config.getPlaylistsFolder() + File.separator + name + ".txt"));
+  public void deletePlaylist(Guild guild, String name) throws IOException {
+    Files.delete(OtherUtil.getPath(config.getPlaylistsFolder() + File.separator + guild.getId() + File.separator + name + ".txt"));
   }
 
-  public void writePlaylist(String name, String text) throws IOException {
-    Files.write(OtherUtil.getPath(config.getPlaylistsFolder() + File.separator + name + ".txt"), text.trim().getBytes());
+  public void writePlaylist(Guild guild, String name, String text) throws IOException {
+    Files.write(OtherUtil.getPath(config.getPlaylistsFolder() + File.separator + guild.getId() + File.separator + name + ".txt"), text.trim().getBytes());
   }
 
-  public Playlist getPlaylist(String name) {
-    if (!getPlaylistNames().contains(name)) return null;
+  public Playlist getPlaylist(Guild guild, String name) {
+    if (!getPlaylistNames(guild).contains(name)) return null;
     try {
-      if (folderExists()) {
+      if (folderExists(guild)) {
         boolean[] shuffle = {false};
         List<String> list = new ArrayList<>();
-        Files.readAllLines(OtherUtil.getPath(config.getPlaylistsFolder() + File.separator + name + ".txt")).forEach(str -> {
+        Files.readAllLines(OtherUtil.getPath(config.getPlaylistsFolder() + File.separator + guild.getId() + File.separator + name + ".txt")).forEach(str -> {
           String s = str.trim();
           if (s.isEmpty()) return;
           if (s.startsWith("#") || s.startsWith("//")) {
@@ -99,7 +102,7 @@ public class PlaylistLoader {
         if (shuffle[0]) shuffle(list);
         return new Playlist(name, list, shuffle[0]);
       } else {
-        createFolder();
+        createFolder(guild);
         return null;
       }
     } catch (IOException e) {

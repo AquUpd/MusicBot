@@ -137,7 +137,6 @@ public class  JMusicBot {
         new SetdjCmd(bot),
         new SettcCmd(bot),
         new SetvcCmd(bot),
-        new AutoplaylistCmd(bot),
         new DebugCmd(bot),
         new PlaylistCmd(bot),
         new SetavatarCmd(bot),
@@ -180,8 +179,8 @@ public class  JMusicBot {
         new SetdjCmd(bot),
         new SettcCmd(bot),
         new SetvcCmd(bot),
-        new AutoplaylistCmd(bot),
         new DebugCmd(bot),
+        new PlaylistCmd(bot),
         new ShutdownCmd(bot),
         new SendToAllOwnersCmd(bot)
       );
