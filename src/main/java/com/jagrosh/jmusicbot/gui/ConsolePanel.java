@@ -15,9 +15,9 @@
  */
 package com.jagrosh.jmusicbot.gui;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.PrintStream;
-import javax.swing.*;
 
 /**
  * @author John Grosh <john.a.grosh@gmail.com>

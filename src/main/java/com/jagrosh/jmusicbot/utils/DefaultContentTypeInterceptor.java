@@ -2,10 +2,11 @@ package com.jagrosh.jmusicbot.utils;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import java.io.IOException;
 
 public class DefaultContentTypeInterceptor implements Interceptor {
 

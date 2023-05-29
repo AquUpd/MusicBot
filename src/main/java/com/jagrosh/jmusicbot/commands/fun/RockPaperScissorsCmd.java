@@ -4,20 +4,13 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.FunCommand;
-import com.jagrosh.jmusicbot.utils.DefaultContentTypeInterceptor;
-import java.io.IOException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
-import okhttp3.*;
-import org.json.JSONObject;
+
+import java.util.Collections;
+import java.util.Locale;
+import java.util.Random;
 
 public class RockPaperScissorsCmd extends FunCommand {
 

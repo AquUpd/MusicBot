@@ -15,11 +15,11 @@
  */
 package com.jagrosh.jmusicbot;
 
-import static org.junit.Assert.*;
-
 import com.jagrosh.jmusicbot.queue.FairQueue;
 import com.jagrosh.jmusicbot.queue.Queueable;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *

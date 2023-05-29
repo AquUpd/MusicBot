@@ -21,7 +21,6 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.settings.Settings;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 /**
  * @author John Grosh (john.a.grosh@gmail.com)

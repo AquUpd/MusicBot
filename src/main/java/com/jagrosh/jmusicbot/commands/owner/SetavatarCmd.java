@@ -20,9 +20,10 @@ import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
 import com.jagrosh.jmusicbot.utils.OtherUtil;
+import net.dv8tion.jda.api.entities.Icon;
+
 import java.io.IOException;
 import java.io.InputStream;
-import net.dv8tion.jda.api.entities.Icon;
 
 /**
  * @author John Grosh <john.a.grosh@gmail.com>

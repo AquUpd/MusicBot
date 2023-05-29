@@ -18,12 +18,10 @@ package com.jagrosh.jmusicbot.commands.admin;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
-import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.interactions.commands.Command;
+
+import java.util.List;
 
 public class DeleteCommandsCmd extends OwnerCommand {
 

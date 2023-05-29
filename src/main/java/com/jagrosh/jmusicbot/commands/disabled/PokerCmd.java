@@ -4,15 +4,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.FunCommand;
-import com.jagrosh.jmusicbot.utils.DefaultContentTypeInterceptor;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
-import okhttp3.*;
-import org.json.JSONObject;
 
 import static com.jagrosh.jmusicbot.commands.fun.FunUtils.genLink;
 

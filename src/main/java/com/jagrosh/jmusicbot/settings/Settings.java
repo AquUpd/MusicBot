@@ -16,15 +16,16 @@
 package com.jagrosh.jmusicbot.settings;
 
 import com.jagrosh.jdautilities.command.GuildSettingsProvider;
-
-import java.util.*;
-
 import com.jagrosh.jmusicbot.localization.Locales;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.Channel;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * @author John Grosh <john.a.grosh@gmail.com>

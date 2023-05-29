@@ -15,13 +15,13 @@
  */
 package com.jagrosh.jmusicbot.gui;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import javax.swing.*;
 
 /**
  * @author Lawrence Dol

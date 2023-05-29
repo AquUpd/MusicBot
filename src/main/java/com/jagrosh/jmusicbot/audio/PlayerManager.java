@@ -33,8 +33,6 @@ import com.typesafe.config.ConfigFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import org.apache.http.client.config.RequestConfig;
 
-import java.util.logging.Logger;
-
 /**
  *
  * @author John Grosh (john.a.grosh@gmail.com)

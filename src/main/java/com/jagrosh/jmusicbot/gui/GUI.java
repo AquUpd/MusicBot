@@ -16,9 +16,10 @@
 package com.jagrosh.jmusicbot.gui;
 
 import com.jagrosh.jmusicbot.Bot;
+
+import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import javax.swing.*;
 
 /**
  * @author John Grosh <john.a.grosh@gmail.com>

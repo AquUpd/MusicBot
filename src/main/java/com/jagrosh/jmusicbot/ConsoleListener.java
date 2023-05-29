@@ -1,7 +1,5 @@
 package com.jagrosh.jmusicbot;
 
-import java.util.List;
-import java.util.Scanner;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
@@ -9,6 +7,9 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Scanner;
 
 @SuppressWarnings("InfiniteRecursion")
 public class ConsoleListener implements Runnable {

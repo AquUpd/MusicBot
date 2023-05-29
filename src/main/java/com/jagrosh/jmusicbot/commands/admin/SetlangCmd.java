@@ -10,7 +10,8 @@ import com.jagrosh.jmusicbot.settings.Settings;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Locale;
 
 public class SetlangCmd extends AdminCommand {
 
