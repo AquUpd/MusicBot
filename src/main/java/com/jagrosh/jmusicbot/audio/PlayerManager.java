@@ -33,6 +33,8 @@ import com.typesafe.config.ConfigFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import org.apache.http.client.config.RequestConfig;
 
+import java.util.logging.Logger;
+
 /**
  *
  * @author John Grosh (john.a.grosh@gmail.com)
@@ -65,7 +67,7 @@ public class PlayerManager extends DefaultAudioPlayerManager {
   }
 
   public void registerRemoteSources(String email, String password) {
-    this.registerSourceManager(new YoutubeAudioSourceManager());
+    this.registerSourceManager(new YoutubeAudioSourceManager(true, email, password));
     this.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
     this.registerSourceManager(new BandcampAudioSourceManager());
     this.registerSourceManager(new VimeoAudioSourceManager());

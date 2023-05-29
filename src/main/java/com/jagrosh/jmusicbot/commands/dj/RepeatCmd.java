@@ -81,12 +81,12 @@ public class RepeatCmd extends DJCommand {
       value = RepeatMode.SINGLE;
     } else {
       event.getHook().editOriginal("Разрешенные параметры: `off`, `all` или `single`")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       return;
     }
     settings.setRepeatMode(value);
     event.getHook().editOriginal("Режим повтора пластинок: `" + value.getUserFriendlyName() + "`")
-      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      .queue();
   }
 
   @Override

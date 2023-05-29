@@ -1,4 +1,4 @@
-package com.jagrosh.jmusicbot.commands.fun;
+package com.jagrosh.jmusicbot.commands.disabled;
 
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.command.SlashCommandEvent;
@@ -35,7 +35,7 @@ public class ChessCmd extends FunCommand {
       event.getHook().editOriginal("https://discord.com/invite/" + code).queue();
     else
       event.getHook().editOriginal("Я не смог создать ссылку")
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
   }
 
 }

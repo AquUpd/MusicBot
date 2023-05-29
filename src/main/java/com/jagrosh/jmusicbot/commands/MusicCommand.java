@@ -23,6 +23,7 @@ import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.settings.Settings;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
@@ -47,8 +48,8 @@ public abstract class MusicCommand extends SlashCommand {
   @Override
   protected void execute(CommandEvent event) {
     Settings settings = event.getClient().getSettingsFor(event.getGuild());
-    TextChannel tchannel = settings.getTextChannel(event.getGuild());
-    if (tchannel != null && !event.getTextChannel().equals(tchannel)) {
+    Channel tchannel = settings.getTextChannel(event.getGuild());
+    if (tchannel != null && !event.getChannel().equals(tchannel)) {
       try {
         event.getMessage().delete().queue();
       } catch (PermissionException ignore) {}
@@ -93,7 +94,7 @@ public abstract class MusicCommand extends SlashCommand {
     event.deferReply().queue();
 
     Settings settings = event.getClient().getSettingsFor(event.getGuild());
-    TextChannel tchannel = settings.getTextChannel(event.getGuild());
+    Channel tchannel = settings.getTextChannel(event.getGuild());
     if (tchannel != null && !event.getChannel().equals(tchannel)) {
       event.getUser().openPrivateChannel().flatMap(channel -> channel.sendMessage(event.getClient().getError() + " Вы можете использовать данную команду только в " + tchannel.getAsMention() + "!")).queue();
       event.getHook().deleteOriginal().queue();
@@ -103,7 +104,7 @@ public abstract class MusicCommand extends SlashCommand {
     bot.getPlayerManager().setUpHandler(event.getGuild()); // no point constantly checking for this later
     if (bePlaying && !((AudioHandler) event.getGuild().getAudioManager().getSendingHandler()).isMusicPlaying(event.getJDA())) {
       event.getHook().editOriginal("Для использования этой команды нужная музыка!")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       return;
     }
     if (beListening) {
@@ -112,14 +113,14 @@ public abstract class MusicCommand extends SlashCommand {
       GuildVoiceState userState = event.getMember().getVoiceState();
       if (!userState.inAudioChannel() || (current != null && !userState.getChannel().equals(current))) {
         event.getHook().editOriginal((current == null ? "Вы должны слушать музыку" : "Вы должны быть в " + current.getAsMention()) + " чтобы использовать это!")
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
         return;
       }
 
       VoiceChannel afkChannel = userState.getGuild().getAfkChannel();
       if (afkChannel != null && afkChannel.equals(userState.getChannel())) {
         event.getHook().editOriginal("Вы не можете использовать эту команду в АФК канале!")
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
         return;
       }
 
@@ -128,7 +129,7 @@ public abstract class MusicCommand extends SlashCommand {
           event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
         } catch (PermissionException ex) {
           event.getHook().editOriginal(event.getClient().getError() + " Я не могу подключиться к " + userState.getChannel().getAsMention() + "!")
-            .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+            .queue();
           return;
         }
       }

@@ -144,7 +144,7 @@ public class SearchCmd extends MusicCommand {
         m.editOriginal(FormatUtil.filter(event.getClient().getWarning() +
           " Эта пластинка (**" + track.getInfo().title + "**) длиннее чем разрешенный лимит : `" +
           FormatUtil.formatTime(track.getDuration()) + "` > `" + bot.getConfig().getMaxTime() + "`"))
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
         return;
       }
       AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
@@ -152,7 +152,7 @@ public class SearchCmd extends MusicCommand {
       m.editOriginal(FormatUtil.filter(event.getClient().getSuccess() +
         " Добавлен **" + track.getInfo().title + "** (`" + FormatUtil.formatTime(track.getDuration()) + "`) " +
         (pos == 0 ? "" : " в очередь " + pos)))
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     }
 
     @Override
@@ -163,14 +163,14 @@ public class SearchCmd extends MusicCommand {
         if (bot.getConfig().isTooLong(track)) {
           m.editOriginal("Эта пластинка (**" + track.getInfo().title + "**) длиннее чем разрешенный лимит : `" +
             FormatUtil.formatTime(track.getDuration()) + "` > `" + bot.getConfig().getMaxTime() + "`")
-            .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+            .queue();
           return;
         }
         AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
         int pos = handler.addTrack(new QueuedTrack(track, event.getUser())) + 1;
         m.editOriginal("Добавлена пластинка **" + FormatUtil.filter(track.getInfo().title) + "** (`" +
           FormatUtil.formatTime(track.getDuration()) + "`) " + (pos == 0 ? "" : " в очередь " + pos))
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
       }).setCancel(msg -> {}).setUsers(event.getUser());
       for (int i = 0; i < 4 && i < playlist.getTracks().size(); i++) {
         AudioTrack track = playlist.getTracks().get(i);
@@ -183,16 +183,16 @@ public class SearchCmd extends MusicCommand {
     public void noMatches() {
       m.editOriginal(FormatUtil.filter(event.getClient().getWarning() + " Результаты не найдены для `" +
         event.getOption("name").getAsString() + "`."))
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     }
 
     @Override
     public void loadFailed(FriendlyException throwable) {
       if (throwable.severity == Severity.COMMON)
         m.editOriginal(event.getClient().getError() + " Ошибка загрузки: " + throwable.getMessage())
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
       else m.editOriginal(event.getClient().getError() + " Ошибка загрузки пластинки.")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     }
   }
 }

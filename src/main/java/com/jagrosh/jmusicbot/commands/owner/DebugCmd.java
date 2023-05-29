@@ -56,8 +56,7 @@ public class DebugCmd extends OwnerCommand {
     StringBuilder sb = new StringBuilder();
     buildString(sb, event.getJDA());
 
-    event.getHook().editOriginal("Debug Information: " + sb)
-        .delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    event.getHook().editOriginal("Debug Information: " + sb).queue();
   }
 
   @Override

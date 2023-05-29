@@ -86,7 +86,7 @@ public class MoveTrackCmd extends DJCommand {
 
     if (from == to) {
       event.getHook().editOriginal("Не могу передвинуть пластинку на свое же место.")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       return;
     }
 
@@ -96,13 +96,13 @@ public class MoveTrackCmd extends DJCommand {
     if (isUnavailablePosition(queue, from)) {
       String reply = String.format("`%d` положение в очереди не правильное!", from);
       event.getHook().editOriginal(reply)
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       return;
     }
     if (isUnavailablePosition(queue, to)) {
       String reply = String.format("`%d` положение в очереди не правильное!", to);
       event.getHook().editOriginal(reply)
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       return;
     }
 
@@ -111,7 +111,7 @@ public class MoveTrackCmd extends DJCommand {
     String trackTitle = track.getTrack().getInfo().title;
     String reply = String.format("Передвинули **%s** с позиции `%d` на позицию `%d`.", trackTitle, from, to);
     event.getHook().editOriginal(reply)
-      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      .queue();
 
   }
 

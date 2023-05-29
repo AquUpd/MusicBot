@@ -56,12 +56,12 @@ public class PauseCmd extends DJCommand {
     if (handler.getPlayer().isPaused()) {
       event.getHook().editOriginal("Пластинки уже стоят на паузе! Используйте `" + event.getClient().getPrefix() +
           "play` или `/play` чтобы возобновить прослушивание!")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       return;
     }
     handler.getPlayer().setPaused(true);
     event.getHook().editOriginal("**" + handler.getPlayer().getPlayingTrack().getInfo().title +
       "** теперь на паузе. Используйте `" + event.getClient().getPrefix() + "play` или `/play` чтобы возобновить прослушивание!")
-      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      .queue();
   }
 }

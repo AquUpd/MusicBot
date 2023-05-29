@@ -51,6 +51,6 @@ public class StopCmd extends DJCommand {
     handler.stopAndClear();
     event.getGuild().getAudioManager().closeAudioConnection();
     event.getHook().editOriginal(event.getClient().getSuccess() + " Все было очищено.")
-      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      .queue();
   }
 }

@@ -38,13 +38,13 @@ public class DeleteCommandsCmd extends OwnerCommand {
     event.deferReply().queue();
     List<Command> commands = event.getGuild().retrieveCommands().complete();
     if (commands.isEmpty()) event.getHook().editOriginal("нет команд")
-      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      .queue();
     else {
       for (Command command: commands) {
         event.getGuild().deleteCommandById(command.getIdLong()).submit();
       }
       event.getHook().editOriginal("Done")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     }
   }
 

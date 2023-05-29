@@ -42,7 +42,7 @@ public class SettingsManager implements GuildSettingsManager {
         // Legacy version support: On versions 0.3.3 and older, the repeat mode was represented as a boolean.
         if (!o.has("repeat_mode") && o.has("repeat") && o.getBoolean("repeat")) o.put("repeat_mode", RepeatMode.ALL);
 
-        settings.put(Long.parseLong(id), new Settings(this, o.has("text_channel_id") ? o.getString("text_channel_id") : null, o.has("voice_channel_id") ? o.getString("voice_channel_id") : null, o.has("dj_role_id") ? o.getString("dj_role_id") : null, o.has("volume") ? o.getInt("volume") : 100, o.has("default_playlist") ? o.getString("default_playlist") : null, o.has("repeat_mode") ? o.getEnum(RepeatMode.class, "repeat_mode") : RepeatMode.OFF, o.has("prefix") ? o.getString("prefix") : null));
+        settings.put(Long.parseLong(id), new Settings(this, o.has("text_channel_id") ? o.getString("text_channel_id") : null, o.has("voice_channel_id") ? o.getString("voice_channel_id") : null, o.has("dj_role_id") ? o.getString("dj_role_id") : null, o.has("volume") ? o.getInt("volume") : 100, o.has("language") ? o.getInt("language") : 0, o.has("default_playlist") ? o.getString("default_playlist") : null, o.has("repeat_mode") ? o.getEnum(RepeatMode.class, "repeat_mode") : RepeatMode.OFF, o.has("prefix") ? o.getString("prefix") : null));
       });
     } catch (IOException | JSONException e) {
       LoggerFactory.getLogger("Settings").warn("Не удалось загрузить настройки серверов (Это окей, если вы еще не настраивали бота на серверах): " + e);
@@ -65,7 +65,7 @@ public class SettingsManager implements GuildSettingsManager {
   }
 
   private Settings createDefaultSettings() {
-    return new Settings(this, 0, 0, 0, 100, null, RepeatMode.OFF, null);
+    return new Settings(this, 0, 0, 0, 100, 0, null, RepeatMode.OFF, null);
   }
 
   protected void writeSettings() {
@@ -77,6 +77,7 @@ public class SettingsManager implements GuildSettingsManager {
       if (s.voiceId != 0) o.put("voice_channel_id", Long.toString(s.voiceId));
       if (s.roleId != 0) o.put("dj_role_id", Long.toString(s.roleId));
       if (s.getVolume() != 100) o.put("volume", s.getVolume());
+      if (s.getLanguage() != 0) o.put("language", s.getLanguage());
       if (s.getDefaultPlaylist() != null) o.put("default_playlist", s.getDefaultPlaylist());
       if (s.getRepeatMode() != RepeatMode.OFF) o.put("repeat_mode", s.getRepeatMode());
       if (s.getPrefix() != null) o.put("prefix", s.getPrefix());

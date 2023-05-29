@@ -110,7 +110,7 @@ public class QueueCmd extends MusicCommand {
       MessageEditData nonowp = ah.getNoMusicPlayingE(event.getJDA());
       MessageEditData built = new MessageEditBuilder().setContent(event.getClient().getWarning() + " Нет пластинок в очереди!")
         .setEmbeds((nowp == null ? nonowp : nowp).getEmbeds().get(0)).build();
-      event.getHook().editOriginal(built).delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      event.getHook().editOriginal(built).queue();
       return;
     }
     String[] songs = new String[list.size()];

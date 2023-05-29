@@ -150,7 +150,7 @@ public class PlaynextCmd extends DJCommand {
         m.editOriginal(FormatUtil.filter(event.getClient().getWarning() +
           " Эта пластинка (**" + track.getInfo().title + "**) длиннее чем разрешенный лимит: `" +
           FormatUtil.formatTime(track.getDuration()) + "` > `" + FormatUtil.formatTime(bot.getConfig().getMaxSeconds() * 1000) + "`"))
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
         return;
       }
       AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
@@ -159,7 +159,7 @@ public class PlaynextCmd extends DJCommand {
         " Добавлена пластинка **" + track.getInfo().title + "** (`" +
         FormatUtil.formatTime(track.getDuration()) + "`) " + (pos == 0 ? "" : " в очередь " + pos));
       m.editOriginal(addMsg)
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     }
 
     @Override
@@ -181,7 +181,7 @@ public class PlaynextCmd extends DJCommand {
     public void noMatches() {
       if (ytsearch)
         m.editOriginal(FormatUtil.filter(event.getClient().getWarning() + " Результаты не найдены для `" + event.getOption("track").getAsString() + "`."))
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
       else
         bot.getPlayerManager().loadItemOrdered(event.getGuild(), "ytsearch:" + event.getOption("track").getAsString(), new SlashResultHandler(m, event, true));
     }
@@ -190,10 +190,10 @@ public class PlaynextCmd extends DJCommand {
     public void loadFailed(FriendlyException throwable) {
       if (throwable.severity == FriendlyException.Severity.COMMON)
         m.editOriginal(event.getClient().getError() + " Ошибка загрузки: " + throwable.getMessage())
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
       else
         m.editOriginal(event.getClient().getError() + " Ошибка загрузки трека.")
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
     }
   }
 }

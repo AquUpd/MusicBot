@@ -68,12 +68,12 @@ public class SkiptoCmd extends DJCommand {
     AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
     if (index < 1 || index > handler.getQueue().size()) {
       event.getHook().editOriginal(event.getClient().getError() + " Позиция должна быть между 1 и " + handler.getQueue().size() + "!")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       return;
     }
     handler.getQueue().skip(index - 1);
     event.getHook().editOriginal(event.getClient().getSuccess() + " Пропущены пластинки до **" + handler.getQueue().get(0).getTrack().getInfo().title + "**")
-      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      .queue();
     handler.getPlayer().stopTrack();
   }
 }

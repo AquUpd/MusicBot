@@ -54,10 +54,10 @@ public class EvalCmd extends OwnerCommand {
     se.put("channel", event.getChannel());
     try {
       event.getHook().editOriginal(event.getClient().getSuccess() + " Evaluated Successfully:\n```\n" + se.eval(event.getOption("code").getAsString()) + " ```")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     } catch (Exception e) {
       event.getHook().editOriginal(event.getClient().getError() + " An exception was thrown:\n```\n" + e + " ```")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     }
   }
 

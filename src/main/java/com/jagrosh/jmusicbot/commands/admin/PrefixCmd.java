@@ -47,19 +47,19 @@ public class PrefixCmd extends AdminCommand {
     if (event.getOption("prefix").getAsString().equalsIgnoreCase("none")) {
       s.setPrefix(null);
       event.getHook().editOriginal("Префикс очищен.")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     } else {
       s.setPrefix(event.getOption("prefix").getAsString());
       event.getHook().editOriginal("Префикс на сервере **" + event.getGuild().getName() + "** изменен на '" +
           event.getOption("prefix").getAsString() + "'")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     }
   }
 
   @Override
   protected void execute(CommandEvent event) {
     if (event.getArgs().isEmpty()) {
-      event.replyError("Напшите нужный префикс или 'NONE' для очистки");
+      event.replyError("Напишите нужный префикс или 'NONE' для очистки");
       return;
     }
 

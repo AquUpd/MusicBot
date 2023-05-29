@@ -49,7 +49,7 @@ public class SkipCmd extends MusicCommand {
     AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
     event.getHook().editOriginal(event.getClient().getSuccess() + " Пропущена пластинка **" +
         handler.getPlayer().getPlayingTrack().getInfo().title + "**")
-      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      .queue();
     handler.getPlayer().stopTrack();
   }
 }

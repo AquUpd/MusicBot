@@ -106,7 +106,7 @@ public class ForceRemoveCmd extends DJCommand {
     AudioHandler handler = (AudioHandler) event.getGuild().getAudioManager().getSendingHandler();
     if (handler.getQueue().isEmpty()) {
       event.getHook().editOriginal("В очереди ничего нет!")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       return;
     }
 
@@ -115,7 +115,7 @@ public class ForceRemoveCmd extends DJCommand {
 
     if (found.isEmpty()) {
       event.getHook().editOriginal("Не удалось найти пользователя!")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       return;
     } else if (found.size() > 1) {
       StringBuilder sb = new StringBuilder();
@@ -160,10 +160,10 @@ public class ForceRemoveCmd extends DJCommand {
     int count = ((AudioHandler) event.getGuild().getAudioManager().getSendingHandler()).getQueue().removeAll(target.getIdLong());
     if (count == 0) {
       event.getHook().editOriginal("Пользователь с ником **" + target.getName() + "** не добавлял пластинки в очередь!").setActionRow()
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     } else {
       event.getHook().editOriginal("Успешно убраны пластинки пользователя **" + target.getName() + "**#" + target.getDiscriminator() + ".").setActionRow()
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     }
   }
 }

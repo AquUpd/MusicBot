@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
@@ -55,7 +56,7 @@ public class SettingsCmd extends SlashCommand {
     Settings s = event.getClient().getSettingsFor(event.getGuild());
     MessageEditBuilder builder = new MessageEditBuilder()
         .setContent(EMOJI + " **" + FormatUtil.filter(event.getJDA().getSelfUser().getName()) + "** настройки:");
-    TextChannel tchan = s.getTextChannel(event.getGuild());
+    Channel tchan = s.getTextChannel(event.getGuild());
     VoiceChannel vchan = s.getVoiceChannel(event.getGuild());
     Role role = s.getRole(event.getGuild());
     EmbedBuilder ebuilder = new EmbedBuilder()
@@ -69,8 +70,7 @@ public class SettingsCmd extends SlashCommand {
       .setFooter(event.getJDA().getGuilds().size() + " servers | " +
           event.getJDA().getGuilds().stream().filter(g -> g.getSelfMember().getVoiceState().inAudioChannel()).count() + " голосовых подключений",
         null);
-    event.getHook().editOriginal(builder.setEmbeds(ebuilder.build()).build())
-      .delay(20, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+    event.getHook().editOriginal(builder.setEmbeds(ebuilder.build()).build()).queue();
   }
 
   @Override
@@ -78,7 +78,7 @@ public class SettingsCmd extends SlashCommand {
     Settings s = event.getClient().getSettingsFor(event.getGuild());
     MessageCreateBuilder builder = new MessageCreateBuilder()
         .setContent(EMOJI + " **" + FormatUtil.filter(event.getSelfUser().getName()) + "** настройки:");
-    TextChannel tchan = s.getTextChannel(event.getGuild());
+    Channel tchan = s.getTextChannel(event.getGuild());
     VoiceChannel vchan = s.getVoiceChannel(event.getGuild());
     Role role = s.getRole(event.getGuild());
     EmbedBuilder ebuilder = new EmbedBuilder()

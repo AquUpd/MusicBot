@@ -99,7 +99,7 @@ public class LyricsCmd extends MusicCommand {
     client.getLyrics(title).thenAccept(lyrics -> {
       if (lyrics == null) {
         event.getHook().editOriginal("Текст для `" + title + "` не найден!")
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
         return;
       }
 

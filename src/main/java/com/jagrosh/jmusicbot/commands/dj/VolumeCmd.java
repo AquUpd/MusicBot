@@ -75,13 +75,13 @@ public class VolumeCmd extends DJCommand {
 
     if (!event.hasOption("volume")) {
       event.getHook().editOriginal(FormatUtil.volumeIcon(volume) + " В данный момент громкость равна `" + volume + "`")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     } else {
       int nvolume = event.getOption("volume").getAsInt();
       handler.getPlayer().setVolume(nvolume);
       settings.setVolume(nvolume);
       event.getHook().editOriginal(FormatUtil.volumeIcon(nvolume) + " Громкость изменена из `" + volume + "` до `" + nvolume + "`")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     }
   }
 }

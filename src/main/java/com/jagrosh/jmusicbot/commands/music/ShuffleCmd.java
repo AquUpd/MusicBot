@@ -61,15 +61,15 @@ public class ShuffleCmd extends MusicCommand {
     switch (s) {
       case 0:
         event.getHook().editOriginal("У вас нет пластинок в очереди!")
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
         break;
       case 1:
         event.getHook().editOriginal("У вас только `1` пластинка в очереди!")
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
         break;
       default:
         event.getHook().editOriginal("Успешно перемешано `" + s + "` пластинок.")
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
         break;
     }
   }

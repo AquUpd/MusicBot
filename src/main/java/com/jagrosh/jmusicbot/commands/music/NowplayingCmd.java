@@ -59,10 +59,10 @@ public class NowplayingCmd extends MusicCommand {
     MessageEditData m = handler.getNowPlaying(event.getJDA());
     if (m == null) {
       event.getHook().editOriginal(handler.getNoMusicPlayingE(event.getJDA()))
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     } else {
       event.getHook().editOriginal(m)
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     }
   }
 }

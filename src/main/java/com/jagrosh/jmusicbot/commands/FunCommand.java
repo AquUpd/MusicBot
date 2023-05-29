@@ -22,6 +22,7 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.settings.Settings;
 import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
@@ -44,7 +45,7 @@ public abstract class FunCommand extends SlashCommand {
   @Override
   protected void execute(CommandEvent event) {
     Settings settings = event.getClient().getSettingsFor(event.getGuild());
-    TextChannel tchannel = settings.getTextChannel(event.getGuild());
+    Channel tchannel = settings.getTextChannel(event.getGuild());
     if (tchannel != null && !event.getTextChannel().equals(tchannel)) {
       try {
         event.getMessage().delete().queue();
@@ -87,7 +88,7 @@ public abstract class FunCommand extends SlashCommand {
     event.deferReply().queue();
 
     Settings settings = event.getClient().getSettingsFor(event.getGuild());
-    TextChannel tchannel = settings.getTextChannel(event.getGuild());
+    Channel tchannel = settings.getTextChannel(event.getGuild());
     if (tchannel != null && !event.getChannel().equals(tchannel)) {
       event.getUser().openPrivateChannel().flatMap(channel -> channel.sendMessage(event.getClient().getError() + " Вы можете использовать данную команду только в " + tchannel.getAsMention() + "!")).queue();
       event.getHook().deleteOriginal().queue();
@@ -100,13 +101,13 @@ public abstract class FunCommand extends SlashCommand {
       if (current == null) current = settings.getVoiceChannel(event.getGuild());
       GuildVoiceState userState = event.getMember().getVoiceState();
       if (!userState.inAudioChannel() || (current != null && !userState.getChannel().equals(current))) {
-        event.getHook().editOriginal("Вы должны находиться в войс канале!").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        event.getHook().editOriginal("Вы должны находиться в войс канале!").queue();
         return;
       }
 
       VoiceChannel afkChannel = userState.getGuild().getAfkChannel();
       if (afkChannel != null && afkChannel.equals(userState.getChannel())) {
-        event.getHook().editOriginal("Вы не можете использовать это в AFK канале!").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        event.getHook().editOriginal("Вы не можете использовать это в AFK канале!").queue();
         return;
       }
 
@@ -114,7 +115,7 @@ public abstract class FunCommand extends SlashCommand {
         try {
           event.getGuild().getAudioManager().openAudioConnection(userState.getChannel());
         } catch (PermissionException ex) {
-          event.getHook().editOriginal(event.getClient().getError() + " Я не могу подключится к **" + userState.getChannel().getName() + "**!").delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          event.getHook().editOriginal(event.getClient().getError() + " Я не могу подключится к **" + userState.getChannel().getName() + "**!").queue();
           return;
         }
       }

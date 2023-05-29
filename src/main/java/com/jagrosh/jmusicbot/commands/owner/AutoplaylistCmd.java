@@ -53,18 +53,18 @@ public class AutoplaylistCmd extends DJCommand {
       Settings settings = event.getClient().getSettingsFor(event.getGuild());
       settings.setDefaultPlaylist(null);
       event.getHook().editOriginal(event.getClient().getSuccess() + " Убран автоматический плейлист для **" + event.getGuild().getName() + "**")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       return;
     }
     String pname = args.replaceAll("\\s+", "_");
     if (bot.getPlaylistLoader().getPlaylist(event.getGuild(), pname) == null) {
       event.getHook().editOriginal(event.getClient().getError() + " Не могу найти `" + pname + ".txt`!")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     } else {
       Settings settings = event.getClient().getSettingsFor(event.getGuild());
       settings.setDefaultPlaylist(pname);
       event.getHook().editOriginal(event.getClient().getSuccess() + " Автоматический плейлист для **" + event.getGuild().getName() + "** теперь `" + pname + "`")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     }
   }
 

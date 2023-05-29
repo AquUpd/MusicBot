@@ -110,7 +110,7 @@ public class ProfilePictureCmd extends FunCommand {
   public void doSlashCommand(SlashCommandEvent event) {
     if (event.getGuild().getId().equals("745746205144776774")) {
       event.getHook().editOriginal("Нельзя использовать данную команду на этом сервере")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     } else {
       if (!event.hasOption("user")) {
         event.getHook().editOriginal("Ваше изображение профиля: \n" + event.getUser().getAvatarUrl()).queue();

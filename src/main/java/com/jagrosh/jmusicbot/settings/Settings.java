@@ -16,10 +16,13 @@
 package com.jagrosh.jmusicbot.settings;
 
 import com.jagrosh.jdautilities.command.GuildSettingsProvider;
-import java.util.Collection;
-import java.util.Collections;
+
+import java.util.*;
+
+import com.jagrosh.jmusicbot.localization.Locales;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 
@@ -28,16 +31,19 @@ import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
  */
 public class Settings implements GuildSettingsProvider {
 
+
+
   private final SettingsManager manager;
   protected long textId;
   protected long voiceId;
   protected long roleId;
   private int volume;
+  private int language; //0 - english, 1 - russian
   private String defaultPlaylist;
   private RepeatMode repeatMode;
   private String prefix;
 
-  public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix) {
+  public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, int langId, String defaultPlaylist, RepeatMode repeatMode, String prefix) {
     this.manager = manager;
     try {
       this.textId = Long.parseLong(textId);
@@ -55,12 +61,13 @@ public class Settings implements GuildSettingsProvider {
       this.roleId = 0;
     }
     this.volume = volume;
+    this.language = langId;
     this.defaultPlaylist = defaultPlaylist;
     this.repeatMode = repeatMode;
     this.prefix = prefix;
   }
 
-  public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, String defaultPlaylist, RepeatMode repeatMode, String prefix) {
+  public Settings(SettingsManager manager, long textId, long voiceId, long roleId, int volume, int langId, String defaultPlaylist, RepeatMode repeatMode, String prefix) {
     this.manager = manager;
     this.textId = textId;
     this.voiceId = voiceId;
@@ -72,8 +79,8 @@ public class Settings implements GuildSettingsProvider {
   }
 
   // Getters
-  public TextChannel getTextChannel(Guild guild) {
-    return guild == null ? null : guild.getTextChannelById(textId);
+  public Channel getTextChannel(Guild guild) {
+    return guild == null ? null : (guild.getTextChannelById(textId) == null ? guild.getVoiceChannelById(textId) : guild.getTextChannelById(textId));
   }
 
   public VoiceChannel getVoiceChannel(Guild guild) {
@@ -91,6 +98,23 @@ public class Settings implements GuildSettingsProvider {
   public void setVolume(int volume) {
     this.volume = volume;
     this.manager.writeSettings();
+  }
+
+  public int getLanguage() {
+    return language;
+  }
+
+  public void setLanguage(Locale locale) {
+    this.language = Locales.languages.indexOf(locale);
+    this.manager.writeSettings();
+  }
+
+  public Locale getLocale() {
+    return Locales.languages.get(getLanguage());
+  }
+
+  public ResourceBundle getResourceBundle() {
+    return ResourceBundle.getBundle("resourcebundle.lang", getLocale());
   }
 
   public String getDefaultPlaylist() {
@@ -126,7 +150,7 @@ public class Settings implements GuildSettingsProvider {
   }
 
   // Setters
-  public void setTextChannel(TextChannel tc) {
+  public void setTextChannel(Channel tc) {
     this.textId = tc == null ? 0 : tc.getIdLong();
     this.manager.writeSettings();
   }

@@ -51,19 +51,19 @@ public class SetdjCmd extends AdminCommand {
     if (event.getOption("rolename").getAsString().equalsIgnoreCase("none")) {
       s.setDJRole(null);
       event.getHook().editOriginal(event.getClient().getSuccess() + " DJ роль очищена; Теперь только администраторы могут её использовать.")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     } else {
       List<Role> list = FinderUtil.findRoles(event.getOption("rolename").getAsString(), event.getGuild());
       if (list.isEmpty())
         event.getHook().editOriginal(event.getClient().getWarning() + " Нет роли с названием \"" + event.getOption("rolename").getAsString() + "\"")
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
       else if (list.size() > 1)
         event.getHook().editOriginal(event.getClient().getWarning() + FormatUtil.listOfRoles(list, event.getOption("rolename").getAsString()))
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
       else {
         s.setDJRole(list.get(0));
         event.getHook().editOriginal(event.getClient().getSuccess() + " DJ команды теперь может использовать роль **" + list.get(0).getName() + "**.   ")
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
       }
     }
   }
@@ -71,7 +71,7 @@ public class SetdjCmd extends AdminCommand {
   @Override
   protected void execute(CommandEvent event) {
     if (event.getArgs().isEmpty()) {
-      event.reply(event.getClient().getError() + " Напшите нужную роль или 'NONE' для очистки(можно написать ID сервера чтобы все могли использовать команду)");
+      event.reply(event.getClient().getError() + " Напишите нужную роль или 'NONE' для очистки(можно написать ID сервера чтобы все могли использовать команду)");
       return;
     }
     Settings s = event.getClient().getSettingsFor(event.getGuild());

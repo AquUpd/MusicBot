@@ -27,7 +27,10 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.exceptions.RateLimitedException;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
@@ -92,21 +95,22 @@ public class NowplayingHandler {
     Guild guild = bot.getJDA().getGuildById(guildId);
     if (guild == null) return;
     Settings settings = bot.getSettingsManager().getSettings(guildId);
-    TextChannel tchan = settings.getTextChannel(guild);
-    if (tchan != null && guild.getSelfMember().hasPermission(tchan, Permission.MANAGE_CHANNEL)) {
+    Channel tchan = settings.getTextChannel(guild);
+    if (tchan != null && guild.getSelfMember().hasPermission((GuildChannel) tchan, Permission.MANAGE_CHANNEL) && !(tchan instanceof VoiceChannel)) {
+      TextChannel tchan1 = (TextChannel) tchan;
       String otherText;
-      String topic = tchan.getTopic();
+      String topic = tchan1.getTopic();
       if (topic == null || topic.isEmpty()) otherText = "\u200B";
       else if (topic.contains("\u200B")) otherText = topic.substring(topic.lastIndexOf("\u200B"));
       else otherText = "\u200B\n " + topic;
       String text = handler.getTopicFormat(bot.getJDA()) + otherText;
-      if (!text.equals(tchan.getTopic())) {
+      if (!text.equals(tchan1.getTopic())) {
         try {
           // normally here if 'wait' was false, we'd want to queue, however,
           // new discord ratelimits specifically limiting changing channel topics
           // mean we don't want a backlog of changes piling up, so if we hit a
           // ratelimit, we just won't change the topic this time
-          tchan.getManager().setTopic(text).complete(wait);
+          tchan1.getManager().setTopic(text).complete(wait);
         } catch (PermissionException | RateLimitedException ignore) {}
       }
     }

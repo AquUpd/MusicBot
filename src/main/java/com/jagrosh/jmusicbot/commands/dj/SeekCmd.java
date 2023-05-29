@@ -106,12 +106,12 @@ public class SeekCmd extends DJCommand {
       }
     } catch (NumberFormatException e) {
       event.getHook().editOriginal("Напишите время в формате `[час:][мин:]<сек>` без других символов.")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       return;
     }
     if (!handler.getPlayer().getPlayingTrack().isSeekable()) {
       event.getHook().editOriginal("Эту пластинку нельзя перемотать.")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     } else {
       if (musicduration < needseek) {
         DateFormat formatter;
@@ -122,7 +122,7 @@ public class SeekCmd extends DJCommand {
         }
         formatter.setTimeZone(TimeZone.getTimeZone("UTC+3"));
         event.getHook().editOriginal("Время которое вы ввели превышает время пластинки. Максимальное время которое можно ввести: **" + formatter.format(musicduration) + "**")
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
       } else {
         DateFormat formatter;
         if (needseek >= 3600000) {
@@ -135,7 +135,7 @@ public class SeekCmd extends DJCommand {
         handler.getPlayer().getPlayingTrack().setPosition(needseek);
         String reply = "Пластинка успешно перемотана на: **" + formatter.format(needseek) + "**";
         event.getHook().editOriginal(reply)
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
       }
     }
   }

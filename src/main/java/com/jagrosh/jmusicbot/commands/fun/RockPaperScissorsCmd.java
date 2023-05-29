@@ -66,25 +66,22 @@ public class RockPaperScissorsCmd extends FunCommand {
     switch(rps(argument)) {
       case -1:
         event.getHook().editOriginal("Напишите \"камень\", \"ножницы\" или \"бумага\" после команды.")
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
         break;
       case 1:
-        event.getHook().editOriginal(":upside_down: Бот выбрал: `" + argument + "`, Игрок выбрал: `" + argument + "`. Ничья!")
-          .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        event.getHook().editOriginal(":upside_down: Бот выбрал: `" + argument + "`, Игрок выбрал: `" + argument + "`. Ничья!").queue();
         break;
       case 2:
         if (argument.equals("камень")) arg = "ножницы";
         else if (argument.equals("ножницы")) arg = "бумага";
         else arg = "камень";
-        event.getHook().editOriginal(":sunglasses: Бот выбрал: `" + arg + "`, Игрок выбрал: `" + argument + "`. Вы выйграли!")
-          .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        event.getHook().editOriginal(":sunglasses: Бот выбрал: `" + arg + "`, Игрок выбрал: `" + argument + "`. Вы выйграли!").queue();
         break;
       case 3:
         if (argument.equals("камень")) arg = "бумага";
         else if (argument.equals("ножницы")) arg = "камень";
         else arg = "ножницы";
-        event.getHook().editOriginal(":sob: Бот выбрал: `" + arg + "`, Игрок выбрал: `" + argument + "`. Вы проиграли!")
-          .delay(10, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        event.getHook().editOriginal(":sob: Бот выбрал: `" + arg + "`, Игрок выбрал: `" + argument + "`. Вы проиграли!").queue();
     }
   }
 

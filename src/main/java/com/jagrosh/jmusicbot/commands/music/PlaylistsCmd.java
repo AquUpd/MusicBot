@@ -65,22 +65,22 @@ public class PlaylistsCmd extends MusicCommand {
       bot.getPlaylistLoader().createFolder(event.getGuild());
     if (!bot.getPlaylistLoader().folderExists(event.getGuild())) {
       event.getHook().editOriginal(event.getClient().getWarning() + " Папки с плейлистами не существует и она будет создана!")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       return;
     }
     List<String> list = bot.getPlaylistLoader().getPlaylistNames(event.getGuild());
     if (list == null)
       event.getHook().editOriginal(event.getClient().getError() + " Не удалось получить список плейлистов!")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     else if (list.isEmpty())
       event.getHook().editOriginal(event.getClient().getWarning() + " В папке плейлистов нет плейлистов(грустно)!")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     else {
       StringBuilder builder = new StringBuilder(event.getClient().getSuccess() + " Доступные плейлисты:\n");
       list.forEach(str -> builder.append("`").append(str).append("` "));
       builder.append("\nнапишите `").append(event.getClient().getTextualPrefix()).append("pplaylist <название>` чтобы включить плейлист");
       event.getHook().editOriginal(builder.toString())
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     }
   }
 }

@@ -56,7 +56,7 @@ public class ForceskipCmd extends DJCommand {
     event.getHook().editOriginal(event.getClient().getSuccess() + " Пропущена пластинка **" +
       handler.getPlayer().getPlayingTrack().getInfo().title + "** " +
       (rm.getOwner() == 0L ? "(автоматическая)" : "(добавлена **" + rm.user.username + "**)"))
-      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      .queue();
     handler.getPlayer().stopTrack();
   }
 }

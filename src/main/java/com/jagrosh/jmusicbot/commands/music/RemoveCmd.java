@@ -97,15 +97,15 @@ public class RemoveCmd extends MusicCommand {
     String args = event.getOption("pos").getAsString();
     if (handler.getQueue().isEmpty()) {
       event.getHook().editOriginal("В очереди ничего нет!")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       return;
     }
     if (args.equalsIgnoreCase("all")) {
       int count = handler.getQueue().removeAll(event.getUser().getIdLong());
       if (count == 0) event.getHook().editOriginal("В очереди ничего нет!")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       event.getHook().editOriginal("Успешно очищена очередь.")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       return;
     }
     int pos;
@@ -116,7 +116,7 @@ public class RemoveCmd extends MusicCommand {
     }
     if (pos < 1 || pos > handler.getQueue().size()) {
       event.getHook().editOriginal("Позиция в очереди должна быть между 1 и " + handler.getQueue().size() + "!")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
       return;
     }
     Settings settings = event.getClient().getSettingsFor(event.getGuild());
@@ -126,7 +126,7 @@ public class RemoveCmd extends MusicCommand {
     if (qt.getIdentifier() == event.getUser().getIdLong()) {
       handler.getQueue().remove(pos - 1);
       event.getHook().editOriginal("Убрана **" + qt.getTrack().getInfo().title + "** из очереди")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     } else if (isDJ) {
       handler.getQueue().remove(pos - 1);
       User u;
@@ -136,10 +136,10 @@ public class RemoveCmd extends MusicCommand {
         u = null;
       }
       event.getHook().editOriginal("Убрана **" + qt.getTrack().getInfo().title + "** из очереди (запрошено " + (u == null ? "кем-то" : "**" + u.getName() + "**") + ")")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     } else {
       event.getHook().editOriginal("Вы не можете убрать **" + qt.getTrack().getInfo().title + "** потому что вы его не добавляли!")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     }
   }
 }

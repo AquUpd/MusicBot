@@ -43,7 +43,7 @@ public class SendToAllOwnersCmd extends OwnerCommand {
       }
     }
     event.getHook().editOriginal("done!")
-      .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+      .queue();
   }
 
   @Override

@@ -52,19 +52,19 @@ public class SetvcCmd extends AdminCommand {
     if (event.getOption("channel").getAsString().equalsIgnoreCase("none")) {
       s.setVoiceChannel(null);
       event.getHook().editOriginal(event.getClient().getSuccess() + " Пластинки теперь могут проигрываться повсюду")
-        .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+        .queue();
     } else {
       List<VoiceChannel> list = FinderUtil.findVoiceChannels(event.getOption("channel").getAsString(), event.getGuild());
       if (list.isEmpty())
         event.getHook().editOriginal(event.getClient().getWarning() + " Нет Войс Каналов с таким названием \"" + event.getOption("channel").getAsString() + "\"")
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
       else if (list.size() > 1)
         event.getHook().editOriginal(event.getClient().getWarning() + FormatUtil.listOfVChannels(list, event.getOption("channel").getAsString()))
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
       else {
         s.setVoiceChannel(list.get(0));
         event.getHook().editOriginal(event.getClient().getSuccess() + " Пластинки теперь могут проигрываться только в " + list.get(0).getAsMention())
-          .delay(5, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+          .queue();
       }
     }
   }
@@ -72,7 +72,7 @@ public class SetvcCmd extends AdminCommand {
   @Override
   protected void execute(CommandEvent event) {
     if (event.getArgs().isEmpty()) {
-      event.reply(event.getClient().getError() + " Напшите нужный канал или 'NONE' для очистки");
+      event.reply(event.getClient().getError() + " Напишите нужный канал или 'NONE' для очистки");
       return;
     }
     Settings s = event.getClient().getSettingsFor(event.getGuild());
