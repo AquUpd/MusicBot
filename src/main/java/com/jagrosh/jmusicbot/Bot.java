@@ -21,12 +21,15 @@ import com.jagrosh.jmusicbot.audio.AudioHandler;
 import com.jagrosh.jmusicbot.audio.NowplayingHandler;
 import com.jagrosh.jmusicbot.audio.PlayerManager;
 import com.jagrosh.jmusicbot.gui.GUI;
+import com.jagrosh.jmusicbot.localization.Locales;
+import com.jagrosh.jmusicbot.localization.TextUtils;
 import com.jagrosh.jmusicbot.playlist.PlaylistLoader;
 import com.jagrosh.jmusicbot.settings.SettingsManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
 
+import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -44,6 +47,8 @@ public class Bot {
   private final PlaylistLoader playlists;
   private final NowplayingHandler nowplaying;
   private final AloneInVoiceHandler aloneInVoiceHandler;
+  private final TextUtils textutils;
+  private final Locales locales;
 
   private boolean shuttingDown = false;
   private JDA jda;
@@ -61,6 +66,9 @@ public class Bot {
     this.nowplaying.init();
     this.aloneInVoiceHandler = new AloneInVoiceHandler(this);
     this.aloneInVoiceHandler.init();
+    this.textutils = new TextUtils(this);
+    this.locales = new Locales();
+    this.locales.init();
   }
 
   public BotConfig getConfig() {
@@ -93,6 +101,14 @@ public class Bot {
 
   public AloneInVoiceHandler getAloneInVoiceHandler() {
     return aloneInVoiceHandler;
+  }
+
+  public TextUtils getTextUtils() {
+    return textutils;
+  }
+
+  public Locales getLocales() {
+    return locales;
   }
 
   public JDA getJDA() {

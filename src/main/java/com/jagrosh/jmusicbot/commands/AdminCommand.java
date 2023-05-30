@@ -16,14 +16,17 @@
 package com.jagrosh.jmusicbot.commands;
 
 import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jmusicbot.Bot;
 import net.dv8tion.jda.api.Permission;
 
 /**
  * @author John Grosh (john.a.grosh@gmail.com)
  */
 public abstract class AdminCommand extends SlashCommand {
+  protected final Bot bot;
 
-  public AdminCommand() {
+  public AdminCommand(Bot bot) {
+    this.bot = bot;
     this.category =
       new Category("Admin", event -> {
           if (event.getAuthor().getId().equals(event.getClient().getOwnerId())) return true;

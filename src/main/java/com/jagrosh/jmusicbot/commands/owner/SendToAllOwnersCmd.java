@@ -18,6 +18,7 @@ public class SendToAllOwnersCmd extends OwnerCommand {
   List<User> sendUsers = new LinkedList<>();
 
   public SendToAllOwnersCmd(Bot bot) {
+    super(bot);
     this.name = "sendtoallowners";
     this.help = "отправляет сообщения всем создателям гильдий";
     this.arguments = "text";

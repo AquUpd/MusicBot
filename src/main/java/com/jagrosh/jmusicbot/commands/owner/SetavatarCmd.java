@@ -31,6 +31,7 @@ import java.io.InputStream;
 public class SetavatarCmd extends OwnerCommand {
 
   public SetavatarCmd(Bot bot) {
+    super(bot);
     this.name = "setavatar";
     this.help = "устанавливает аватар для бота";
     this.arguments = "<url>";

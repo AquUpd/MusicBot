@@ -39,6 +39,7 @@ public class DebugCmd extends OwnerCommand {
   private final Bot bot;
 
   public DebugCmd(Bot bot) {
+    super(bot);
     this.bot = bot;
     this.name = "debug";
     this.help = "показывает дебаг информацию";

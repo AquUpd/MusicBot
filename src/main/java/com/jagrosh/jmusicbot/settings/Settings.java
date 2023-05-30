@@ -31,8 +31,6 @@ import java.util.*;
  */
 public class Settings implements GuildSettingsProvider {
 
-
-
   private final SettingsManager manager;
   protected long textId;
   protected long voiceId;
@@ -42,6 +40,8 @@ public class Settings implements GuildSettingsProvider {
   private String defaultPlaylist;
   private RepeatMode repeatMode;
   private String prefix;
+
+  private MultiLocale multiLocale = null;
 
   public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String lang, String defaultPlaylist, RepeatMode repeatMode, String prefix) {
     this.manager = manager;
@@ -110,8 +110,11 @@ public class Settings implements GuildSettingsProvider {
   }
 
   public MultiLocale getMultiLocale() {
-    Optional<MultiLocale> matchingLocale = Locales.languages.stream().filter(multiLoc -> multiLoc.getShortName().equals(language)).findFirst();
-    return matchingLocale.orElseGet(() -> Locales.languages.get(0));
+    if(multiLocale == null) {
+      Optional<MultiLocale> matchingLocale = Locales.languages.stream().filter(multiLoc -> multiLoc.getShortName().equals(language)).findFirst();
+      multiLocale = matchingLocale.orElseGet(() -> Locales.languages.get(0));
+    }
+    return multiLocale;
   }
 
   public String getDefaultPlaylist() {

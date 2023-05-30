@@ -27,6 +27,7 @@ import net.dv8tion.jda.api.OnlineStatus;
 public class SetstatusCmd extends OwnerCommand {
 
   public SetstatusCmd(Bot bot) {
+    super(bot);
     this.name = "setstatus";
     this.help = "устанавливает статус что делает бот";
     this.arguments = "<status>";

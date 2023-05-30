@@ -36,6 +36,7 @@ import java.util.List;
 public class SetvcCmd extends AdminCommand {
 
   public SetvcCmd(Bot bot) {
+    super(bot);
     this.name = "setvc";
     this.help = "Устанавливает голосовой канал для использования пластинок";
     this.arguments = "<channel|NONE>";

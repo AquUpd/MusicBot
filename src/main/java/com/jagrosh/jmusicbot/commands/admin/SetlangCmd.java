@@ -6,7 +6,6 @@ import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.localization.Locales;
 import com.jagrosh.jmusicbot.localization.MultiLocale;
-import com.jagrosh.jmusicbot.localization.TextUtils;
 import com.jagrosh.jmusicbot.settings.Settings;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -18,14 +17,15 @@ import java.util.Optional;
 public class SetlangCmd extends AdminCommand {
 
   public SetlangCmd(Bot bot) {
+    super(bot);
     this.name = "setlang";
-    this.help = TextUtils.localize("commands_setlang_help");
+    this.help = bot.getTextUtils().localizeDefault("commands_setlang_help");
     this.arguments = "<language>";
-    OptionData languageOption = new OptionData(OptionType.STRING, "language", TextUtils.localize("commands_setlang_option_language"))
+    OptionData languageOption = new OptionData(OptionType.STRING, "language", bot.getTextUtils().localizeDefault("commands_setlang_option_language"))
       .addChoice("English", "english")
       .addChoice("Russian", "russian")
       .setRequired(true);
-    TextUtils.optionTranslation(languageOption, "commands_setlang_option_language");
+    bot.getTextUtils().optionTranslation(languageOption, "commands_setlang_option_language");
 
     this.options = Collections.singletonList(languageOption);
     this.aliases = bot.getConfig().getAliases(this.name);
@@ -43,12 +43,12 @@ public class SetlangCmd extends AdminCommand {
       Locales.languages.forEach(multiLoc -> strBuilder.append("\"").append(multiLoc.getName()).append("\", "));
       strBuilder.deleteCharAt(strBuilder.lastIndexOf(","));
 
-      event.getHook().editOriginal(event.getClient().getError() + " " + TextUtils.localize(s.getMultiLocale(), "commands_setlang_error_invalid", strBuilder)).queue();
+      event.getHook().editOriginal(bot.getTextUtils().localizeError(s.getMultiLocale(), "commands_setlang_error_invalid", strBuilder)).queue();
       return;
     }
 
     s.setLanguage(matchingLocale.get());
-    event.getHook().editOriginal(event.getClient().getSuccess() + " "  + TextUtils.localize(s.getMultiLocale(), "commands_setlang_success", TextUtils.localize(s.getMultiLocale(), "language_" + arg))).queue();
+    event.getHook().editOriginal(bot.getTextUtils().localizeSuccess(s.getMultiLocale(), "commands_setlang_success", bot.getTextUtils().localize(s.getMultiLocale(), "language_" + arg))).queue();
   }
 
   @Override
@@ -60,7 +60,7 @@ public class SetlangCmd extends AdminCommand {
       Locales.languages.forEach(multiLoc -> strBuilder.append("\"").append(multiLoc.getName()).append("\", "));
       strBuilder.deleteCharAt(strBuilder.lastIndexOf(","));
 
-      event.replyError(TextUtils.localize(s.getMultiLocale(), "commands_setlang_error_empty", strBuilder));
+      event.reply(bot.getTextUtils().localizeError(s.getMultiLocale(), "commands_setlang_error_empty", strBuilder));
       return;
     }
 
@@ -71,11 +71,11 @@ public class SetlangCmd extends AdminCommand {
       Locales.languages.forEach(multiLoc -> strBuilder.append("\"").append(multiLoc.getName()).append("\", "));
       strBuilder.deleteCharAt(strBuilder.lastIndexOf(","));
 
-      event.replyError(TextUtils.localize(s.getMultiLocale(), "commands_setlang_error_invalid", strBuilder));
+      event.reply(bot.getTextUtils().localizeError(s.getMultiLocale(), "commands_setlang_error_invalid", strBuilder));
       return;
     }
 
     s.setLanguage(matchingLocale.get());
-    event.replySuccess(TextUtils.localize(s.getMultiLocale(), "commands_setlang_success", TextUtils.localize(s.getMultiLocale(), "language_" + arg)));
+    event.reply(bot.getTextUtils().localizeSuccess(s.getMultiLocale(), "commands_setlang_success", bot.getTextUtils().localize(s.getMultiLocale(), "language_" + arg)));
   }
 }

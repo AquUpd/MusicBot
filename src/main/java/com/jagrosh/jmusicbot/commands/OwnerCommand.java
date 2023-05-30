@@ -16,13 +16,17 @@
 package com.jagrosh.jmusicbot.commands;
 
 import com.jagrosh.jdautilities.command.SlashCommand;
+import com.jagrosh.jmusicbot.Bot;
 
 /**
  * @author John Grosh (john.a.grosh@gmail.com)
  */
 public abstract class OwnerCommand extends SlashCommand {
 
-  public OwnerCommand() {
+  protected final Bot bot;
+
+  public OwnerCommand(Bot bot) {
+    this.bot = bot;
     this.category = new Category("Owner");
     this.ownerCommand = true;
   }

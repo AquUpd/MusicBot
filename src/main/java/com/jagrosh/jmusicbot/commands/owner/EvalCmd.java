@@ -31,10 +31,8 @@ import java.util.Collections;
  */
 public class EvalCmd extends OwnerCommand {
 
-  private final Bot bot;
-
   public EvalCmd(Bot bot) {
-    this.bot = bot;
+    super(bot);
     this.name = "eval";
     this.help = "evaluates nashorn code";
     this.options = Collections.singletonList(new OptionData(OptionType.STRING, "code", "Код.").setRequired(true));

@@ -32,10 +32,13 @@ import java.util.Collections;
 public class PrefixCmd extends AdminCommand {
 
   public PrefixCmd(Bot bot) {
+    super(bot);
     this.name = "prefix";
-    this.help = "выбирает префикс для определенного сервера";
+    this.help = bot.getTextUtils().localizeDefault("commands_setprefix_help");
     this.arguments = "<prefix|NONE>";
-    this.options = Collections.singletonList(new OptionData(OptionType.STRING, "prefix", "Префикс для команд. NONE чтобы очистить.").setRequired(true));
+    OptionData prefixOption = new OptionData(OptionType.STRING, "prefix", bot.getTextUtils().localizeDefault("commands_setprefix_option_prefix")).setRequired(true);
+    bot.getTextUtils().optionTranslation(prefixOption, "commands_setprefix_option_prefix");
+    this.options = Collections.singletonList(prefixOption);
     this.aliases = bot.getConfig().getAliases(this.name);
   }
 
@@ -43,32 +46,32 @@ public class PrefixCmd extends AdminCommand {
   protected void execute(SlashCommandEvent event) {
     event.deferReply().queue();
     Settings s = event.getClient().getSettingsFor(event.getGuild());
+
     if (event.getOption("prefix").getAsString().equalsIgnoreCase("none")) {
       s.setPrefix(null);
-      event.getHook().editOriginal("Префикс очищен.")
-        .queue();
+      event.getHook().editOriginal(bot.getTextUtils().localizeSuccess(s.getMultiLocale(), "commands_setprefix_success_cleared")).queue();
     } else {
       s.setPrefix(event.getOption("prefix").getAsString());
-      event.getHook().editOriginal("Префикс на сервере **" + event.getGuild().getName() + "** изменен на '" +
-          event.getOption("prefix").getAsString() + "'")
-        .queue();
+      event.getHook().editOriginal(bot.getTextUtils().localizeSuccess(s.getMultiLocale(), "commands_setprefix_success", event.getGuild().getName(), event.getOption("prefix").getAsString())).queue();
     }
   }
 
   @Override
   protected void execute(CommandEvent event) {
+    Settings s = event.getClient().getSettingsFor(event.getGuild());
+
     if (event.getArgs().isEmpty()) {
-      event.replyError("Напишите нужный префикс или 'NONE' для очистки");
+      event.reply(bot.getTextUtils().localizeError(s.getMultiLocale(), "commands_setprefix_error_empty"));
       return;
     }
 
-    Settings s = event.getClient().getSettingsFor(event.getGuild());
-    if (event.getArgs().equalsIgnoreCase("none")) {
+    String arg = event.getArgs();
+    if (arg.equalsIgnoreCase("none")) {
       s.setPrefix(null);
-      event.replySuccess("Префикс очищен.");
+      event.reply(bot.getTextUtils().localizeSuccess(s.getMultiLocale(), "commands_setprefix_success_cleared"));
     } else {
       s.setPrefix(event.getArgs());
-      event.replySuccess("Префикс на сервере **" + event.getGuild().getName() + "** изменен на '" + event.getArgs() + "'");
+      event.reply(bot.getTextUtils().localizeSuccess(s.getMultiLocale(), "commands_setprefix_success", event.getGuild().getName(), arg));
     }
   }
 }

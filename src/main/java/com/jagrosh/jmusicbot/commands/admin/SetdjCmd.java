@@ -36,6 +36,7 @@ import java.util.List;
 public class SetdjCmd extends AdminCommand {
 
   public SetdjCmd(Bot bot) {
+    super(bot);
     this.name = "setdj";
     this.help = "Устанавливает роль для использования DJ команд";
     this.arguments = "<rolename|NONE>";

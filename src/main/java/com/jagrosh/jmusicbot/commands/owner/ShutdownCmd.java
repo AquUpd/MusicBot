@@ -25,10 +25,8 @@ import com.jagrosh.jmusicbot.commands.OwnerCommand;
  */
 public class ShutdownCmd extends OwnerCommand {
 
-  private final Bot bot;
-
   public ShutdownCmd(Bot bot) {
-    this.bot = bot;
+    super(bot);
     this.name = "shutdown";
     this.help = "безопасно выключает бота";
     this.aliases = bot.getConfig().getAliases(this.name);

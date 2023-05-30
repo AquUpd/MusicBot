@@ -39,6 +39,7 @@ import java.util.logging.Logger;
 public class SettcCmd extends AdminCommand {
 
   public SettcCmd(Bot bot) {
+    super(bot);
     this.name = "settc";
     this.help = "устанавливает текстовый канал для команд";
     this.arguments = "<channel|NONE>";

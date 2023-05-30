@@ -30,11 +30,8 @@ import java.util.Collections;
  */
 public class AutoplaylistCmd extends DJCommand {
 
-  private final Bot bot;
-
   public AutoplaylistCmd(Bot bot) {
     super(bot);
-    this.bot = bot;
     this.guildOnly = true;
     this.name = "autoplaylist";
     this.arguments = "<name|NONE>";

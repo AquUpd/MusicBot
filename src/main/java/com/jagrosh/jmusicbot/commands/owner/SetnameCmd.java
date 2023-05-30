@@ -27,6 +27,7 @@ import net.dv8tion.jda.api.exceptions.RateLimitedException;
 public class SetnameCmd extends OwnerCommand {
 
   public SetnameCmd(Bot bot) {
+    super(bot);
     this.name = "setname";
     this.help = "устанавливает новое название бота";
     this.arguments = "<name>";

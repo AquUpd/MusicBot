@@ -27,12 +27,13 @@ import net.dv8tion.jda.api.entities.Activity;
 public class SetgameCmd extends OwnerCommand {
 
   public SetgameCmd(Bot bot) {
+    super(bot);
     this.name = "setgame";
     this.help = "устанавливает игру в которую играет бот";
     this.arguments = "[action] [game]";
     this.aliases = bot.getConfig().getAliases(this.name);
     this.guildOnly = false;
-    this.children = new OwnerCommand[]{new SetlistenCmd(), new SetstreamCmd(), new SetwatchCmd(),};
+    this.children = new OwnerCommand[]{new SetlistenCmd(bot), new SetstreamCmd(bot), new SetwatchCmd(bot),};
   }
 
   @Override
@@ -53,7 +54,8 @@ public class SetgameCmd extends OwnerCommand {
 
   private class SetstreamCmd extends OwnerCommand {
 
-    private SetstreamCmd() {
+    private SetstreamCmd(Bot bot) {
+      super(bot);
       this.name = "stream";
       this.aliases = new String[]{"twitch", "streaming"};
       this.help = "отображает стрим другого человека";
@@ -84,7 +86,8 @@ public class SetgameCmd extends OwnerCommand {
 
   private class SetlistenCmd extends OwnerCommand {
 
-    private SetlistenCmd() {
+    private SetlistenCmd(Bot bot) {
+      super(bot);
       this.name = "listen";
       this.aliases = new String[]{"listening"};
       this.help = "устанавливает что слушает бот";
@@ -115,7 +118,8 @@ public class SetgameCmd extends OwnerCommand {
 
   private class SetwatchCmd extends OwnerCommand {
 
-    private SetwatchCmd() {
+    private SetwatchCmd(Bot bot) {
+      super(bot);
       this.name = "watch";
       this.aliases = new String[]{"watching"};
       this.help = "показывает что смотрит бот";
