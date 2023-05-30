@@ -17,15 +17,14 @@ package com.jagrosh.jmusicbot.settings;
 
 import com.jagrosh.jdautilities.command.GuildSettingsProvider;
 import com.jagrosh.jmusicbot.localization.Locales;
+import com.jagrosh.jmusicbot.localization.MultiLocale;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.lang.management.MemoryUsage;
+import java.util.*;
 
 /**
  * @author John Grosh <john.a.grosh@gmail.com>
@@ -39,12 +38,12 @@ public class Settings implements GuildSettingsProvider {
   protected long voiceId;
   protected long roleId;
   private int volume;
-  private int language; //0 - english, 1 - russian
+  private String language;
   private String defaultPlaylist;
   private RepeatMode repeatMode;
   private String prefix;
 
-  public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, int langId, String defaultPlaylist, RepeatMode repeatMode, String prefix) {
+  public Settings(SettingsManager manager, String textId, String voiceId, String roleId, int volume, String lang, String defaultPlaylist, RepeatMode repeatMode, String prefix) {
     this.manager = manager;
     try {
       this.textId = Long.parseLong(textId);
@@ -62,7 +61,7 @@ public class Settings implements GuildSettingsProvider {
       this.roleId = 0;
     }
     this.volume = volume;
-    this.language = langId;
+    this.language = lang;
     this.defaultPlaylist = defaultPlaylist;
     this.repeatMode = repeatMode;
     this.prefix = prefix;
@@ -101,21 +100,18 @@ public class Settings implements GuildSettingsProvider {
     this.manager.writeSettings();
   }
 
-  public int getLanguage() {
+  public String getLanguage() {
     return language;
   }
 
-  public void setLanguage(Locale locale) {
-    this.language = Locales.languages.indexOf(locale);
+  public void setLanguage(MultiLocale locale) {
+    this.language = locale.getShortName();
     this.manager.writeSettings();
   }
 
-  public Locale getLocale() {
-    return Locales.languages.get(getLanguage());
-  }
-
-  public ResourceBundle getResourceBundle() {
-    return ResourceBundle.getBundle("resourcebundle.lang", getLocale());
+  public MultiLocale getMultiLocale() {
+    Optional<MultiLocale> matchingLocale = Locales.languages.stream().filter(multiLoc -> multiLoc.getShortName().equals(language)).findFirst();
+    return matchingLocale.orElseGet(() -> Locales.languages.get(0));
   }
 
   public String getDefaultPlaylist() {

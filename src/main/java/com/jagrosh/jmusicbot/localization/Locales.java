@@ -5,27 +5,12 @@ import net.dv8tion.jda.api.interactions.DiscordLocale;
 import java.util.*;
 
 public class Locales {
-
-  public static List<Locale> languages = new ArrayList<Locale>() {{
-    add(0, new Locale("en"));
-    add(1, new Locale("ru"));
+  public static List<MultiLocale> languages = new ArrayList<MultiLocale>() {{
+    add(0, new MultiLocale("english","en_us", new Locale("en", "us"), DiscordLocale.ENGLISH_US));
+    add(1, new MultiLocale("russian", "ru_ru",  new Locale("ru", "ru"), DiscordLocale.RUSSIAN));
   }};
 
-  public static HashMap<String, Locale> stringLanguages = new HashMap<String, Locale>() {{
-    put("english", new Locale("en"));
-    put("russian", new Locale("ru"));
-  }};
-
-  public static HashMap<Locale, DiscordLocale> discordLocaleToLocale = new HashMap<Locale, DiscordLocale>() {{
-    put(languages.get(0), DiscordLocale.ENGLISH_US);
-    put(languages.get(1), DiscordLocale.RUSSIAN);
-  }};
-
-  public static ResourceBundle getResourceBundle(Locale locale) {
-    return ResourceBundle.getBundle("resourcebundle.lang", locale);
-  }
-
-  public static ResourceBundle getResourceBundle() {
-    return ResourceBundle.getBundle("resourcebundle.lang", languages.get(0));
+  public static ResourceBundle getDefaultResourceBundle() {
+    return languages.get(0).getResourceBundle();
   }
 }

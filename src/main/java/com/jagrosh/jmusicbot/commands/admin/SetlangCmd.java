@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.command.SlashCommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.AdminCommand;
 import com.jagrosh.jmusicbot.localization.Locales;
+import com.jagrosh.jmusicbot.localization.MultiLocale;
 import com.jagrosh.jmusicbot.localization.TextUtils;
 import com.jagrosh.jmusicbot.settings.Settings;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -12,6 +13,7 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 
 import java.util.Collections;
 import java.util.Locale;
+import java.util.Optional;
 
 public class SetlangCmd extends AdminCommand {
 
@@ -35,18 +37,18 @@ public class SetlangCmd extends AdminCommand {
     String arg = event.getOption("language").getAsString().toLowerCase(Locale.ENGLISH);
     Settings s = event.getClient().getSettingsFor(event.getGuild());
 
-    if(!Locales.stringLanguages.containsValue(arg)) {
+    Optional<MultiLocale> matchingLocale = Locales.languages.stream().filter(multiLoc -> multiLoc.getName().equals(arg)).findFirst();
+    if(!matchingLocale.isPresent()) {
       StringBuilder strBuilder = new StringBuilder();
-      Locales.stringLanguages.keySet().forEach(str -> strBuilder.append("\"").append(str).append("\", "));
+      Locales.languages.forEach(multiLoc -> strBuilder.append("\"").append(multiLoc.getName()).append("\", "));
       strBuilder.deleteCharAt(strBuilder.lastIndexOf(","));
 
-      event.getHook().editOriginal(event.getClient().getError() + " " + TextUtils.localize(s.getResourceBundle(), "commands_setlang_error_invalid", strBuilder)).queue();
+      event.getHook().editOriginal(event.getClient().getError() + " " + TextUtils.localize(s.getMultiLocale(), "commands_setlang_error_invalid", strBuilder)).queue();
       return;
     }
 
-    s.setLanguage(Locales.stringLanguages.get(arg));
-
-    event.getHook().editOriginal(event.getClient().getSuccess() + " "  + TextUtils.localize(s.getResourceBundle(), "commands_setlang_success", TextUtils.localize(s.getResourceBundle(), "language_" + arg))).queue();
+    s.setLanguage(matchingLocale.get());
+    event.getHook().editOriginal(event.getClient().getSuccess() + " "  + TextUtils.localize(s.getMultiLocale(), "commands_setlang_success", TextUtils.localize(s.getMultiLocale(), "language_" + arg))).queue();
   }
 
   @Override
@@ -55,24 +57,25 @@ public class SetlangCmd extends AdminCommand {
 
     if (event.getArgs().isEmpty()) {
       StringBuilder strBuilder = new StringBuilder();
-      Locales.stringLanguages.keySet().forEach(str -> strBuilder.append("\"").append(str).append("\", "));
+      Locales.languages.forEach(multiLoc -> strBuilder.append("\"").append(multiLoc.getName()).append("\", "));
       strBuilder.deleteCharAt(strBuilder.lastIndexOf(","));
 
-      event.reply(event.getClient().getError() + " "  + TextUtils.localize(s.getResourceBundle(), "commands_setlang_error_empty", strBuilder));
+      event.replyError(TextUtils.localize(s.getMultiLocale(), "commands_setlang_error_empty", strBuilder));
       return;
     }
+
     String arg = event.getArgs().toLowerCase(Locale.ENGLISH);
-    if(!Locales.stringLanguages.containsKey(arg)) {
+    Optional<MultiLocale> matchingLocale = Locales.languages.stream().filter(multiLoc -> multiLoc.getName().equals(arg)).findFirst();
+    if(!matchingLocale.isPresent()) {
       StringBuilder strBuilder = new StringBuilder();
-      Locales.stringLanguages.keySet().forEach(str -> strBuilder.append("\"").append(str).append("\", "));
+      Locales.languages.forEach(multiLoc -> strBuilder.append("\"").append(multiLoc.getName()).append("\", "));
       strBuilder.deleteCharAt(strBuilder.lastIndexOf(","));
 
-      event.reply(event.getClient().getError() + " " + TextUtils.localize(s.getResourceBundle(), "commands_setlang_error_invalid", strBuilder));
+      event.replyError(TextUtils.localize(s.getMultiLocale(), "commands_setlang_error_invalid", strBuilder));
       return;
     }
 
-    s.setLanguage(Locales.stringLanguages.get(arg));
-
-    event.reply(event.getClient().getSuccess() + " "  + TextUtils.localize(s.getResourceBundle(), "commands_setlang_success", TextUtils.localize(s.getResourceBundle(), "language_" + arg)));
+    s.setLanguage(matchingLocale.get());
+    event.replySuccess(TextUtils.localize(s.getMultiLocale(), "commands_setlang_success", TextUtils.localize(s.getMultiLocale(), "language_" + arg)));
   }
 }
